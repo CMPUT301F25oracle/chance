@@ -49,7 +49,7 @@ Instead of a “first-come, first-served” race, entrants can join a waiting li
 ├── wiki/                     # Mockups and storyboard (.png)
 ├── README.md                 # Project overview (this file)
 └── .gitignore
-
+```
 
 ---
 
