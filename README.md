@@ -40,13 +40,13 @@ Instead of a “first-come, first-served” race, entrants can join a waiting li
 ---
 
 ## 🗂️ Project Structure
-├── app/ # Android Studio source code
-│ ├── java/ # Activities, models, adapters
-│ ├── res/ # Layouts, icons, and drawables
-│ └── AndroidManifest.xml
-├── docs/ # CRC cards and analysis documents
-├── wiki/ # Mockups and storyboard (.png)
-├── README.md # Project overview (this file)
+├── app/                      # Android Studio source code
+│   ├── java/                 # Activities, models, adapters
+│   ├── res/                  # Layouts, icons, and drawables
+│   └── AndroidManifest.xml
+├── docs/                     # CRC cards and analysis documents
+├── wiki/                     # Mockups and storyboard (.png)
+├── README.md                 # Project overview (this file)
 └── .gitignore
 
 
