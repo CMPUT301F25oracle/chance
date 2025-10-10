@@ -40,6 +40,7 @@ Instead of a “first-come, first-served” race, entrants can join a waiting li
 ---
 
 ## 🗂️ Project Structure
+```bash
 ├── app/                      # Android Studio source code
 │   ├── java/                 # Activities, models, adapters
 │   ├── res/                  # Layouts, icons, and drawables
