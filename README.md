@@ -45,7 +45,7 @@ Instead of a “first-come, first-served” race, entrants can join a waiting li
 │   ├── java/                 # Activities, models, adapters
 │   ├── res/                  # Layouts, icons, and drawables
 │   └── AndroidManifest.xml
-├── docs/                     # CRC cards and analysis documents
+├── doc/                     # CRC cards and analysis documents
 ├── wiki/                     # Mockups and storyboard (.png)
 ├── README.md                 # Project overview (this file)
 └── .gitignore
@@ -75,17 +75,64 @@ Each screen is labeled with its corresponding **User Story ID** and linked throu
 ---
 
 ## 🧱 Object-Oriented Analysis
-Key anticipated classes derived from user stories:
-- `Event` – stores event details and waiting lists  
-- `Entrant` – represents user profiles and histories  
-- `Organizer` – manages event creation and draws  
-- `LotterySystem` – performs random selections  
-- `NotificationManager` – sends app notifications  
-- `FirebaseManager` – handles database operations  
-- `QRCodeHandler` – generates and scans event codes  
-- `Admin` – manages event and user removals  
 
-Detailed **CRC cards** and analysis are available in `/docs` and linked in the Wiki.
+Key anticipated classes and controllers derived from user stories and CRC card design:
+
+- **`Event`** – Holds event information (name, description, date/time, capacity, price, and poster). Maintains registration windows and manages waiting lists and attendees. Provides counts for entrants and attendees.  
+  *Collaborators:* `Organizer`, `EventController`, `WaitingList`, `EventDetailActivity`, `Lottery`
+
+- **`Entrant`** – Represents the participant profile with personal details and event history. Can join or leave waiting lists, manage notifications, and edit or delete their profile.  
+  *Collaborators:* `WaitingList`, `ProfileController`, `EventController`, `ProfileActivity`
+
+- **`Organizer`** – Manages event creation and updates, defines registration windows, sets capacities and prices, and publishes posters. Can view waiting lists, trigger lottery draws, and send notifications.  
+  *Collaborators:* `Event`, `EventController`, `LotteryController`, `EventCreateActivity`
+
+- **`Administrator`** – Oversees the system’s infrastructure. Can browse and remove events, profiles, and uploaded images, and review notification or log records.  
+  *Collaborators:* `Event`, `Entrant`
+
+- **`EventController`** – Handles event creation, updates, and validation. Enforces capacity and registration window constraints. Orchestrates waiting list joins and leaves and supplies data to UI components.  
+  *Collaborators:* `EventCreateActivity`, `EventDetailActivity`, `WaitingList`, `EventListActivity`
+
+- **`LotteryController`** – Runs event draws and replacement draws, updates chosen lists, and triggers notifications for selected or declined entrants.  
+  *Collaborators:* `Lottery`, `EventController`, `Invitation`
+
+- **`Lottery`** – Selects entrants randomly from a waiting list and returns chosen participants to the event handler.  
+  *Collaborators:* `WaitingList`, `Event`
+
+- **`WaitingList`** – Stores all entrants for each event, preventing duplicates. Supports adding/removing entrants, returning counts, and providing entrants for lottery draws.  
+  *Collaborators:* `Entrant`, `Event`, `SignUpActivity`, `EventDetailActivity`, `EventController`, `Lottery`
+
+- **`Invitation`** – Manages invitations to selected entrants, including pending/accepted/declined statuses. Triggers replacement draws on decline and can expire unresponded invitations.  
+  *Collaborators:* `Entrant`, `LotteryController`, `SignUpController`, `SignUpActivity`
+
+- **`SignUpController`** – Validates capacity and registration conditions when an entrant accepts an invitation. Updates waiting lists and triggers replacement draws if needed.  
+  *Collaborators:* `EventController`, `Invitation`, `LotteryController`, `WaitingList`
+
+- **`ProfileController`** – Handles profile data storage, updates, and notification preferences. Provides entrant profile information to other screens.  
+  *Collaborators:* `ProfileActivity`, `EventDetailActivity`
+
+- **`EventListActivity`** – Displays the list of joinable events. Handles searching, filtering, and navigation to event details.  
+  *Collaborators:* `EventController`, `EventDetailActivity`, `EventCreateActivity`
+
+- **`EventDetailActivity`** – Shows full event details and current registration status. Allows entrants to join or leave waiting lists and handles navigation from QR scans.  
+  *Collaborators:* `EventController`, `WaitingList`, `QRScanActivity`
+
+- **`EventCreateActivity`** – UI for creating or editing event details, posters, and registration settings.  
+  *Collaborators:* `EventController`, `Organizer`
+
+- **`ProfileActivity`** – UI for entrants to view or edit their profile, manage notifications, and review their joined or selected events.  
+  *Collaborators:* `ProfileController`, `EventController`
+
+- **`SignUpActivity`** – UI for entrants to accept or decline invitations and confirm participation.  
+  *Collaborators:* `SignUpController`, `Invitation`, `EventDetailActivity`
+
+- **`QRScanActivity`** – Handles QR code scanning and decoding for joining events via direct links.  
+  *Collaborators:* `EventController`, `EventDetailActivity`, `WaitingList`
+
+- **`QR Code` / `QRCodeHandler`** – Generates and encodes event info into QR codes and supports joining via scan.  
+  *Collaborators:* `Event`
+
+📂 Detailed **CRC cards** and analysis are available in `/doc` and linked in the Wiki.
 
 ---
 
