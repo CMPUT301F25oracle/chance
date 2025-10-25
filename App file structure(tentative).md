@@ -1,3 +1,6 @@
+## 📁 Project Structure
+
+```
 app/
 ├── java/com/example/eventlottery/
 │   ├── model/                     # Core data classes (POJOs)
@@ -65,3 +68,4 @@ app/
 ├── AndroidManifest.xml
 ├── build.gradle
 └── google-services.json           # Firebase config
+``` 
