@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- ZXing Decorated Barcode View -->
+    <com.journeyapps.barcodescanner.DecoratedBarcodeView
+        android:id="@+id/barcode_scanner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:zxing_framing_rect_width="250dp"
+        app:zxing_framing_rect_height="250dp"
+        app:zxing_mask_color="#88000000"
+        app:zxing_laser_color="#00FF00"
+        app:zxing_border_color="#FFFFFF"
+        app:zxing_border_line_length="60dp"
+        app:zxing_border_line_thickness="4dp"
+        app:zxing_status_text="@string/scan_qr_code" />
+
+    <!-- Overlay for UI feedback -->
+    <TextView
+        android:id="@+id/tv_instruction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/scan_qr_code"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="80dp" />
+
+</FrameLayout>
