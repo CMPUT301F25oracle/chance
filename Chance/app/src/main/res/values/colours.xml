@@ -6,7 +6,7 @@
     <color name="theme_blue">#1170F5</color>
     <color name="button_blue">#66A0F0</color>
     <color name="profile_list_blue">#336eed</color>
-    <color name="white">#000000</color>
-    <color name="black">#FFFFFF</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
     <color name="button_green">#77DD77</color>
 </resources>
