@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="88dp"
+    android:clipChildren="false"
+    >
+    <com.google.android.flexbox.FlexboxLayout
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        app:alignItems="center"
+        app:alignContent="stretch"
+        app:justifyContent="space_evenly"
+        app:flexDirection="row"
+        android:layout_marginTop="20dp"
+        android:background="@color/white"
+        android:clipChildren="false"
+        >
+        <Button
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:backgroundTint="@color/theme_blue"
+            android:background="@drawable/navbar_home"
+            />
+        <LinearLayout
+            android:layout_width="110dp"
+            android:layout_height="90dp"
+            android:gravity="center"
+            android:background="@drawable/box_rounded_corners"
+            android:backgroundTint="@color/white"
+            android:clipChildren="false"
+            >
+            <Button
+                android:layout_width="65dp"
+                android:layout_height="60dp"
+                android:layout_marginBottom="5dp"
+                app:backgroundTint="@color/theme_blue"
+                android:background="@drawable/navbar_qrcode"
+                />
+        </LinearLayout>
+
+        <Button
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:backgroundTint="@color/theme_blue"
+            android:background="@drawable/navbar_profile"/>
+
+    </com.google.android.flexbox.FlexboxLayout>
+</RelativeLayout>

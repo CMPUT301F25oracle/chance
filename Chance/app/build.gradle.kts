@@ -9,7 +9,7 @@ android {
     compileSdk = 36
 
     sourceSets.getByName("main") {
-        res.setSrcDirs(listOf("src/main/res", "src/main/res/layout/reusables"))
+        res.setSrcDirs(listOf("src/main/res"))
     }
     defaultConfig {
         applicationId = "com.example.chance"
