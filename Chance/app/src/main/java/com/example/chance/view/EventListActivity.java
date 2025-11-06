@@ -2,9 +2,7 @@ package com.example.chance.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,20 +13,15 @@ import com.example.chance.R;
 import com.example.chance.adapter.EventListAdapter;
 import com.example.chance.controller.EventController;
 import com.example.chance.model.Event;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.textfield.TextInputEditText;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Displays all events to the user (Entrant view).
- * Allows searching, filtering, and QR code scanning.
+ * Displays a list of all available events to entrants.
  */
 public class EventListActivity extends AppCompatActivity {
 
-    private EventListAdapter adapter;
-    private final List<Event> all = new ArrayList<>();
+    private RecyclerView recyclerView;
     private EventController eventController;
 
     @Override
@@ -36,56 +29,25 @@ public class EventListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_list);
 
-        RecyclerView rv = findViewById(R.id.recyclerEvents);
-        TextInputEditText search = findViewById(R.id.searchInput);
-        FloatingActionButton fab = findViewById(R.id.fabScan);
+        recyclerView = findViewById(R.id.recycler_events);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // --- RecyclerView setup ---
-        adapter = new EventListAdapter(event -> {
-            Intent i = new Intent(this, EventDetailActivity.class);
-            i.putExtra("eventId", event.getId());
-            startActivity(i);
-        });
-        rv.setLayoutManager(new LinearLayoutManager(this));
-        rv.setAdapter(adapter);
-
-        // --- Fetch events from Firestore ---
         eventController = new EventController();
-        eventController.getAllEvents(events -> {
-            all.clear();
-            all.addAll(events);
-            adapter.submitList(all);
-        }, error -> {
-            Log.e("EventListActivity", "Error loading events", error);
-        });
 
-        // --- Search bar logic ---
-        search.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-                filter(s == null ? "" : s.toString());
-            }
-            @Override public void afterTextChanged(Editable s) {}
-        });
-
-        // --- QR Scanner button ---
-        fab.setOnClickListener(v -> startActivity(new Intent(this, QRScannerActivity.class)));
+        loadEvents();
     }
 
-    // --- Filter events by search query ---
-    private void filter(String q) {
-        if (q.isEmpty()) {
-            adapter.submitList(all);
-            return;
-        }
-        List<Event> filtered = new ArrayList<>();
-        String lower = q.toLowerCase();
-        for (Event e : all) {
-            if ((e.getName() != null && e.getName().toLowerCase().contains(lower)) ||
-                    (e.getLocation() != null && e.getLocation().toLowerCase().contains(lower))) {
-                filtered.add(e);
-            }
-        }
-        adapter.submitList(filtered);
+    private void loadEvents() {
+        eventController.getAllEvents(this::setupRecycler, e ->
+                Toast.makeText(this, "Failed to load events: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+
+    private void setupRecycler(List<Event> events) {
+        EventListAdapter adapter = new EventListAdapter(this, events, event -> {
+            Intent intent = new Intent(EventListActivity.this, EventDetailActivity.class);
+            intent.putExtra("eventId", event.getId());
+            startActivity(intent);
+        });
+        recyclerView.setAdapter(adapter);
     }
 }
