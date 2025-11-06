@@ -21,6 +21,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".view.QRScannerActivity"
+            android:exported="true"
+            android:screenOrientation="fullSensor" />
+
+        <uses-permission android:name="android.permission.CAMERA" />
     </application>
 
 </manifest>
