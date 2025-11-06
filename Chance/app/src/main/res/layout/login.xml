@@ -23,7 +23,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/sub_title_text_size"
+            android:textSize="@dimen/title_and_greeting_text_size"
             android:text="Welcome to Chance"/>
     </com.google.android.flexbox.FlexboxLayout>
 
