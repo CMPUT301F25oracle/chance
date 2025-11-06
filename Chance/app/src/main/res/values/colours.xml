@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="soft_text_grey"></color>
     <color name="grey">#E8EFFF</color>
     <color name="orange">#FFC76C</color>
     <color name="button_red">#FF746C</color>

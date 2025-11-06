@@ -4,120 +4,130 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:alignItems="flex_start"
+    app:alignItems="baseline"
     app:flexDirection="column"
-    app:justifyContent="flex_start"
-    android:orientation="vertical"
+    app:justifyContent="space_between"
     android:background="@color/grey">
 
     <include layout="@layout/_title_bar" />
-
     <com.google.android.flexbox.FlexboxLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:alignItems="center"
+        android:layout_height="match_parent"
+        app:alignItems="flex_start"
         app:flexDirection="column"
-        app:justifyContent="center"
-        android:orientation="horizontal"
-        android:layout_marginTop="20dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hello, {{user}}!"
-            android:textSize="@dimen/title_and_greeting_text_size"
-            android:textColor="@color/black"
-            />
-
-        <Button
-            android:id="@+id/administrator"
-            android:layout_marginTop="10dp"
-            android:layout_width="350dp"
-            android:layout_height="35dp"
-            android:backgroundTint="@color/orange"
-            android:text="Adminstration Tools"
-            android:textColor="@color/black"
-            />
-
+        app:justifyContent="flex_start"
+        android:orientation="vertical"
+        android:background="@color/grey"
+        >
         <com.google.android.flexbox.FlexboxLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:alignItems="center"
-            app:flexDirection="row"
-            app:justifyContent="space_evenly"
+            app:flexDirection="column"
+            app:justifyContent="center"
             android:orientation="horizontal"
-            >
+            android:layout_marginTop="20dp">
 
-            <!-- Button text size need to readjust -->
-            <Button
-                android:layout_width="120dp"
-                android:layout_height="70dp"
-                android:text="Registered"
-                android:textSize="10dp"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hello, {{user}}!"
+                android:textSize="@dimen/title_text_size"
                 android:textColor="@color/black"
-                android:backgroundTint="@color/white"
                 />
 
             <Button
-                android:layout_width="126dp"
-                android:layout_height="70dp"
-                android:text="Created Events"
-                android:textSize="10dp"
+                android:id="@+id/administrator"
+                android:layout_marginTop="10dp"
+                android:layout_width="350dp"
+                android:layout_height="35dp"
+                android:backgroundTint="@color/orange"
+                android:text="Adminstration Tools"
                 android:textColor="@color/black"
-                android:backgroundTint="@color/white"
                 />
 
-            <Button
-                android:layout_width="120dp"
-                android:layout_height="70dp"
-                android:text="Create Event"
-                android:textSize="10dp"
-                android:textColor="@color/black"
-                android:backgroundTint="@color/white"
-                />
+            <com.google.android.flexbox.FlexboxLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:alignItems="center"
+                app:flexDirection="row"
+                app:justifyContent="space_evenly"
+                android:orientation="horizontal"
+                >
 
+                <!-- Button text size need to readjust -->
+                <Button
+                    android:layout_width="120dp"
+                    android:layout_height="70dp"
+                    android:text="Registered"
+                    android:textSize="10dp"
+                    android:textColor="@color/black"
+                    android:backgroundTint="@color/white"
+                    />
+
+                <Button
+                    android:layout_width="126dp"
+                    android:layout_height="70dp"
+                    android:text="Created Events"
+                    android:textSize="10dp"
+                    android:textColor="@color/black"
+                    android:backgroundTint="@color/white"
+                    />
+
+                <Button
+                    android:layout_width="120dp"
+                    android:layout_height="70dp"
+                    android:text="Create Event"
+                    android:textSize="10dp"
+                    android:textColor="@color/black"
+                    android:backgroundTint="@color/white"
+                    />
+
+            </com.google.android.flexbox.FlexboxLayout>
+
+            <com.google.android.flexbox.FlexboxLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:flexDirection="row"
+                app:alignContent="flex_start"
+                android:orientation="horizontal">
+                <!-- This is the search bar -->
+                <EditText
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="330dp"
+                    android:layout_height="40dp"
+                    android:hint="Find an event..."
+                    android:background="@color/white"
+                    />
+            </com.google.android.flexbox.FlexboxLayout>
+
+
+            <com.google.android.flexbox.FlexboxLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:flexWrap="wrap"
+                app:flexDirection="row"
+                app:justifyContent="space_evenly"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="200dp"
+                    android:layout_height="250dp"
+                    android:background="@color/black"
+                    />
+
+                <View
+                    android:layout_width="200dp"
+                    android:layout_height="300dp"
+                    android:background="@color/black"
+                    />
+            </com.google.android.flexbox.FlexboxLayout>
+
+        </com.google.android.flexbox.FlexboxLayout>
     </com.google.android.flexbox.FlexboxLayout>
 
-        <com.google.android.flexbox.FlexboxLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:flexDirection="row"
-            app:alignContent="flex_start"
-            android:orientation="horizontal">
-        <!-- This is the search bar -->
-        <EditText
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_width="330dp"
-            android:layout_height="40dp"
-            android:hint="Find an event..."
-            android:background="@color/white"
-            />
-        </com.google.android.flexbox.FlexboxLayout>
 
-
-        <com.google.android.flexbox.FlexboxLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:flexWrap="wrap"
-            app:flexDirection="row"
-            app:justifyContent="space_evenly"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
-
-            <View
-                android:layout_width="200dp"
-                android:layout_height="250dp"
-                android:background="@color/black"
-                />
-
-            <View
-                android:layout_width="200dp"
-                android:layout_height="300dp"
-                android:background="@color/black"
-                />
-        </com.google.android.flexbox.FlexboxLayout>
-
-    </com.google.android.flexbox.FlexboxLayout>
-
+    <include layout="@layout/_nav_bar" />
 </com.google.android.flexbox.FlexboxLayout>
