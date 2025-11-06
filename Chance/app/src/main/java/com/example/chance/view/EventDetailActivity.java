@@ -1,7 +1,9 @@
 package com.example.chance.view;
 
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,44 +13,50 @@ import com.example.chance.controller.EventController;
 import com.example.chance.model.Event;
 import com.google.android.material.button.MaterialButton;
 
-import java.text.DateFormat;
-
 /**
- * Displays the details of a single event when the user selects one from the list.
+ * Displays full details of an event and allows entrants to join.
  */
 public class EventDetailActivity extends AppCompatActivity {
 
-    private final DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
-    private EventController controller;
+    private TextView tvTitle, tvLocation, tvDescription, tvDate, tvPrice, tvCapacity;
+    private MaterialButton btnJoin;
+    private EventController eventController;
+    private String eventId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_detail);
 
-        String eventId = getIntent().getStringExtra("eventId");
+        tvTitle = findViewById(R.id.tv_event_title);
+        tvLocation = findViewById(R.id.tv_event_location);
+        tvDescription = findViewById(R.id.tv_event_description);
+        tvDate = findViewById(R.id.tv_event_date);
+        tvPrice = findViewById(R.id.tv_event_price);
+        tvCapacity = findViewById(R.id.tv_event_capacity);
+        btnJoin = findViewById(R.id.btn_join_event);
 
-        TextView tvTitle = findViewById(R.id.tvTitle);
-        TextView tvMeta = findViewById(R.id.tvMeta);
-        TextView tvDescription = findViewById(R.id.tvDescription);
-        MaterialButton btnJoin = findViewById(R.id.btnJoin);
+        eventController = new EventController();
+        eventId = getIntent().getStringExtra("eventId");
 
-        controller = new EventController();
+        loadEventDetails();
+    }
 
-        if (eventId != null) {
-            controller.getEvent(eventId, event -> {
-                if (event == null) return;
+    private void loadEventDetails() {
+        eventController.getEvent(eventId, event -> {
+            if (event != null) displayEvent(event);
+        }, e -> Toast.makeText(this, "Failed to load event", Toast.LENGTH_SHORT).show());
+    }
 
-                tvTitle.setText(event.getName());
-                String meta = (event.getLocation() == null ? "" : event.getLocation())
-                        + (event.getDate() == null ? "" : " • " + df.format(event.getDate()));
-                tvMeta.setText(meta);
-                tvDescription.setText(event.getDescription() == null ? "" : event.getDescription());
-            }, e -> {});
-        }
+    private void displayEvent(Event event) {
+        tvTitle.setText(event.getName());
+        tvLocation.setText(event.getLocation());
+        tvDescription.setText(event.getDescription());
+        tvDate.setText(event.getDate() != null ? event.getDate().toString() : "");
+        tvPrice.setText(event.getPrice() == 0 ? "Free" : "$" + event.getPrice());
+        tvCapacity.setText("Capacity: " + event.getCapacity());
 
-        btnJoin.setOnClickListener(v -> {
-            // TODO: Implement "join event" logic here later with LotteryController
-        });
+        btnJoin.setOnClickListener(v ->
+                Toast.makeText(this, "Joined " + event.getName(), Toast.LENGTH_SHORT).show());
     }
 }

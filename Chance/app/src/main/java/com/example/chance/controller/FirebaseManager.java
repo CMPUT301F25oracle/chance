@@ -16,26 +16,24 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
- * FirebaseManager is responsible for managing all Firestore and Storage operations.
- * Other controllers call its methods instead of directly using Firebase APIs.
+ * FirebaseManager centralizes all Firestore and Storage operations.
+ * Other controllers interact with Firebase through this class.
  */
 public class FirebaseManager {
 
     private static final String TAG = "FirebaseManager";
     private static FirebaseManager instance;
+
     private final FirebaseFirestore db;
     private final FirebaseStorage storage;
 
+    // -------------------- Singleton --------------------
     private FirebaseManager() {
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
     }
 
-    // Singleton pattern — ensures only one FirebaseManager exists
     public static FirebaseManager getInstance() {
         if (instance == null) {
             instance = new FirebaseManager();
@@ -43,16 +41,29 @@ public class FirebaseManager {
         return instance;
     }
 
-    // --- Firestore CRUD Methods ---
+    // -------------------- Firestore CRUD --------------------
 
-    public <T> void addDocument(String collectionName, T object, OnSuccessListener<DocumentReference> onSuccess, OnFailureListener onFailure) {
+    /**
+     * Add a new document to a collection with auto-generated ID.
+     */
+    public <T> void addDocument(String collectionName,
+                                T object,
+                                OnSuccessListener<DocumentReference> onSuccess,
+                                OnFailureListener onFailure) {
         db.collection(collectionName)
                 .add(object)
                 .addOnSuccessListener(onSuccess)
                 .addOnFailureListener(onFailure);
     }
 
-    public <T> void setDocument(String collectionName, String documentId, T object, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+    /**
+     * Overwrite or create a document with a custom ID.
+     */
+    public <T> void setDocument(String collectionName,
+                                String documentId,
+                                T object,
+                                OnSuccessListener<Void> onSuccess,
+                                OnFailureListener onFailure) {
         db.collection(collectionName)
                 .document(documentId)
                 .set(object)
@@ -60,7 +71,13 @@ public class FirebaseManager {
                 .addOnFailureListener(onFailure);
     }
 
-    public void getDocument(String collectionName, String documentId, OnSuccessListener<DocumentSnapshot> onSuccess, OnFailureListener onFailure) {
+    /**
+     * Retrieve a specific document by ID.
+     */
+    public void getDocument(String collectionName,
+                            String documentId,
+                            OnSuccessListener<DocumentSnapshot> onSuccess,
+                            OnFailureListener onFailure) {
         db.collection(collectionName)
                 .document(documentId)
                 .get()
@@ -68,7 +85,13 @@ public class FirebaseManager {
                 .addOnFailureListener(onFailure);
     }
 
-    public void deleteDocument(String collectionName, String documentId, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+    /**
+     * Delete a document from Firestore.
+     */
+    public void deleteDocument(String collectionName,
+                               String documentId,
+                               OnSuccessListener<Void> onSuccess,
+                               OnFailureListener onFailure) {
         db.collection(collectionName)
                 .document(documentId)
                 .delete()
@@ -76,23 +99,46 @@ public class FirebaseManager {
                 .addOnFailureListener(onFailure);
     }
 
-    public void listenToCollection(String collectionName, EventListener<QuerySnapshot> listener) {
-        db.collection(collectionName).addSnapshotListener(listener);
+    /**
+     * Attach a real-time listener to a Firestore collection.
+     */
+    public void listenToCollection(String collectionName,
+                                   EventListener<QuerySnapshot> listener) {
+        db.collection(collectionName)
+                .addSnapshotListener(listener);
     }
 
-    // --- Storage Methods (for event posters or profile images) ---
+    // -------------------- Storage Operations --------------------
+
+    /**
+     * Upload a file (in bytes) to Firebase Storage.
+     */
+    public void uploadFile(String path,
+                           byte[] fileData,
+                           OnSuccessListener onSuccess,
+                           OnFailureListener onFailure) {
+        storage.getReference(path)
+                .putBytes(fileData)
+                .addOnSuccessListener(onSuccess)
+                .addOnFailureListener(onFailure);
+    }
+
+    /**
+     * Get a StorageReference for a given path.
+     */
     public StorageReference getStorageReference(String path) {
         return storage.getReference(path);
     }
 
-    public void uploadFile(String path, byte[] fileData, OnSuccessListener success, OnFailureListener failure) {
-        storage.getReference(path)
-                .putBytes(fileData)
-                .addOnSuccessListener(success)
-                .addOnFailureListener(failure);
+    // -------------------- Utility + Accessors --------------------
+
+    /**
+     * Expose Firestore instance for custom queries.
+     */
+    public FirebaseFirestore getDb() {
+        return db;
     }
 
-    // --- Utility ---
     public void logError(String message, Exception e) {
         Log.e(TAG, message, e);
     }
