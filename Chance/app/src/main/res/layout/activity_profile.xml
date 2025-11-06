@@ -1,198 +1,370 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.flexbox.FlexboxLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    app:alignItems="flex_start"
+    app:flexDirection="column"
+    app:justifyContent="flex_start"
+    android:orientation="vertical"
+    android:background="@color/grey">
 
-    <LinearLayout
+    <include layout="@layout/_title_bar" />
+
+    <com.google.android.flexbox.FlexboxLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        app:alignItems="center"
+        app:flexDirection="column"
+        app:justifyContent="center"
+        android:orientation="horizontal"
+        android:layout_marginTop="50dp">
 
-        <!-- Header -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/avatar_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@android:drawable/sym_def_app_icon"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+            android:contentDescription="Avatar" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Profile"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:paddingBottom="16dp" />
+            android:layout_marginTop="50px"
+            android:textSize="@dimen/common_text_size"
+            android:text="Profile Information"
+            />
+        </com.google.android.flexbox.FlexboxLayout>
 
-        <!-- Avatar and name -->
-        <LinearLayout
+
+        <com.google.android.flexbox.FlexboxLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center_horizontal">
-
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/avatar_image"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:src="@android:drawable/sym_def_app_icon"
-                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
-                android:contentDescription="Avatar" />
+            app:flexDirection="column"
+            app:justifyContent="center"
+            android:orientation="horizontal"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="25dp"
+            >
 
             <TextView
-                android:id="@+id/tv_user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="John Doe"
-                android:textStyle="bold"
-                android:textSize="18sp"
-                android:paddingTop="8dp" />
+                android:text="User Name:"
+                android:textSize="@dimen/sub_sub_title_text_size"
+                >
+
+            </TextView>
+
+            <EditText
+                android:layout_marginTop="5dp"
+                android:layout_width="350dp"
+                android:layout_height="30dp"
+                android:hint="Your Username"
+                android:background="@color/white"/>
 
             <TextView
-                android:id="@+id/tv_user_role"
+                android:layout_marginTop="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Entrant"
-                android:textSize="14sp"
-                android:textColor="@android:color/darker_gray" />
-        </LinearLayout>
+                android:text="Full Name:"
+                android:textSize="@dimen/sub_sub_title_text_size"
+                >
 
-        <!-- Personal Information card -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp">
+            </TextView>
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <EditText
+                android:layout_marginTop="5dp"
+                android:layout_width="350dp"
+                android:layout_height="30dp"
+                android:background="@color/white"
+                android:hint="Lorem lpsum"/>
+
+            <TextView
+                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:text="Email:"
+                android:textSize="@dimen/sub_sub_title_text_size"
+                >
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Personal Information"
-                    android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:paddingBottom="8dp" />
+            </TextView>
 
-                <!-- Name field -->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Name">
+            <EditText
+                android:layout_marginTop="5dp"
+                android:layout_width="350dp"
+                android:layout_height="30dp"
+                android:hint="username@email.com"
+                android:background="@color/white"/>
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/input_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="John Doe" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <!-- Email field -->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Email"
-                    android:layout_marginTop="8dp">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/input_email"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textEmailAddress"
-                        android:text="john.doe@email.com" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <!-- Phone field -->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Phone (Optional)"
-                    android:layout_marginTop="8dp">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/input_phone"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="phone"
-                        android:hint="+1 (555) 000-0000" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <!-- Save button -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_save_changes"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Save Changes" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Preferences card -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:text="Phone Number:"
+                android:textSize="@dimen/sub_sub_title_text_size"
+                >
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Preferences"
-                    android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:paddingBottom="8dp" />
+            </TextView>
 
-                <!-- Notifications toggle -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="space_between|center_vertical"
-                    android:paddingTop="8dp">
+            <EditText
+                android:layout_marginTop="5dp"
+                android:layout_width="350dp"
+                android:layout_height="30dp"
+                android:hint="123-456-7890"
+                android:background="@color/white"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Notifications" />
+        </com.google.android.flexbox.FlexboxLayout>
 
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switch_notifications"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="true" />
-                </LinearLayout>
+    <com.google.android.flexbox.FlexboxLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:flexDirection="column"
+        app:justifyContent="center"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
 
-                <!-- Device ID display -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingTop="8dp">
+        <Button
+            android:layout_marginLeft="27dp"
+            android:layout_width="350dp"
+            android:layout_height="40dp"
+            android:backgroundTint="@color/orange"
+            android:text="View Notification History"
+            android:textColor="@color/white"
+            />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Device ID"
-                        android:textStyle="bold" />
+        <Button
+            android:layout_marginLeft="27dp"
+            android:layout_width="350dp"
+            android:layout_height="40dp"
+            android:backgroundTint="@color/orange"
+            android:text="Disable Account"
+            android:textColor="@color/white"
+            />
 
-                    <TextView
-                        android:id="@+id/tv_device_id"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="ABC-123-XYZ"
-                        android:textColor="@android:color/darker_gray" />
-                </LinearLayout>
+        <Button
+            android:layout_marginLeft="27dp"
+            android:layout_width="350dp"
+            android:layout_height="40dp"
+            android:backgroundTint="@color/button_blue"
+            android:text="Disable Notification"
+            android:textColor="@color/white"
+            />
 
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+        <Button
+            android:layout_marginLeft="27dp"
+            android:layout_width="350dp"
+            android:layout_height="40dp"
+            android:backgroundTint="@color/button_blue"
+            android:text="Disable Notification"
+            android:textColor="@color/white"
+            />
 
-    </LinearLayout>
-</ScrollView>
+    </com.google.android.flexbox.FlexboxLayout>
+
+</com.google.android.flexbox.FlexboxLayout>
+
+
+
+
+
+
+    <!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    android:fillViewport="true">-->
+
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="vertical"-->
+<!--        android:padding="16dp">-->
+
+<!--        &lt;!&ndash; Header &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Profile"-->
+<!--            android:textSize="20sp"-->
+<!--            android:textStyle="bold"-->
+<!--            android:paddingBottom="16dp" />-->
+
+<!--        &lt;!&ndash; Avatar and name &ndash;&gt;-->
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical"-->
+<!--            android:gravity="center_horizontal">-->
+
+<!--            <com.google.android.material.imageview.ShapeableImageView-->
+<!--                android:id="@+id/avatar_image"-->
+<!--                android:layout_width="80dp"-->
+<!--                android:layout_height="80dp"-->
+<!--                android:src="@android:drawable/sym_def_app_icon"-->
+<!--                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"-->
+<!--                android:contentDescription="Avatar" />-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/tv_user_name"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="John Doe"-->
+<!--                android:textStyle="bold"-->
+<!--                android:textSize="18sp"-->
+<!--                android:paddingTop="8dp" />-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/tv_user_role"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Entrant"-->
+<!--                android:textSize="14sp"-->
+<!--                android:textColor="@android:color/darker_gray" />-->
+<!--        </LinearLayout>-->
+
+<!--        &lt;!&ndash; Personal Information card &ndash;&gt;-->
+<!--        <com.google.android.material.card.MaterialCardView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="24dp"-->
+<!--            app:cardCornerRadius="12dp"-->
+<!--            app:cardElevation="2dp">-->
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="vertical"-->
+<!--                android:padding="16dp">-->
+
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Personal Information"-->
+<!--                    android:textStyle="bold"-->
+<!--                    android:textSize="16sp"-->
+<!--                    android:paddingBottom="8dp" />-->
+
+<!--                &lt;!&ndash; Name field &ndash;&gt;-->
+<!--                <com.google.android.material.textfield.TextInputLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:hint="Name">-->
+
+<!--                    <com.google.android.material.textfield.TextInputEditText-->
+<!--                        android:id="@+id/input_name"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="John Doe" />-->
+<!--                </com.google.android.material.textfield.TextInputLayout>-->
+
+<!--                &lt;!&ndash; Email field &ndash;&gt;-->
+<!--                <com.google.android.material.textfield.TextInputLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:hint="Email"-->
+<!--                    android:layout_marginTop="8dp">-->
+
+<!--                    <com.google.android.material.textfield.TextInputEditText-->
+<!--                        android:id="@+id/input_email"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:inputType="textEmailAddress"-->
+<!--                        android:text="john.doe@email.com" />-->
+<!--                </com.google.android.material.textfield.TextInputLayout>-->
+
+<!--                &lt;!&ndash; Phone field &ndash;&gt;-->
+<!--                <com.google.android.material.textfield.TextInputLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:hint="Phone (Optional)"-->
+<!--                    android:layout_marginTop="8dp">-->
+
+<!--                    <com.google.android.material.textfield.TextInputEditText-->
+<!--                        android:id="@+id/input_phone"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:inputType="phone"-->
+<!--                        android:hint="+1 (555) 000-0000" />-->
+<!--                </com.google.android.material.textfield.TextInputLayout>-->
+
+<!--                &lt;!&ndash; Save button &ndash;&gt;-->
+<!--                <com.google.android.material.button.MaterialButton-->
+<!--                    android:id="@+id/btn_save_changes"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="16dp"-->
+<!--                    android:text="Save Changes" />-->
+<!--            </LinearLayout>-->
+<!--        </com.google.android.material.card.MaterialCardView>-->
+
+<!--        &lt;!&ndash; Preferences card &ndash;&gt;-->
+<!--        <com.google.android.material.card.MaterialCardView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="24dp"-->
+<!--            app:cardCornerRadius="12dp"-->
+<!--            app:cardElevation="2dp">-->
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="vertical"-->
+<!--                android:padding="16dp">-->
+
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Preferences"-->
+<!--                    android:textStyle="bold"-->
+<!--                    android:textSize="16sp"-->
+<!--                    android:paddingBottom="8dp" />-->
+
+<!--                &lt;!&ndash; Notifications toggle &ndash;&gt;-->
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="horizontal"-->
+<!--                    android:gravity="space_between|center_vertical"-->
+<!--                    android:paddingTop="8dp">-->
+
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="Notifications" />-->
+
+<!--                    <com.google.android.material.switchmaterial.SwitchMaterial-->
+<!--                        android:id="@+id/switch_notifications"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:checked="true" />-->
+<!--                </LinearLayout>-->
+
+<!--                &lt;!&ndash; Device ID display &ndash;&gt;-->
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="vertical"-->
+<!--                    android:paddingTop="8dp">-->
+
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="Device ID"-->
+<!--                        android:textStyle="bold" />-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/tv_device_id"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="ABC-123-XYZ"-->
+<!--                        android:textColor="@android:color/darker_gray" />-->
+<!--                </LinearLayout>-->
+
+<!--            </LinearLayout>-->
+<!--        </com.google.android.material.card.MaterialCardView>-->
+
+<!--    </LinearLayout>-->
+<!--</ScrollView>-->
