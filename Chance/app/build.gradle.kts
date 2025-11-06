@@ -1,3 +1,5 @@
+import org.gradle.internal.declarativedsl.parsing.main
+
 plugins {
     alias(libs.plugins.android.application)
 }
@@ -6,6 +8,9 @@ android {
     namespace = "com.example.chance"
     compileSdk = 36
 
+    sourceSets.getByName("main") {
+        res.setSrcDirs(listOf("src/main/res", "src/main/res/layout/reusables"))
+    }
     defaultConfig {
         applicationId = "com.example.chance"
         minSdk = 24
@@ -47,6 +52,7 @@ dependencies {
     implementation(libs.navigation.ui)
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.storage)
+    implementation("com.google.android.flexbox:flexbox:3.0.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
