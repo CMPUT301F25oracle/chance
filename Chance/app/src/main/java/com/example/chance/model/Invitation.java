@@ -1,5 +1,5 @@
 
-package com.example.eventlottery.model;
+package com.example.chance.model;
 
 import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.IgnoreExtraProperties;

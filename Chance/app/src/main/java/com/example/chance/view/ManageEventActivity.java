@@ -1,22 +1,12 @@
 package com.example.chance.view;
 
 import android.os.Bundle;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.chance.R;
 import com.example.chance.controller.EventController;
 import com.example.chance.controller.LotteryController;
-import com.example.chance.model.Event;
-import com.example.chance.model.Lottery;
-import com.google.android.material.button.MaterialButton;
-
-import java.util.List;
 
 /**
  * Organizer view for managing an event.
@@ -24,9 +14,6 @@ import java.util.List;
  */
 public class ManageEventActivity extends AppCompatActivity {
 
-    private TextView tvEventTitle;
-    private MaterialButton btnDrawWinners;
-    private RecyclerView recyclerViewEntrants;
     private EventController eventController;
     private LotteryController lotteryController;
     private String eventId;
@@ -34,29 +21,31 @@ public class ManageEventActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_manage_event);
 
-        tvEventTitle = findViewById(R.id.tv_manage_event_title);
-        btnDrawWinners = findViewById(R.id.btn_draw_winners);
-        recyclerViewEntrants = findViewById(R.id.recycler_manage_event);
-        recyclerViewEntrants.setLayoutManager(new LinearLayoutManager(this));
+        // TODO: Uncomment when manage event XML layout is created with proper IDs
+        // setContentView(R.layout.activity_manage_event);
 
         eventController = new EventController();
         lotteryController = new LotteryController();
 
         eventId = getIntent().getStringExtra("eventId");
-        loadEventDetails();
 
-        btnDrawWinners.setOnClickListener(v -> conductDraw());
+        Toast.makeText(this, "Manage Event - Waiting for UI layout", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Load event details when XML is ready.
+     */
     private void loadEventDetails() {
         eventController.getEvent(eventId, event -> {
-            tvEventTitle.setText(event.getName());
-            Toast.makeText(this, "Loaded event successfully", Toast.LENGTH_SHORT).show();
+            // TODO: Set event name when TextView is available
+            Toast.makeText(this, "Loaded: " + event.getName(), Toast.LENGTH_SHORT).show();
         }, e -> Toast.makeText(this, "Failed to load event", Toast.LENGTH_SHORT).show());
     }
 
+    /**
+     * Conduct lottery draw for this event.
+     */
     private void conductDraw() {
         lotteryController.createLottery(eventId,
                 doc -> {
