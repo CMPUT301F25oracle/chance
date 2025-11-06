@@ -6,6 +6,7 @@
     android:layout_height="45dp"
     app:alignItems="center"
     app:alignContent="stretch"
+    app:layout_flexShrink="0"
     android:background="@color/theme_blue"
     >
     <Space
