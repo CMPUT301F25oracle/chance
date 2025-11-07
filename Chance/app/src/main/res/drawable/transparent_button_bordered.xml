@@ -4,6 +4,6 @@
     <solid android:color="#FFFFFF" /> <!-- Background color of the button -->
     <stroke
         android:width="2dp"
-        android:colour="#FF0000" /> <!-- Border color (e.g., red) -->
+        /> <!-- Border color (e.g., red) -->
     <corners android:radius="8dp" /> <!-- Optional: Rounded corners -->
 </shape>
