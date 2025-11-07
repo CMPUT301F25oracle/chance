@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable name="label" type="String"/>
+        <variable name="hint" type="String"/>
+    </data>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_flexShrink="0">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Some Label"
+            android:text="@{label}"
+            android:textSize="@dimen/sub_sub_title_text_size"
+            >
+        </TextView>
+        <EditText
+            android:id="@+id/username_input"
+            android:layout_marginTop="5dp"
+            android:layout_width="350dp"
+            android:layout_height="30dp"
+            tools:hint="Some Hint"
+            android:hint="@{hint}"
+            android:background="@color/white"/>
+    </LinearLayout>
+</layout>
