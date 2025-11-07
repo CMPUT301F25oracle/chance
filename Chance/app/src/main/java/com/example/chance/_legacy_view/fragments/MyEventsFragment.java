@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chance.R;
-import com.example.chance.adapter.EventListAdapter;
+import com.example.chance._legacy_adapter.EventListAdapter;
 import com.example.chance.controller.FirebaseManager;
 import com.example.chance.model.Event;
 import com.google.firebase.auth.FirebaseAuth;

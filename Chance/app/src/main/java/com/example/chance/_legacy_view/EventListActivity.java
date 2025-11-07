@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chance.R;
-import com.example.chance.adapter.EventListAdapter;
+import com.example.chance._legacy_adapter.EventListAdapter;
 import com.example.chance.controller.EventController;
 import com.example.chance.model.Event;
 

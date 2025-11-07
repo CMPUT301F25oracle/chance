@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chance.R;
-import com.example.chance.adapter.NotificationAdapter;
+import com.example.chance._legacy_adapter.NotificationAdapter;
 import com.example.chance.model.NotificationItem;
 
 import java.util.ArrayList;

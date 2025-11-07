@@ -1,4 +1,4 @@
-package com.example.chance.ui.dashboard;
+package com.example.chance._legacy_ui.dashboard;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

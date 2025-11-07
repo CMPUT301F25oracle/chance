@@ -9,6 +9,7 @@ android {
     compileSdk = 36
 
 
+
     defaultConfig {
         applicationId = "com.example.chance"
         minSdk = 24
@@ -18,6 +19,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+
 
     buildTypes {
         release {
@@ -57,4 +59,10 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+}
+
+tasks.withType<JavaCompile> {
+    exclude("**/com/example/chance/_legacy_view/**")
+    exclude("**/com/example/chance/_legacy_adapter/**")
+    exclude("**/com/example/chance/_legacy_ui/**")
 }

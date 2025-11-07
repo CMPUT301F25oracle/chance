@@ -1,4 +1,4 @@
-package com.example.chance.adapter;
+package com.example.chance._legacy_adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;

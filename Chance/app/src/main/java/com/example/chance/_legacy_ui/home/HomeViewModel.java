@@ -1,4 +1,4 @@
-package com.example.chance.ui.home;
+package com.example.chance._legacy_ui.home;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

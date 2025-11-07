@@ -1,4 +1,4 @@
-package com.example.chance.adapter;
+package com.example.chance._legacy_adapter;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;

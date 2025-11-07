@@ -1,4 +1,4 @@
-package com.example.chance.ui.notifications;
+package com.example.chance._legacy_ui.notifications;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
