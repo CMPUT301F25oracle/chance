@@ -22,7 +22,6 @@
             android:textSize="@dimen/sub_title_text_size"
             android:textColor="@color/black"
             android:text="Please fill in your event information below."/>
-        <include tools:input="test" tools:hint="hello" layout="@layout/_reusable_input_labelled"/>
     </com.google.android.flexbox.FlexboxLayout>
 
     <!--endregion: event information-->

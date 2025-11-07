@@ -26,7 +26,6 @@
             android:exported="true"
             android:screenOrientation="fullSensor" />
 
-        <uses-permission android:name="android.permission.CAMERA" />
     </application>
 
 </manifest>

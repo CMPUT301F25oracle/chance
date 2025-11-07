@@ -8,9 +8,7 @@ android {
     namespace = "com.example.chance"
     compileSdk = 36
 
-    sourceSets.getByName("main") {
-        res.setSrcDirs(listOf("src/main/res"))
-    }
+
     defaultConfig {
         applicationId = "com.example.chance"
         minSdk = 24
