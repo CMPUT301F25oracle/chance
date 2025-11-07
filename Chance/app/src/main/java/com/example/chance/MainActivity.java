@@ -1,16 +1,21 @@
+
 package com.example.chance;
+
+import static android.view.View.GONE;
 
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.chance.databinding.ActivityMainBinding;
+import com.example.chance.views.Login;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,18 +25,25 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        binding = ActivityMainBinding.inflate(getLayoutInflater());
-//        setContentView(binding.getRoot());
-//
-//        BottomNavigationView navView = findViewById(R.id.nav_view);
-//        // Passing each menu ID as a set of Ids because each
-//        // menu should be considered as top level destinations.
-//        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-//                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
-//                .build();
-//        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-//        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-//        NavigationUI.setupWithNavController(binding.navView, navController);
+        // hides the default action bar
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        // we initially hide the title and navigation bars
+        // in case we're going to login screen
+        binding.getRoot().findViewById(R.id.title_bar).setVisibility(GONE);
+        binding.getRoot().findViewById(R.id.nav_bar).setVisibility(GONE);
+
+        // Load the Login fragment into the content_view container
+        if (savedInstanceState == null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.content_view, new Login());
+            transaction.commit();
+        }
     }
 
 }

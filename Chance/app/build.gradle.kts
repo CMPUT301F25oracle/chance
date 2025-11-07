@@ -42,7 +42,7 @@ dependencies {
 
     implementation("com.google.firebase:firebase-firestore:25.1.1")
     implementation("com.google.firebase:firebase-auth:23.1.0")
-    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
+    //implementation("com.journeyapps:zxing-android-embedded:4.3.0")
     implementation("com.google.zxing:core:3.5.3")
     implementation(libs.appcompat)
     implementation(libs.material)
