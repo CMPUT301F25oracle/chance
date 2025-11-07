@@ -5,13 +5,13 @@ import com.google.firebase.firestore.IgnoreExtraProperties;
 import java.util.List;
 
 @IgnoreExtraProperties
-public class Entrant {
+public class User {
 
     @DocumentId
-    private String id;
-    private String name;
+    private String username;
     private String email;
     private String phoneNumber;
+    private String password;
     private String deviceId;
     private List<String> joinedEvents;
     private List<String> selectedEvents;
@@ -20,21 +20,19 @@ public class Entrant {
     private boolean notificationsEnabled;
 
     // Required empty constructor for Firestore
-    public Entrant() {}
+    public User() {}
 
-    public Entrant(String name, String email, String deviceId) {
-        this.name = name;
+    public User(String name, String email, String deviceId) {
+        this.username = name;
         this.email = email;
         this.deviceId = deviceId;
         this.notificationsEnabled = true;
     }
 
     // --- Getters and Setters ---
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public String getUsername() { return username; }
+    public void setUsername(String name) { this.username = name; }
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
@@ -62,6 +60,14 @@ public class Entrant {
 
     @Override
     public String toString() {
-        return name + " (" + email + ")";
+        return username + " (" + email + ")";
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

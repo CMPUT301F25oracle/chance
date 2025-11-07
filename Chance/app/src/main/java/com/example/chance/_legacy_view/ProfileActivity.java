@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.chance.R;
 import com.example.chance.controller.ProfileController;
-import com.example.chance.model.Entrant;
 
 /**
  * Displays user's profile information.
@@ -34,11 +33,11 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void loadProfile() {
-        profileController.getEntrant(userId, entrant -> {
-            if (entrant != null) {
-                tvName.setText(entrant.getName());
-                tvEmail.setText(entrant.getEmail());
-                tvDeviceId.setText(entrant.getDeviceId());
+        profileController.getEntrant(userId, user -> {
+            if (user != null) {
+                tvName.setText(user.getName());
+                tvEmail.setText(user.getEmail());
+                tvDeviceId.setText(user.getDeviceId());
             }
         }, e -> Toast.makeText(this, "Failed to load profile", Toast.LENGTH_SHORT).show());
     }

@@ -8,7 +8,7 @@ import java.util.List;
  * Organizers can create, edit, and manage events.
  */
 @IgnoreExtraProperties
-public class Organizer extends Entrant {
+public class Organizer extends User {
 
     private List<String> createdEvents;   // IDs of events created by this organizer
     private String organizationName;      // optional company or host name
@@ -36,6 +36,6 @@ public class Organizer extends Entrant {
 
     @Override
     public String toString() {
-        return getName() + " (" + organizationName + ")";
+        return getUsername() + " (" + organizationName + ")";
     }
 }

@@ -13,11 +13,16 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.example.chance.R;
+import com.example.chance.controller.DataStoreManager;
+import com.example.chance.controller.FirebaseManager;
 import com.example.chance.databinding.LoginBinding;
+
+import java.util.Objects;
 
 public class Login extends Fragment {
 
     private LoginBinding binding;
+    private DataStoreManager dsm;
 
     @Nullable
     @Override
@@ -25,6 +30,7 @@ public class Login extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = LoginBinding.inflate(inflater, container, false);
+        dsm = DataStoreManager.getInstance();
         return binding.getRoot();
     }
 
@@ -32,11 +38,17 @@ public class Login extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Example: Setup login button click listener
          binding.loginButton.setOnClickListener(v -> {
-             // Validate credentials
-             // If successful, navigate to home
-             navigateToHome();
+             // first we grab the credentials
+             String username = binding.username.getText().toString();
+             String password = binding.password.getText().toString();
+             dsm.getUser(username, (user) -> {
+                 if (user != null) {
+                     if (Objects.equals(user.getUsername(), username)) {
+                         navigateToHome();
+                     }
+                 }
+             });
          });
     }
 

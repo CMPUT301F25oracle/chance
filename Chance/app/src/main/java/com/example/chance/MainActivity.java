@@ -5,6 +5,7 @@ import static android.view.View.GONE;
 
 import android.os.Bundle;
 
+import com.example.chance.controller.DataStoreManager;
 import com.example.chance.controller.FirebaseManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -30,15 +31,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // initialize our firebase connection
-        FirebaseManager.getInstance();
+        DataStoreManager.getInstance().createUser("lamersc", "me@lamersc.com");
 
-        Map<String, Object> testData = new HashMap<>();
-        testData.put("email", "me@lamersc.com");
-        testData.put("username", "lamersc");
-        testData.put("password", "p");
-        testData.put("phone_number", "1234567890");
-        
-        FirebaseManager.getInstance().addDocument("users", testData, (s) -> {}, (s) -> {});
+
 
         // hides the default action bar
         if (getSupportActionBar() != null) {
