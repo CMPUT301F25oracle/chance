@@ -19,6 +19,7 @@
         android:clipChildren="false"
         >
         <Button
+            android:id="@+id/navbar_home_button"
             android:layout_width="48dp"
             android:layout_height="48dp"
             app:backgroundTint="@color/theme_blue"
@@ -42,6 +43,7 @@
         </LinearLayout>
 
         <Button
+            android:id="@+id/navbar_profile_button"
             android:layout_width="48dp"
             android:layout_height="48dp"
             app:backgroundTint="@color/theme_blue"
