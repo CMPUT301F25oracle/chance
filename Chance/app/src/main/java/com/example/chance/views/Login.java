@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.example.chance.R;
+import com.example.chance.controller.ChanceState;
 import com.example.chance.controller.DataStoreManager;
 import com.example.chance.controller.FirebaseManager;
 import com.example.chance.databinding.LoginBinding;
@@ -44,9 +45,15 @@ public class Login extends Fragment {
              String password = binding.password.getText().toString();
              dsm.getUser(username, (user) -> {
                  if (user != null) {
-                     if (Objects.equals(user.getUsername(), username)) {
-                         navigateToHome();
+                     if (!Objects.equals(user.getUsername(), username)) {
+                         return;
                      }
+                     if (!Objects.equals(user.getPassword(), password)) {
+                         return;
+                     }
+                     // otherwise we can authenticate the user
+                     ChanceState.getInstance().setUser(user);
+                     navigateToHome();
                  }
              });
          });

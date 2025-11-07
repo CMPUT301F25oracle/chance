@@ -34,11 +34,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // initialize our firebase connection
-        DataStoreManager.getInstance().createUser("lamersc", "me@lamersc.com");
-
-
-
         // hides the default action bar
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();

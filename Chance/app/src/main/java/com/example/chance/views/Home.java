@@ -21,6 +21,7 @@ public class Home extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = HomeBinding.inflate(inflater, container, false);
+
         return binding.getRoot();
     }
 
