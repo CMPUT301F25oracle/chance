@@ -116,14 +116,21 @@
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
-                <View
+                <FrameLayout
                     android:layout_width="200dp"
                     android:layout_height="250dp"
                     android:background="@color/black"
-                    />
+                    app:layout_flexGrow="1">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="220dp"
+                        android:layout_gravity="top"
+                        android:src="@drawable/placeholder_banner"
+                        android:scaleType="centerCrop" />
+                </FrameLayout>
 
             </com.google.android.flexbox.FlexboxLayout>
-
 
                 <com.google.android.flexbox.FlexboxLayout
                     android:layout_width="wrap_content"
@@ -134,15 +141,49 @@
                     app:justifyContent="space_evenly"
                     android:orientation="horizontal">
 
-                <View
+                    <FrameLayout
+                        android:layout_width="200dp"
+                        android:layout_height="250dp"
+                        android:background="@color/black"
+                        app:layout_flexGrow="1">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="220dp"
+                            android:layout_gravity="top"
+                            android:src="@drawable/placeholder_banner"
+                            android:scaleType="centerCrop" />
+                    </FrameLayout>
+
+            </com.google.android.flexbox.FlexboxLayout>
+
+            <com.google.android.flexbox.FlexboxLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:flexWrap="wrap"
+                app:flexDirection="row"
+                android:layout_marginTop="10dp"
+                app:justifyContent="space_evenly"
+                android:orientation="horizontal">
+
+                <FrameLayout
                     android:layout_width="200dp"
-                    android:layout_height="300dp"
+                    android:layout_height="250dp"
                     android:background="@color/black"
-                    />
+                    app:layout_flexGrow="1">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="220dp"
+                        android:layout_gravity="top"
+                        android:src="@drawable/placeholder_banner"
+                        android:scaleType="centerCrop" />
+                </FrameLayout>
 
             </com.google.android.flexbox.FlexboxLayout>
 
         </com.google.android.flexbox.FlexboxLayout>
+
     </com.google.android.flexbox.FlexboxLayout>
 
     </ScrollView>
