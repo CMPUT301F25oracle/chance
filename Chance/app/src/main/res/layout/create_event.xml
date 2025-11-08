@@ -137,14 +137,12 @@
             android:layout_height="wrap_content"
             android:text="Registration Start Date"
             android:textSize="@dimen/sub_sub_title_text_size"/>
-        <EditText
+        <DatePicker
             android:id="@+id/registration_start_input"
-            android:layout_marginTop="5dp"
-            android:layout_width="350dp"
-            android:layout_height="30dp"
-            android:hint="Registration start date..."
-            android:background="@color/white"
-            android:padding="5dp"/>
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:calendarViewShown="false"
+            android:datePickerMode="spinner"/>
 
         <!-- Registration End Date -->
         <TextView
@@ -152,14 +150,12 @@
             android:layout_height="wrap_content"
             android:text="Registration End Date"
             android:textSize="@dimen/sub_sub_title_text_size"/>
-        <EditText
+        <DatePicker
             android:id="@+id/registration_end_input"
-            android:layout_marginTop="5dp"
-            android:layout_width="350dp"
-            android:layout_height="30dp"
-            android:hint="Registration end date..."
-            android:background="@color/white"
-            android:padding="5dp"/>
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:calendarViewShown="false"
+            android:datePickerMode="spinner"/>
 
         <!-- Number of Event Candidates -->
         <TextView
@@ -187,7 +183,6 @@
             android:layout_marginTop="5dp"
             android:layout_width="350dp"
             android:layout_height="30dp"
-            android:inputType="number"
             android:background="@color/white"
             android:hint="Your description..."
             android:padding="5dp"/>
@@ -208,7 +203,7 @@
             android:backgroundTint="@color/button_blue"
             android:textColor="@color/white"
             android:background="@drawable/box_rounded_corners"
-            android:text="Enter Lottery" />
+            android:text="Create Event" />
     </com.google.android.flexbox.FlexboxLayout>
 
 </com.google.android.flexbox.FlexboxLayout>

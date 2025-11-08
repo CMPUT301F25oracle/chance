@@ -23,20 +23,23 @@ public class Event {
     private double price;       // Entry fee (0 for free events)
     private String description; // Event details
     private Date date;          // Event date
-
-
-    private User eventOrganizer;
+    private Date startDate;    // Event start date
+    private Date endDate;     // Event end date
+    private String eventOrganizerName;
 
     // Required empty constructor for Firestore
     public Event() {}
 
-    public Event(String name, String location, int capacity, double price, String description, Date date) {
+    public Event(String name, String location, int capacity, double price, String description, Date startDate, Date endDate, String eventOrganizerName) {
+        this.id = eventOrganizerName + "-" + name;
         this.name = name;
         this.location = location;
         this.capacity = capacity;
         this.price = price;
         this.description = description;
-        this.date = date;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.eventOrganizerName = eventOrganizerName;
     }
 
     // --- Getters and Setters ---
@@ -57,9 +60,6 @@ public class Event {
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
-
-    public Date getDate() { return date; }
-    public void setDate(Date date) { this.date = date; }
 
     // --- Utility Methods ---
     @Exclude
@@ -83,11 +83,28 @@ public class Event {
         return name + " (" + location + ") on " + date;
     }
 
-    public User getEventOrganizer() {
-        return eventOrganizer;
+
+    public String getEventOrganizerName() {
+        return eventOrganizerName;
     }
 
-    public void setEventOrganizer(User eventOrganizer) {
-        this.eventOrganizer = eventOrganizer;
+    public void setEventOrganizerName(String eventOrganizerName) {
+        this.eventOrganizerName = eventOrganizerName;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 }

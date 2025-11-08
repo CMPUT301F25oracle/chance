@@ -46,8 +46,8 @@ public class DataStoreManager {
         }, (e)->{});
     }
 
-    public Event createEvent(String name, String location, int capacity, double price, String description, Date date) {
-        Event new_event = new Event(name, location, capacity, price, description, date);
+    public Event createEvent(String name, String location, int capacity, double price, String description, Date startDate, Date endDate, String organizerUserName) {
+        Event new_event = new Event(name, location, capacity, price, description, startDate, endDate, organizerUserName);
         db.setDocument("events", new_event.getId(), new_event, (s)->{}, (s)->{});
         return new_event;
     }
