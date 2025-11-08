@@ -8,7 +8,6 @@
     app:justifyContent="space_between"
     android:orientation="vertical"
     android:background="@color/grey">
-    <include layout="@layout/_title_bar" />
     <!--region: event information-->
     <com.google.android.flexbox.FlexboxLayout
         android:layout_width="match_parent"
@@ -71,5 +70,4 @@
     </com.google.android.flexbox.FlexboxLayout>
 
     <!--endregion: event information-->
-    <include layout="@layout/_nav_bar" />
 </com.google.android.flexbox.FlexboxLayout>

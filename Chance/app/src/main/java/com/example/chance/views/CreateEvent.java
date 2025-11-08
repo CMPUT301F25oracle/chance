@@ -11,19 +11,19 @@ import androidx.fragment.app.Fragment;
 
 import com.example.chance.R;
 import com.example.chance.controller.ChanceState;
-import com.example.chance.databinding.HomeBinding;
+import com.example.chance.databinding.CreateEventBinding;
 import com.example.chance.model.User;
 
-public class Home extends Fragment {
+public class CreateEvent extends Fragment {
 
-    private HomeBinding binding;
+    private CreateEventBinding binding;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        binding = HomeBinding.inflate(inflater, container, false);
+        binding = CreateEventBinding.inflate(inflater, container, false);
 
         return binding.getRoot();
     }
@@ -31,13 +31,7 @@ public class Home extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        User user = ChanceState.getInstance().getUser();
-        binding.homeSystemMessage.setText("Hello, " + user.getUsername());
-        binding.createEventButton.setOnClickListener(v -> {
-            requireActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content_view, new CreateEvent())
-                    .commit();
-        });
+
 
 
     }
