@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.flexbox.FlexboxLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:alignItems="flex_start"
+    app:flexDirection="column"
+    android:background="@color/grey">
+    <ImageView
+        android:id="@+id/event_banner"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:src="@drawable/placeholder_banner"
+        android:scaleType="centerCrop"
+        app:layout_flexGrow="1"/>
+    <com.google.android.flexbox.FlexboxLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:alignItems="flex_start"
+        app:flexDirection="column"
+        android:padding="30px"
+        app:layout_flexGrow="1">
+        <TextView
+            android:id="@+id/event_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/title_text_size"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:text="{Event Name}"/>
+        <TextView
+            android:id="@+id/event_information"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/title_text_size"
+            android:textColor="@color/black"
+            android:alpha="0.70"
+            android:text=
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec lorem nec justo pretium viverra vulputate in tellus. Curabitur"/>
+    </com.google.android.flexbox.FlexboxLayout>
+
+
+</com.google.android.flexbox.FlexboxLayout>

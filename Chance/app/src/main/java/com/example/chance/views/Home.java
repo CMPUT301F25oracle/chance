@@ -39,6 +39,7 @@ public class Home extends Fragment {
                     .replace(R.id.content_view, new CreateEvent())
                     .commit();
         });
+
         //endregion
 
 
