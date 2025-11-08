@@ -8,12 +8,13 @@
     app:justifyContent="space_between"
     android:orientation="vertical"
     android:background="@color/grey">
-    <!--region: event information-->
+    <!--region: event information input-->
     <com.google.android.flexbox.FlexboxLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:alignItems="flex_start"
         app:flexDirection="column"
+        app:layout_flexGrow="1"
         android:padding="30px">
         <TextView
             android:layout_width="wrap_content"
@@ -66,8 +67,10 @@
             android:layout_height="30dp"
             android:inputType="number"
             android:background="@color/white"/>
-
     </com.google.android.flexbox.FlexboxLayout>
 
     <!--endregion: event information-->
+    <!--region: event submission buttons-->
+
+    <!--endregion: event submission buttons-->
 </com.google.android.flexbox.FlexboxLayout>

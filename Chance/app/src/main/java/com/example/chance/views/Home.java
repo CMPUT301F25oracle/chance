@@ -33,11 +33,13 @@ public class Home extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         User user = ChanceState.getInstance().getUser();
         binding.homeSystemMessage.setText("Hello, " + user.getUsername());
+        //region button press handlers
         binding.createEventButton.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.content_view, new CreateEvent())
                     .commit();
         });
+        //endregion
 
 
     }

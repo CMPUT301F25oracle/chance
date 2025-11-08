@@ -17,6 +17,7 @@
         android:layout_marginTop="20dp"
         android:background="@color/white"
         android:clipChildren="false"
+        android:elevation="30dp"
         >
         <Button
             android:id="@+id/navbar_home_button"
@@ -32,6 +33,7 @@
             android:background="@drawable/box_rounded_corners"
             android:backgroundTint="@color/white"
             android:clipChildren="false"
+            android:elevation="30dp"
             >
             <Button
                 android:layout_width="65dp"
