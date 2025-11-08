@@ -23,9 +23,9 @@ import org.junit.runner.RunWith;
 
 // For the Main activity testing, the issue is when you test the class as a whole, it will fail
 // but when you test the cases individually, it will pass
-// For this problem, we will fix it during the reading week
+// For this problem, we will fix it very soon
 
-public class MainActivityNavTest {
+public class MainActivityTest {
 
     private ActivityScenario<MainActivity> scenario;
 
@@ -35,7 +35,7 @@ public class MainActivityNavTest {
     }
 
     @Test
-    public void startsWithAuthenticationFragment() {
+    public void starts_with_authentication_fragment() {
         scenario = ActivityScenario.launch(MainActivity.class);
         scenario.onActivity(activity -> {
             Fragment f = currentFragment(activity);
@@ -44,7 +44,7 @@ public class MainActivityNavTest {
     }
 
     @Test
-    public void navHomeLoadsHomeFragment() {
+    public void nav_home_loads_home_fragment() {
         scenario = ActivityScenario.launch(MainActivity.class);
         onView(withId(R.id.navbar_home_button)).perform(click());
         scenario.onActivity(activity -> {
@@ -54,7 +54,7 @@ public class MainActivityNavTest {
     }
 
     @Test
-    public void navProfileLoadsProfileFragment() {
+    public void nav_profile_loads_profile_fragment() {
         scenario = ActivityScenario.launch(MainActivity.class);
         onView(withId(R.id.navbar_profile_button)).perform(click());
         scenario.onActivity(activity -> {
