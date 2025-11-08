@@ -44,6 +44,8 @@ public class CreateEvent extends Fragment {
 
             String event_name = binding.eventNameInput.getText().toString();
             String event_address = binding.eventAddressInput.getText().toString();
+            int maximum_candidates = Integer.parseInt(binding.candidateMaximumInput.getText().toString());
+            float attendance_price = Float.parseFloat(binding.priceInput.getText().toString());
 
             DatePicker event_reg_start = binding.registrationStartInput;
             calendar.set(event_reg_start.getYear(), event_reg_start.getMonth(), event_reg_start.getDayOfMonth());
@@ -53,10 +55,9 @@ public class CreateEvent extends Fragment {
             calendar.set(event_reg_end.getYear(), event_reg_end.getMonth(), event_reg_end.getDayOfMonth());
             Date event_end_calendar = calendar.getTime();
 
-            int maximum_candidates = Integer.parseInt(binding.candidateMaximumInput.getText().toString());
             String event_description = binding.descriptionInput.getText().toString();
 
-            Event new_event = DataStoreManager.getInstance().createEvent(event_name, event_address, maximum_candidates, 0, event_description, event_start_calendar, event_end_calendar, user.getUsername());
+            Event new_event = DataStoreManager.getInstance().createEvent(event_name, event_address, maximum_candidates, attendance_price, event_description, event_start_calendar, event_end_calendar, user.getUsername());
             requireActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.content_view, new Home())
                     .commit();

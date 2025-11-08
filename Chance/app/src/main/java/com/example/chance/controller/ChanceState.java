@@ -9,7 +9,7 @@ public class ChanceState extends Application {
     private static ChanceState instance;
     private User user;
 
-    private Event loadable_event;
+    private Event loadableEvent;
 
     @Override
     public void onCreate() {
@@ -29,12 +29,12 @@ public class ChanceState extends Application {
         return user;
     }
 
-    public Event getLoadable_event() {
-        return loadable_event;
+    public Event getLoadableEvent() {
+        return loadableEvent;
     }
 
-    public void setLoadable_event(Event loadable_event) {
-        this.loadable_event = loadable_event;
+    public void setLoadableEvent(Event loadableEvent) {
+        this.loadableEvent = loadableEvent;
     }
 }
 
