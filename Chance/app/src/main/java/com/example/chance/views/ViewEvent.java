@@ -43,6 +43,8 @@ public class ViewEvent extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Event event_details = ChanceState.getInstance().getLoadableEvent();
         binding.eventName.setText(event_details.getName());
+        binding.eventInformation.setText(
+                String.format("* ? users currently in waiting list  /  $%.2f per person.\n%s", event_details.getPrice(), event_details.getLocation()));
         binding.eventOverview.setText(event_details.getDescription());
         // now we load the events unique QRCode
         Bitmap unique_qrcode;

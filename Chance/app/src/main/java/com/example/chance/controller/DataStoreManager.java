@@ -59,6 +59,18 @@ public class DataStoreManager {
         }, (e)->{});
     }
 
+    public void updateUser(String username, User updatedUser, OnSuccessListener<Void> onSuccess) {
+        db.setDocument("users", username, updatedUser, onSuccess, (e)->{});
+    }
+
+    public void deleteUser(String username, OnSuccessListener<Void> onSuccess) {
+        db.deleteDocument("users", username, (na) -> {
+            onSuccess.onSuccess(null);
+        }, (e)->{
+            throw new RuntimeException();
+        });
+    }
+
     /**
      * Create a new event in Firestore.
      * @param name

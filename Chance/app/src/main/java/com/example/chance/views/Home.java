@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -51,6 +52,8 @@ public class Home extends Fragment {
             for (Event event : events) {
                 // Inflate your event_pill.xml
                 View pill = inflater.inflate(R.layout._r_event_pill, event_container, false);
+                ((TextView) pill.findViewById(R.id.event_title)).setText(event.getName());
+                ((TextView) pill.findViewById(R.id.event_description)).setText(event.getDescription());
                 pill.setTag(event);
                 pill.setOnClickListener(v -> {
                     ChanceState.getInstance().setLoadableEvent((Event) v.getTag());

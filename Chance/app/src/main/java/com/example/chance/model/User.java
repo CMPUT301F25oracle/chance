@@ -9,6 +9,8 @@ public class User {
 
     @DocumentId
     private String username;
+
+    private String fullName;
     private String email;
     private String phoneNumber;
     private String password;
@@ -23,9 +25,9 @@ public class User {
     // Required empty constructor for Firestore
     public User() {}
 
-    public User(String name, String email, String deviceId) {
+    public User(String name, String password, String deviceId) {
         this.username = name;
-        this.email = email;
+        this.password = password;
         this.deviceId = deviceId;
         this.notificationsEnabled = true;
     }
@@ -78,5 +80,13 @@ public class User {
 
     public void setOrganizationName(String organizationName) {
         this.organizationName = organizationName;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 }
