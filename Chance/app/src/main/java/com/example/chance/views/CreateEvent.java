@@ -57,6 +57,7 @@ public class CreateEvent extends Fragment {
 
             String event_description = binding.descriptionInput.getText().toString();
 
+
             Event new_event = DataStoreManager.getInstance().createEvent(event_name, event_address, maximum_candidates, attendance_price, event_description, event_start_calendar, event_end_calendar, user.getUsername());
             requireActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.content_view, new Home())

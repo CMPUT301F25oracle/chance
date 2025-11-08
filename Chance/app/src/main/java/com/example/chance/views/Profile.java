@@ -86,6 +86,24 @@ public class Profile extends Fragment {
                 dsm.updateUser(user.getUsername(), user, (v) -> {});
             }
         });
+        binding.phoneInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                // nothing needed here for now
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // nothing needed here for now
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String new_phone_number = binding.phoneInput.getText().toString();
+                user.setPhoneNumber(new_phone_number);
+                dsm.updateUser(user.getUsername(), user, (v) -> {});
+            }
+        });
 
         binding.deleteAccountButton.setOnClickListener(v -> {
             // we redefine to make sure the newest instance is obtained
