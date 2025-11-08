@@ -4,6 +4,7 @@ import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -15,23 +16,24 @@ import java.util.Objects;
 public class Event {
 
     @DocumentId
-    private String id;          // Firestore document ID
+    private String eventId;          // Firestore document ID
 
     private String name;        // Event name
     private String location;    // Venue or online link
     private int capacity;       // Max entrants
     private double price;       // Entry fee (0 for free events)
     private String description; // Event details
-    private Date date;          // Event date
     private Date startDate;    // Event start date
     private Date endDate;     // Event end date
     private String eventOrganizerName;
+
+    private List<String> waitingList;
 
     // Required empty constructor for Firestore
     public Event() {}
 
     public Event(String name, String location, int capacity, double price, String description, Date startDate, Date endDate, String eventOrganizerName) {
-        this.id = eventOrganizerName + "-" + name;
+        this.eventId = eventOrganizerName + "-" + name;
         this.name = name;
         this.location = location;
         this.capacity = capacity;
@@ -43,8 +45,8 @@ public class Event {
     }
 
     // --- Getters and Setters ---
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public String getId() { return eventId; }
+    public void setId(String id) { this.eventId = id; }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
@@ -72,15 +74,15 @@ public class Event {
         if (this == o) return true;
         if (!(o instanceof Event)) return false;
         Event event = (Event) o;
-        return Objects.equals(id, event.id);
+        return Objects.equals(eventId, event.eventId);
     }
 
     @Override
-    public int hashCode() { return Objects.hash(id); }
+    public int hashCode() { return Objects.hash(eventId); }
 
     @Override
     public String toString() {
-        return name + " (" + location + ") on " + date;
+        return name + " (" + location + ") on ?";
     }
 
 
@@ -107,4 +109,17 @@ public class Event {
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
+
+    public List<String> getWaitingList() {
+        return waitingList;
+    }
+
+    public void setWaitingList(String userId) {
+        waitingList.add(userId);
+    }
+
+    public void leaveWaitingList(String userId) {
+        waitingList.remove(userId);
+    }
+
 }

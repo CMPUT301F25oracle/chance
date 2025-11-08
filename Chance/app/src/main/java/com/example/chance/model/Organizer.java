@@ -1,5 +1,6 @@
 package com.example.chance.model;
 
+import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import java.util.List;
 @IgnoreExtraProperties
 public class Organizer extends User {
 
+    @DocumentId
     private List<String> createdEvents;   // IDs of events created by this organizer
     private String organizationName;      // optional company or host name
     private String bio;                   // short description or tagline
