@@ -32,6 +32,7 @@ public class Home extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         User user = ChanceState.getInstance().getUser();
         binding.homeSystemMessage.setText("Hello, " + user.getUsername());
+        binding.
 
 
     }

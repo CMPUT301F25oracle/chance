@@ -1,5 +1,6 @@
 package com.example.chance.views;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,10 +12,10 @@ import androidx.fragment.app.Fragment;
 
 import com.example.chance.controller.ChanceState;
 import com.example.chance.controller.DataStoreManager;
-import com.example.chance.databinding.LoginBinding;
 import com.example.chance.databinding.ProfileBinding;
 import com.example.chance.model.User;
 
+import java.net.URI;
 import java.util.Objects;
 
 
@@ -37,6 +38,7 @@ public class Profile extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         // now we load the users information from chance state
         User user = ChanceState.getInstance().getUser();
+        // binding.profileImage.setImageURI(pfp_uri);
         binding.usernameInput.setText(user.getUsername());
         binding.fullnameInput.setText("---TBA---");
         binding.emailInput.setText(user.getEmail());

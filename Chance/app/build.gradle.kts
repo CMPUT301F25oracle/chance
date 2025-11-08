@@ -48,6 +48,7 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     //implementation("com.journeyapps:zxing-android-embedded:4.3.0")
     implementation("com.google.zxing:core:3.5.3")
+    implementation("com.github.bumptech.glide:glide:5.0.5")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)

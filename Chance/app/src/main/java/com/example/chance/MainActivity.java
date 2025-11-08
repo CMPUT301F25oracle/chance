@@ -6,25 +6,14 @@ import static android.view.View.GONE;
 import android.os.Bundle;
 import android.view.View;
 
-import com.example.chance.controller.DataStoreManager;
-import com.example.chance.controller.FirebaseManager;
 import com.example.chance.views.Home;
 import com.example.chance.views.Profile;
-import com.google.android.flexbox.FlexboxLayout;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
 import com.example.chance.databinding.ActivityMainBinding;
-import com.example.chance.views.Login;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.example.chance.views.Authentication;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -50,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         // Load the Login fragment into the content_view container
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.content_view, new Login());
+            transaction.replace(R.id.content_view, new Authentication());
             transaction.commit();
         }
         

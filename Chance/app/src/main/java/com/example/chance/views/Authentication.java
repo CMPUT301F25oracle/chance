@@ -10,19 +10,18 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 
 import com.example.chance.R;
 import com.example.chance.controller.ChanceState;
 import com.example.chance.controller.DataStoreManager;
-import com.example.chance.controller.FirebaseManager;
-import com.example.chance.databinding.LoginBinding;
+import com.example.chance.databinding.AuthenticationBinding;
+import com.example.chance.model.User;
 
 import java.util.Objects;
 
-public class Login extends Fragment {
+public class Authentication extends Fragment {
 
-    private LoginBinding binding;
+    private AuthenticationBinding binding;
     private DataStoreManager dsm;
 
     @Nullable
@@ -30,7 +29,7 @@ public class Login extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        binding = LoginBinding.inflate(inflater, container, false);
+        binding = AuthenticationBinding.inflate(inflater, container, false);
         dsm = DataStoreManager.getInstance();
         return binding.getRoot();
     }
@@ -38,6 +37,20 @@ public class Login extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        binding.signUpButton.setOnClickListener(v -> {
+            String username = binding.username.getText().toString();
+            String password = binding.password.getText().toString();
+            dsm.getUser(username, (user) -> {
+                if (user != null) {
+                    return;
+                } else {
+                    User new_user = dsm.createUser(username, password);
+                    ChanceState.getInstance().setUser(new_user);
+                    navigateToHome();
+                }
+            });
+        });
 
          binding.loginButton.setOnClickListener(v -> {
              // first we grab the credentials

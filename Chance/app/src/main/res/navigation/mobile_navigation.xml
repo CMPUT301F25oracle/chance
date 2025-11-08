@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/navigation_login"
-        android:name="com.example.chance.views.Login"
+        android:name="com.example.chance.views.Authentication"
         android:label="Login"
-        tools:layout="@layout/login" />
+        tools:layout="@layout/authentication" />
 
     <fragment
         android:id="@+id/navigation_home"
