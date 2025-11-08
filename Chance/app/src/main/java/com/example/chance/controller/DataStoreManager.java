@@ -2,6 +2,7 @@ package com.example.chance.controller;
 
 import com.example.chance.model.Event;
 import com.example.chance.model.User;
+import com.example.chance.model.WaitingList;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -64,12 +65,24 @@ public class DataStoreManager {
     }
 
     public void deleteUser(String username, OnSuccessListener<Void> onSuccess) {
-        db.deleteDocument("users", username, (na) -> {
+        db.deleteDocument("users", username, (___na) -> {
             onSuccess.onSuccess(null);
         }, (e)->{
             throw new RuntimeException();
         });
     }
+
+
+    public void joinWaitingList(Event event, String entrantId, OnSuccessListener<Void> onSuccess) {
+        event.setWaitingList(entrantId);
+        db.setDocument("events", event.getId(), event, onSuccess, (e)->{});
+    }
+
+    public void leaveWaitingList(Event event, String entrantId, OnSuccessListener<Void> onSuccess) {
+        event.leaveWaitingList(entrantId);
+        db.setDocument("events", event.getId(), event, onSuccess, (e)->{});
+    }
+
 
     /**
      * Create a new event in Firestore.
