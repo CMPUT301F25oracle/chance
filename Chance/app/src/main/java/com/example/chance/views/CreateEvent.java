@@ -9,7 +9,9 @@ import android.widget.DatePicker;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.example.chance.ChanceViewModel;
 import com.example.chance.R;
 import com.example.chance.controller.ChanceState;
 import com.example.chance.controller.DataStoreManager;
@@ -23,6 +25,7 @@ import java.util.Date;
 public class CreateEvent extends Fragment {
 
     private CreateEventBinding binding;
+    private ChanceViewModel cvm;
 
     @Nullable
     @Override
@@ -30,7 +33,7 @@ public class CreateEvent extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = CreateEventBinding.inflate(inflater, container, false);
-
+        cvm = new ViewModelProvider(requireActivity()).get(ChanceViewModel.class);
         return binding.getRoot();
     }
 
@@ -59,9 +62,7 @@ public class CreateEvent extends Fragment {
 
 
             Event new_event = DataStoreManager.getInstance().createEvent(event_name, event_address, maximum_candidates, attendance_price, event_description, event_start_calendar, event_end_calendar, user.getUsername());
-            requireActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content_view, new Home())
-                    .commit();
+            cvm.setNewFragment(Home.class);
         });
 
 
