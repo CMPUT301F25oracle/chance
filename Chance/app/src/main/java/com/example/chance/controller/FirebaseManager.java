@@ -85,6 +85,12 @@ public class FirebaseManager {
                 .addOnFailureListener(onFailure);
     }
 
+    public void getCollection(String collectionName, OnSuccessListener<QuerySnapshot> onSuccess, OnFailureListener onFailure) {
+        db.collection(collectionName)
+                .get()
+                .addOnSuccessListener(onSuccess)
+                .addOnFailureListener(onFailure);
+    }
     /**
      * Delete a document from Firestore.
      */
