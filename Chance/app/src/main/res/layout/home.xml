@@ -9,6 +9,11 @@
     app:justifyContent="space_between"
     android:background="@color/grey">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
     <com.google.android.flexbox.FlexboxLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -103,13 +108,11 @@
                     />
             </com.google.android.flexbox.FlexboxLayout>
 
-
             <com.google.android.flexbox.FlexboxLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:flexWrap="wrap"
                 app:flexDirection="row"
-                app:justifyContent="space_evenly"
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
@@ -119,15 +122,29 @@
                     android:background="@color/black"
                     />
 
+            </com.google.android.flexbox.FlexboxLayout>
+
+
+                <com.google.android.flexbox.FlexboxLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:flexWrap="wrap"
+                    app:flexDirection="row"
+                    android:layout_marginTop="10dp"
+                    app:justifyContent="space_evenly"
+                    android:orientation="horizontal">
+
                 <View
                     android:layout_width="200dp"
                     android:layout_height="300dp"
                     android:background="@color/black"
                     />
+
             </com.google.android.flexbox.FlexboxLayout>
 
         </com.google.android.flexbox.FlexboxLayout>
     </com.google.android.flexbox.FlexboxLayout>
 
+    </ScrollView>
 
 </com.google.android.flexbox.FlexboxLayout>
