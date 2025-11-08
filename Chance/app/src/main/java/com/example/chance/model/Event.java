@@ -24,6 +24,7 @@ public class Event {
     private String description; // Event details
     private Date date;          // Event date
 
+
     private User eventOrganizer;
 
     // Required empty constructor for Firestore

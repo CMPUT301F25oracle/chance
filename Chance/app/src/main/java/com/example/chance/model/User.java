@@ -18,6 +18,7 @@ public class User {
     private List<String> waitingListEvents;
     private String profileImageUrl;
     private boolean notificationsEnabled;
+    private String organizationName;
 
     // Required empty constructor for Firestore
     public User() {}
@@ -69,5 +70,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getOrganizationName() {
+        return organizationName;
+    }
+
+    public void setOrganizationName(String organizationName) {
+        this.organizationName = organizationName;
     }
 }

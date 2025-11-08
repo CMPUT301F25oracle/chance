@@ -1,10 +1,13 @@
 package com.example.chance.controller;
 
+import com.example.chance.model.Event;
 import com.example.chance.model.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Date;
 
 public class DataStoreManager {
     private static DataStoreManager instance;
@@ -37,6 +40,23 @@ public class DataStoreManager {
             if (doc.exists()) {
                 User user = doc.toObject(User.class);
                 onSuccess.onSuccess(user);
+            } else {
+                onSuccess.onSuccess(null);
+            }
+        }, (e)->{});
+    }
+
+    public Event createEvent(String name, String location, int capacity, double price, String description, Date date) {
+        Event new_event = new Event(name, location, capacity, price, description, date);
+        db.setDocument("events", new_event.getId(), new_event, (s)->{}, (s)->{});
+        return new_event;
+    }
+
+    public void getEvent(String id, OnSuccessListener<Event> onSuccess) {
+        db.getDocument("events", id, (doc) -> {
+            if (doc.exists()) {
+                Event event = doc.toObject(Event.class);
+                onSuccess.onSuccess(event);
             } else {
                 onSuccess.onSuccess(null);
             }

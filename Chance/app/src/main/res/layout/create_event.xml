@@ -176,6 +176,21 @@
             android:background="@color/white"
             android:hint="Number of candidates..."
             android:padding="5dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Event Description"
+            android:textSize="@dimen/sub_sub_title_text_size"/>
+        <EditText
+            android:id="@+id/description_input"
+            android:layout_marginTop="5dp"
+            android:layout_width="350dp"
+            android:layout_height="30dp"
+            android:inputType="number"
+            android:background="@color/white"
+            android:hint="Your description..."
+            android:padding="5dp"/>
     </com.google.android.flexbox.FlexboxLayout>
     <!--endregion: event information-->
     <com.google.android.flexbox.FlexboxLayout

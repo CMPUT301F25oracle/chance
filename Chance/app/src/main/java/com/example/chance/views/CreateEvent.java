@@ -11,7 +11,9 @@ import androidx.fragment.app.Fragment;
 
 import com.example.chance.R;
 import com.example.chance.controller.ChanceState;
+import com.example.chance.controller.DataStoreManager;
 import com.example.chance.databinding.CreateEventBinding;
+import com.example.chance.model.Event;
 import com.example.chance.model.User;
 
 public class CreateEvent extends Fragment {
@@ -39,6 +41,9 @@ public class CreateEvent extends Fragment {
             String event_registration_start = binding.registrationStartInput.getText().toString();
             String event_registration_end = binding.registrationEndInput.getText().toString();
             int maximum_candidates = Integer.parseInt(binding.candidateMaximumInput.getText().toString());
+            String event_description = binding.descriptionInput.getText().toString();
+
+            Event new_event = DataStoreManager.getInstance().createEvent(event_name, event_address, maximum_candidates, 0, event_description, null);
 
         });
 
