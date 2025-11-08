@@ -72,7 +72,18 @@
                 android:textColor="@color/black"
                 android:text="Login"/>
         </LinearLayout>
-
+        <Space
+            android:layout_width="20px"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/error_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/common_text_size"
+            android:text="N/A"
+            android:fontFamily="@font/abc_marfa_regular"
+            android:visibility="invisible"
+            android:textColor="@color/button_red"/>
     </com.google.android.flexbox.FlexboxLayout>
 
 

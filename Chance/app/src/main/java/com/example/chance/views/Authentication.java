@@ -43,7 +43,9 @@ public class Authentication extends Fragment {
             String password = binding.password.getText().toString();
             dsm.getUser(username, (user) -> {
                 if (user != null) {
-                    return;
+                    binding.errorMessage.setVisibility(VISIBLE);
+                    binding.errorMessage.setText("Account username already taken");
+
                 } else {
                     User new_user = dsm.createUser(username, password);
                     ChanceState.getInstance().setUser(new_user);
@@ -57,14 +59,10 @@ public class Authentication extends Fragment {
              String username = binding.username.getText().toString();
              String password = binding.password.getText().toString();
              dsm.getUser(username, (user) -> {
-                 if (user != null) {
-                     if (!Objects.equals(user.getUsername(), username)) {
-                         return;
-                     }
-                     if (!Objects.equals(user.getPassword(), password)) {
-                         return;
-                     }
-                     // otherwise we can authenticate the user
+                 if (user == null || !Objects.equals(user.getPassword(), password)) {
+                     binding.errorMessage.setVisibility(VISIBLE);
+                     binding.errorMessage.setText("Username or Password was invalid");
+                 } else {
                      ChanceState.getInstance().setUser(user);
                      navigateToHome();
                  }

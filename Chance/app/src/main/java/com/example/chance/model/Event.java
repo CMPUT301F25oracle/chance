@@ -24,6 +24,8 @@ public class Event {
     private String description; // Event details
     private Date date;          // Event date
 
+    private User eventOrganizer;
+
     // Required empty constructor for Firestore
     public Event() {}
 
@@ -78,5 +80,13 @@ public class Event {
     @Override
     public String toString() {
         return name + " (" + location + ") on " + date;
+    }
+
+    public User getEventOrganizer() {
+        return eventOrganizer;
+    }
+
+    public void setEventOrganizer(User eventOrganizer) {
+        this.eventOrganizer = eventOrganizer;
     }
 }

@@ -1,3 +1,80 @@
+<!--<com.google.android.flexbox.FlexboxLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    app:alignItems="flex_start"-->
+<!--    app:flexDirection="column"-->
+<!--    app:justifyContent="space_between"-->
+<!--    android:orientation="vertical"-->
+<!--    android:background="@color/grey">-->
+<!--    &lt;!&ndash;region: event information input&ndash;&gt;-->
+<!--    <com.google.android.flexbox.FlexboxLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        app:alignItems="flex_start"-->
+<!--        app:flexDirection="column"-->
+<!--        app:layout_flexGrow="1"-->
+<!--        android:padding="30px">-->
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textSize="@dimen/sub_title_text_size"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:text="Please fill in your event information below."/>-->
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Event Name"-->
+<!--            android:textSize="@dimen/sub_sub_title_text_size"-->
+<!--            >-->
+<!--        </TextView>-->
+<!--        <EditText-->
+<!--            android:id="@+id/username_input"-->
+<!--            android:layout_marginTop="5dp"-->
+<!--            android:layout_width="350dp"-->
+<!--            android:layout_height="30dp"-->
+<!--            android:hint="Your event name..."-->
+<!--            android:background="@color/white"/>-->
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Event Address"-->
+<!--            android:textSize="@dimen/sub_sub_title_text_size"-->
+<!--            >-->
+<!--        </TextView>-->
+<!--        <EditText-->
+<!--            android:id="@+id/address_input"-->
+<!--            android:layout_marginTop="5dp"-->
+<!--            android:layout_width="350dp"-->
+<!--            android:layout_height="30dp"-->
+<!--            android:hint="Your address..."-->
+<!--            android:background="@color/white"/>-->
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Number of Event Candidates"-->
+<!--            android:textSize="@dimen/sub_sub_title_text_size"-->
+<!--            >-->
+<!--        </TextView>-->
+<!--        <EditText-->
+<!--            android:id="@+id/candidate_maximum_input"-->
+<!--            android:layout_marginTop="5dp"-->
+<!--            android:layout_width="350dp"-->
+<!--            android:layout_height="30dp"-->
+<!--            android:inputType="number"-->
+<!--            android:background="@color/white"/>-->
+<!--    </com.google.android.flexbox.FlexboxLayout>-->
+
+<!--    &lt;!&ndash;endregion: event information&ndash;&gt;-->
+<!--    &lt;!&ndash;region: event submission buttons&ndash;&gt;-->
+
+<!--    &lt;!&ndash;endregion: event submission buttons&ndash;&gt;-->
+<!--</com.google.android.flexbox.FlexboxLayout>-->
+
 <com.google.android.flexbox.FlexboxLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -5,9 +82,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     app:alignItems="flex_start"
     app:flexDirection="column"
-    app:justifyContent="space_between"
     android:orientation="vertical"
     android:background="@color/grey">
+
     <!--region: event information input-->
     <com.google.android.flexbox.FlexboxLayout
         android:layout_width="match_parent"
@@ -16,6 +93,7 @@
         app:flexDirection="column"
         app:layout_flexGrow="1"
         android:padding="30px">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -23,54 +101,99 @@
             android:textColor="@color/black"
             android:text="Please fill in your event information below."/>
 
+        <!-- Event Name -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Event Name"
-            android:textSize="@dimen/sub_sub_title_text_size"
-            >
-        </TextView>
+            android:textSize="@dimen/sub_sub_title_text_size"/>
         <EditText
-            android:id="@+id/username_input"
+            android:id="@+id/event_name_input"
             android:layout_marginTop="5dp"
             android:layout_width="350dp"
             android:layout_height="30dp"
             android:hint="Your event name..."
-            android:background="@color/white"/>
+            android:background="@color/white"
+            android:padding="5dp"/>
 
+        <!-- Event Address -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Event Address"
-            android:textSize="@dimen/sub_sub_title_text_size"
-            >
-        </TextView>
+            android:textSize="@dimen/sub_sub_title_text_size"/>
         <EditText
-            android:id="@+id/address_input"
+            android:id="@+id/event_address_input"
             android:layout_marginTop="5dp"
             android:layout_width="350dp"
             android:layout_height="30dp"
             android:hint="Your address..."
-            android:background="@color/white"/>
+            android:background="@color/white"
+            android:padding="5dp"/>
 
+        <!-- Registration Start Date -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Registration Start Date"
+            android:textSize="@dimen/sub_sub_title_text_size"/>
+        <EditText
+            android:id="@+id/registration_start_input"
+            android:layout_marginTop="5dp"
+            android:layout_width="350dp"
+            android:layout_height="30dp"
+            android:hint="Registration start date..."
+            android:background="@color/white"
+            android:padding="5dp"/>
+
+        <!-- Registration End Date -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Registration End Date"
+            android:textSize="@dimen/sub_sub_title_text_size"/>
+        <EditText
+            android:id="@+id/registration_end_input"
+            android:layout_marginTop="5dp"
+            android:layout_width="350dp"
+            android:layout_height="30dp"
+            android:hint="Registration end date..."
+            android:background="@color/white"
+            android:padding="5dp"/>
+
+        <!-- Number of Event Candidates -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Number of Event Candidates"
-            android:textSize="@dimen/sub_sub_title_text_size"
-            >
-        </TextView>
+            android:textSize="@dimen/sub_sub_title_text_size"/>
         <EditText
             android:id="@+id/candidate_maximum_input"
             android:layout_marginTop="5dp"
             android:layout_width="350dp"
             android:layout_height="30dp"
             android:inputType="number"
-            android:background="@color/white"/>
+            android:background="@color/white"
+            android:hint="Number of candidates..."
+            android:padding="5dp"/>
+    </com.google.android.flexbox.FlexboxLayout>
+    <!--endregion: event information-->
+    <com.google.android.flexbox.FlexboxLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:alignContent="flex_end"
+        app:alignItems="flex_end"
+        app:flexDirection="column"
+        android:paddingHorizontal="25px"
+        app:layout_flexShrink="0">
+        <Button
+            android:id="@+id/submit_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/button_blue"
+            android:textColor="@color/white"
+            android:background="@drawable/box_rounded_corners"
+            android:text="Enter Lottery" />
     </com.google.android.flexbox.FlexboxLayout>
 
-    <!--endregion: event information-->
-    <!--region: event submission buttons-->
-
-    <!--endregion: event submission buttons-->
 </com.google.android.flexbox.FlexboxLayout>

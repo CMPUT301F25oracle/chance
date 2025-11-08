@@ -31,6 +31,16 @@ public class CreateEvent extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        User user = ChanceState.getInstance().getUser();
+
+        binding.submitButton.setOnClickListener(v -> {
+            String event_name = binding.eventNameInput.getText().toString();
+            String event_address = binding.eventAddressInput.getText().toString();
+            String event_registration_start = binding.registrationStartInput.getText().toString();
+            String event_registration_end = binding.registrationEndInput.getText().toString();
+            int maximum_candidates = Integer.parseInt(binding.candidateMaximumInput.getText().toString());
+
+        });
 
 
 

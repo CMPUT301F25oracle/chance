@@ -29,6 +29,10 @@ public class DataStoreManager {
     }
     // TODO: make WAYYYYY more secure.
     public void getUser(String username, OnSuccessListener<User> onSuccess) {
+        if (username.isEmpty()) {
+            onSuccess.onSuccess(null);
+            return;
+        }
         db.getDocument("users", username, (doc) -> {
             if (doc.exists()) {
                 User user = doc.toObject(User.class);
