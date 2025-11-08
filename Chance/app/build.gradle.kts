@@ -45,7 +45,7 @@ android {
 
 dependencies {
 
-
+    implementation(files("/Users/lamersc/Library/Android/sdk/platforms/android-36/android.jar"))
     testImplementation("org.mockito:mockito-core:5.11.0")
 
     testImplementation("org.mockito:mockito-inline:5.2.0")
