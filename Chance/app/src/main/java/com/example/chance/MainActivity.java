@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
             transaction.commit();
         });
 
+        
 
 //        FlexboxLayout navView = binding.getRoot().findViewById(R.id.nav_bar);
 //
