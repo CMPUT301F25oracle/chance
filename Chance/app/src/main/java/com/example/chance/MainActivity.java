@@ -11,13 +11,16 @@ import com.example.chance.views.Profile;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.chance.databinding.ActivityMainBinding;
 import com.example.chance.views.Authentication;
+import com.example.chance.ChanceViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+    private ChanceViewModel chanceViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +48,25 @@ public class MainActivity extends AppCompatActivity {
         
         // Set up bottom navigation
         setupNavBar();
+
+        //region: viewmodel callbacks
+        chanceViewModel = new ViewModelProvider(this).get(ChanceViewModel.class);
+
+        chanceViewModel.getNewFragment().observe(this, fragmentClass -> {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            try {
+                transaction.replace(R.id.content_view, fragmentClass.newInstance());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            transaction.commit();
+        });
+        chanceViewModel.getNavBarVisible().observe(this, visible -> {
+            int visibility = visible ? View.VISIBLE : View.GONE;
+            binding.getRoot().findViewById(R.id.title_bar).setVisibility(visibility);
+            binding.getRoot().findViewById(R.id.nav_bar).setVisibility(visibility);
+        });
+        //endregion: viewmodel callbacks
     }
     
     private void setupNavBar() {

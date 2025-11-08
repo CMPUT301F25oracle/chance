@@ -10,7 +10,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.example.chance.ChanceViewModel;
 import com.example.chance.R;
 import com.example.chance.controller.ChanceState;
 import com.example.chance.controller.DataStoreManager;
@@ -23,6 +25,7 @@ public class Authentication extends Fragment {
 
     private AuthenticationBinding binding;
     private DataStoreManager dsm;
+    private ChanceViewModel cvm;
 
     @Nullable
     @Override
@@ -31,6 +34,7 @@ public class Authentication extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding = AuthenticationBinding.inflate(inflater, container, false);
         dsm = DataStoreManager.getInstance();
+        cvm = new ViewModelProvider(requireActivity()).get(ChanceViewModel.class);
         return binding.getRoot();
     }
 
@@ -71,13 +75,8 @@ public class Authentication extends Fragment {
     }
 
     private void navigateToHome() {
-        // we're logged in / signed up now, so we can show title and nav bar again
-        requireActivity().findViewById(R.id.title_bar).setVisibility(VISIBLE);
-        requireActivity().findViewById(R.id.nav_bar).setVisibility(VISIBLE);
-        // Replace Login fragment with Home fragment
-        requireActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content_view, new Home())
-                .commit();
+        cvm.setNewFragment(Home.class);
+        cvm.setNavBarVisible(true);
     }
 
     @Override
