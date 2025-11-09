@@ -16,6 +16,8 @@ public class Organizer extends User {
     private String organizationName;      // optional company or host name
     private String bio;                   // short description or tagline
 
+    private Event event;
+
     // Required empty constructor for Firestore
     public Organizer() {
         super();
