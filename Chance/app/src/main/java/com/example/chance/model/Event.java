@@ -29,6 +29,8 @@ public class Event {
 
     private List<String> waitingList;
 
+    private List<String> invitationList;
+
     // Required empty constructor for Firestore
     public Event() {}
 
@@ -119,6 +121,18 @@ public class Event {
     }
 
     public void leaveWaitingList(String userId) {
+        waitingList.remove(userId);
+    }
+
+    public List<String> getInvitationList() {
+        return invitationList;
+    }
+
+    public void acceptInvitation(String userId) {
+        invitationList.add(userId);
+    }
+
+    public void rejectInvitation(String userId) {
         waitingList.remove(userId);
     }
 

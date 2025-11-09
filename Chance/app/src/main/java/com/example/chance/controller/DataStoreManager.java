@@ -2,11 +2,7 @@ package com.example.chance.controller;
 
 import com.example.chance.model.Event;
 import com.example.chance.model.User;
-import com.example.chance.model.WaitingList;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Date;
 import java.util.List;
@@ -80,6 +76,16 @@ public class DataStoreManager {
 
     public void leaveWaitingList(Event event, String entrantId, OnSuccessListener<Void> onSuccess) {
         event.leaveWaitingList(entrantId);
+        db.setDocument("events", event.getId(), event, onSuccess, (e)->{});
+    }
+
+    public void acceptInvitation(Event event, String entrantId, OnSuccessListener<Void> onSuccess) {
+        event.acceptInvitation(entrantId);
+        db.setDocument("events", event.getId(), event, onSuccess, (e)->{});
+    }
+
+    public void rejectInvitation(Event event, String entrantId, OnSuccessListener<Void> onSuccess) {
+        event.rejectInvitation(entrantId);
         db.setDocument("events", event.getId(), event, onSuccess, (e)->{});
     }
 
