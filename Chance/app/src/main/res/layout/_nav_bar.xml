@@ -1,12 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="88dp"
     app:layout_flexShrink="0"
     android:clipChildren="false"
+    android:clipToPadding="false"
+    android:layout_marginTop="-20dp"
     >
+    <!--region: navbar shadow-->
+    <!--
+    NOTE: the way the background shadow is done is by using a duplicate
+    of the navbar background.
+
+    ALSO NOTE: the preview of the navbar is not accurate, as the margin
+    had to be adjusted to allow other views to be occulated by the navbar.
+    -->
+    <com.google.android.flexbox.FlexboxLayout
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        app:alignItems="center"
+        app:alignContent="stretch"
+        app:justifyContent="space_evenly"
+        app:flexDirection="row"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/navbar_shadow_gradient_unrounded"
+        android:clipChildren="false"
+        android:elevation="30dp"
+        android:translationY="-3dp"
+        >
+        <LinearLayout
+            android:layout_width="109dp"
+            android:layout_height="90dp"
+            android:gravity="center"
+            android:background="@drawable/navbar_shadow_gradient_rounded"
+            android:clipChildren="false"
+            android:elevation="30dp"
+            />
+    </com.google.android.flexbox.FlexboxLayout>
+
+    <!--endregion-->
     <com.google.android.flexbox.FlexboxLayout
         android:layout_width="match_parent"
         android:layout_height="68dp"
@@ -53,4 +87,4 @@
             android:background="@drawable/navbar_profile"/>
 
     </com.google.android.flexbox.FlexboxLayout>
-</RelativeLayout>
+</FrameLayout>
