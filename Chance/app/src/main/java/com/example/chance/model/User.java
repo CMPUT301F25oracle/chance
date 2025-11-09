@@ -32,33 +32,113 @@ public class User {
         this.notificationsEnabled = true;
     }
 
-    // --- Getters and Setters ---
 
+    /**
+     * grabs the username
+     * @return
+     */
     public String getUsername() { return username; }
+
+    /**
+     * sets a new username
+     * @param name
+     */
     public void setUsername(String name) { this.username = name; }
 
+    /**
+     * grabs the users email
+     * @return
+     */
     public String getEmail() { return email; }
+
+    /**
+     * sets a new email
+     * @param email
+     */
     public void setEmail(String email) { this.email = email; }
 
+    /**
+     * grabs the users phone number
+     * @return
+     */
     public String getPhoneNumber() { return phoneNumber; }
+
+    /**
+     * sets a new phone number
+     * @param phoneNumber
+     */
     public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
 
+    /**
+     * grabs the users device id
+     * @return
+     */
     public String getDeviceId() { return deviceId; }
+
+    /**
+     * sets the current devices id
+     * @param deviceId
+     */
     public void setDeviceId(String deviceId) { this.deviceId = deviceId; }
 
+    /**
+     * gets events the user has joined
+     * @return
+     */
     public List<String> getJoinedEvents() { return joinedEvents; }
+
+    /**
+     * replaces joined events list with a new list
+     * @param joinedEvents
+     */
     public void setJoinedEvents(List<String> joinedEvents) { this.joinedEvents = joinedEvents; }
 
+    /**
+     * gets events the user was selected for
+     * @return
+     */
     public List<String> getSelectedEvents() { return selectedEvents; }
+
+    /**
+     * replaces selected events list with a new list
+     * @param selectedEvents
+     */
     public void setSelectedEvents(List<String> selectedEvents) { this.selectedEvents = selectedEvents; }
 
+    /**
+     * gets events the user is waiting to hear back from
+     * @return
+     */
     public List<String> getWaitingListEvents() { return waitingListEvents; }
+
+    /**
+     * replaces the events the user is waiting to hear back from with a new list
+     * @param waitingListEvents
+     */
     public void setWaitingListEvents(List<String> waitingListEvents) { this.waitingListEvents = waitingListEvents; }
 
+    /**
+     * gets the user profile photo
+     * @return
+     */
     public String getProfileImageUrl() { return profileImageUrl; }
+
+    /**
+     * sets the user profile photo
+     * @param profileImageUrl
+     */
     public void setProfileImageUrl(String profileImageUrl) { this.profileImageUrl = profileImageUrl; }
 
+    /**
+     * returns if the user has notifications enabled
+     * @return
+     */
     public boolean isNotificationsEnabled() { return notificationsEnabled; }
+
+    /**
+     * sets the users notifcations preference
+     * @param notificationsEnabled
+     */
     public void setNotificationsEnabled(boolean notificationsEnabled) { this.notificationsEnabled = notificationsEnabled; }
 
     @Override
@@ -66,26 +146,50 @@ public class User {
         return username + " (" + email + ")";
     }
 
+    /**
+     * FIXME: MAKE MORE SECURE
+     * @return
+     */
     public String getPassword() {
         return password;
     }
 
+    /**
+     * @FIXME: MAKE MORE SECURE
+     * @param password
+     */
     public void setPassword(String password) {
         this.password = password;
     }
 
+    /**
+     * gets name of organization the user is part of
+     * @return
+     */
     public String getOrganizationName() {
         return organizationName;
     }
 
+    /**
+     * sets the organization the user is part of
+     * @param organizationName
+     */
     public void setOrganizationName(String organizationName) {
         this.organizationName = organizationName;
     }
 
+    /**
+     * gets the users full name
+     * @return
+     */
     public String getFullName() {
         return fullName;
     }
 
+    /**
+     * sets the users full name
+     * @param fullName
+     */
     public void setFullName(String fullName) {
         this.fullName = fullName;
     }

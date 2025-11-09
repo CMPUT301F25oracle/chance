@@ -18,6 +18,10 @@ public class DataStoreManager {
         db = FirebaseManager.getInstance();
     }
 
+    /**
+     * gets the datastore instance
+     * @return
+     */
     public static DataStoreManager getInstance() {
         if (instance == null) {
             instance = new DataStoreManager();
@@ -58,10 +62,21 @@ public class DataStoreManager {
         }, (e)->{});
     }
 
+    /**
+     * updates the user in firebase
+     * @param username
+     * @param updatedUser
+     * @param onSuccess
+     */
     public void updateUser(String username, User updatedUser, OnSuccessListener<Void> onSuccess) {
         db.setDocument("users", username, updatedUser, onSuccess, (e)->{});
     }
 
+    /**
+     * deletes the user from firebase
+     * @param username
+     * @param onSuccess
+     */
     public void deleteUser(String username, OnSuccessListener<Void> onSuccess) {
         db.deleteDocument("users", username, (___na) -> {
             onSuccess.onSuccess(null);
@@ -71,31 +86,66 @@ public class DataStoreManager {
     }
 
 
+    /**
+     * joins the user into the waiting list
+     * @param event
+     * @param entrantId
+     * @param onSuccess
+     */
     public void joinWaitingList(Event event, String entrantId, OnSuccessListener<Void> onSuccess) {
         event.setWaitingList(entrantId);
         db.setDocument("events", event.getID(), event, onSuccess, (e)->{});
     }
 
+    /**
+     * removes the user from the waiting list
+     * @param event
+     * @param entrantId
+     * @param onSuccess
+     */
     public void leaveWaitingList(Event event, String entrantId, OnSuccessListener<Void> onSuccess) {
         event.leaveWaitingList(entrantId);
         db.setDocument("events", event.getID(), event, onSuccess, (e)->{});
     }
 
+    /**
+     * accepts the invitation for the specified event
+     * @param event
+     * @param entrantId
+     * @param onSuccess
+     */
     public void acceptInvitation(Event event, String entrantId, OnSuccessListener<Void> onSuccess) {
         event.acceptInvitation(entrantId);
         db.setDocument("events", event.getID(), event, onSuccess, (e)->{});
     }
 
+    /**
+     * rejects the invitation for the specified event
+     * @param event
+     * @param entrantId
+     * @param onSuccess
+     */
     public void rejectInvitation(Event event, String entrantId, OnSuccessListener<Void> onSuccess) {
         event.rejectInvitation(entrantId);
         db.setDocument("events", event.getID(), event, onSuccess, (e)->{});
     }
 
+    /**
+     * uploads an event poster
+     * @param event_id
+     * @param image
+     * @param onSuccess
+     */
     public void uploadEventImage(String event_id, Base64 image, OnSuccessListener<Void> onSuccess) {
         EventImage eventImage = new EventImage(event_id, image);
         db.setDocument("event_images", event_id, eventImage, onSuccess, (e)->{});
     }
 
+    /**
+     * grabs an events associated poster
+     * @param event_id
+     * @param onSuccess
+     */
     public void browseEventImage(String event_id, OnSuccessListener<Base64> onSuccess) {
         if (event_id.isEmpty()) {
             onSuccess.onSuccess(null);
