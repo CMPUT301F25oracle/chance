@@ -57,7 +57,8 @@ public class Home extends Fragment {
                 View pill = inflater.inflate(R.layout._r_event_pill, event_container, false);
                 ((TextView) pill.findViewById(R.id.event_title)).setText(event.getName());
                 ((TextView) pill.findViewById(R.id.event_description)).setText(event.getDescription());
-                pill.setTag(event.getId());
+                assert event.getID() != null;
+                pill.setTag(event.getID());
                 pill.setOnClickListener(v -> {
                     assert (String) v.getTag() != null;
                     cvm.requestOpenEvent((String) v.getTag());

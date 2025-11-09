@@ -73,22 +73,22 @@ public class DataStoreManager {
 
     public void joinWaitingList(Event event, String entrantId, OnSuccessListener<Void> onSuccess) {
         event.setWaitingList(entrantId);
-        db.setDocument("events", event.getId(), event, onSuccess, (e)->{});
+        db.setDocument("events", event.getID(), event, onSuccess, (e)->{});
     }
 
     public void leaveWaitingList(Event event, String entrantId, OnSuccessListener<Void> onSuccess) {
         event.leaveWaitingList(entrantId);
-        db.setDocument("events", event.getId(), event, onSuccess, (e)->{});
+        db.setDocument("events", event.getID(), event, onSuccess, (e)->{});
     }
 
     public void acceptInvitation(Event event, String entrantId, OnSuccessListener<Void> onSuccess) {
         event.acceptInvitation(entrantId);
-        db.setDocument("events", event.getId(), event, onSuccess, (e)->{});
+        db.setDocument("events", event.getID(), event, onSuccess, (e)->{});
     }
 
     public void rejectInvitation(Event event, String entrantId, OnSuccessListener<Void> onSuccess) {
         event.rejectInvitation(entrantId);
-        db.setDocument("events", event.getId(), event, onSuccess, (e)->{});
+        db.setDocument("events", event.getID(), event, onSuccess, (e)->{});
     }
 
     public void uploadEventImage(String event_id, Base64 image, OnSuccessListener<Void> onSuccess) {
@@ -129,7 +129,7 @@ public class DataStoreManager {
      */
     public Event createEvent(String name, String location, int capacity, double price, String description, Date startDate, Date endDate, String organizerUserName) {
         Event new_event = new Event(name, location, capacity, price, description, startDate, endDate, organizerUserName);
-        db.setDocument("events", new_event.getId(), new_event, (s)->{}, (s)->{});
+        db.setDocument("events", new_event.getID(), new_event, (s)->{}, (s)->{});
         return new_event;
     }
 

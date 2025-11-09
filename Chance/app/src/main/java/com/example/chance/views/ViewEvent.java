@@ -56,7 +56,7 @@ public class ViewEvent extends Fragment {
             // now we load the events unique QRCode
             Bitmap unique_qrcode;
             try {
-                unique_qrcode = QRCodeHandler.generateQRCode(event.getId());
+                unique_qrcode = QRCodeHandler.generateQRCode(event.getID());
             } catch (WriterException e) {
                 throw new RuntimeException(e);
             }

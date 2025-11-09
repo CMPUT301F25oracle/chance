@@ -19,7 +19,7 @@ import java.util.Random;
 public class Event {
 
     @DocumentId
-    private String eventId;          // Firestore document ID
+    private String ID;          // Firestore document ID
 
     private String name;        // Event name
     private String location;    // Venue or online link
@@ -41,7 +41,7 @@ public class Event {
     public Event() {}
 
     public Event(String name, String location, int capacity, double price, String description, Date startDate, Date endDate, String eventOrganizerName) {
-        this.eventId = eventOrganizerName + "-" + name;
+        this.ID = eventOrganizerName + "-" + name;
         this.name = name;
         this.location = location;
         this.capacity = capacity;
@@ -53,8 +53,8 @@ public class Event {
     }
 
     // --- Getters and Setters ---
-    public String getId() { return eventId; }
-    public void setId(String id) { this.eventId = id; }
+    public String getID() { return ID; }
+    public void setID(String eventId) { this.ID = eventId; }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
@@ -82,11 +82,11 @@ public class Event {
         if (this == o) return true;
         if (!(o instanceof Event)) return false;
         Event event = (Event) o;
-        return Objects.equals(eventId, event.eventId);
+        return Objects.equals(ID, event.ID);
     }
 
     @Override
-    public int hashCode() { return Objects.hash(eventId); }
+    public int hashCode() { return Objects.hash(ID); }
 
     @Override
     public String toString() {

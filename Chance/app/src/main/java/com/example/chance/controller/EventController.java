@@ -58,7 +58,7 @@ public class EventController {
                     for (DocumentSnapshot doc : query.getDocuments()) {
                         Event event = doc.toObject(Event.class);
                         if (event != null) {
-                            event.setId(doc.getId());
+                            event.setID(doc.getId());
                             events.add(event);
                         }
                     }
