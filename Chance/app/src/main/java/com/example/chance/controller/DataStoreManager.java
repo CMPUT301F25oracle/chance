@@ -93,7 +93,7 @@ public class DataStoreManager {
      * @param onSuccess
      */
     public void joinWaitingList(Event event, String entrantId, OnSuccessListener<Void> onSuccess) {
-        event.setWaitingList(entrantId);
+        event.addToWaitingList(entrantId);
         db.setDocument("events", event.getID(), event, onSuccess, (e)->{});
     }
 

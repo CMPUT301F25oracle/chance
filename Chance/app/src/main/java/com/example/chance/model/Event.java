@@ -4,6 +4,7 @@ import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -50,6 +51,9 @@ public class Event {
         this.startDate = startDate;
         this.endDate = endDate;
         this.eventOrganizerName = eventOrganizerName;
+        this.maxInvited = 10;
+        this.waitingList = new ArrayList<>();
+        this.invitationList = new ArrayList<>();
     }
 
     // --- Getters and Setters ---
@@ -122,8 +126,8 @@ public class Event {
         return waitingList;
     }
 
-    public void setWaitingList(String userId) {
-        waitingList.add(userId);
+    public void setWaitingList(ArrayList<String> waitingList) {
+        this.waitingList = waitingList;
     }
 
     public void leaveWaitingList(String userId) {
@@ -132,6 +136,13 @@ public class Event {
 
     public List<String> getInvitationList() {
         return invitationList;
+    }
+    public void setInvitationList(ArrayList<String> invitationList) {
+        this.invitationList = invitationList;
+    }
+
+    public void addToWaitingList(String userId) {
+        waitingList.add(userId);
     }
 
     public void acceptInvitation(String userId) {
@@ -161,4 +172,11 @@ public class Event {
         }
     }
 
+    public int getMaxInvited() {
+        return maxInvited;
+    }
+
+    public void setMaxInvited(int maxInvited) {
+        this.maxInvited = maxInvited;
+    }
 }
