@@ -6,10 +6,13 @@ import static android.view.View.GONE;
 import android.os.Bundle;
 import android.view.View;
 
+import com.example.chance.controller.ChanceState;
+import com.example.chance.controller.DataStoreManager;
 import com.example.chance.views.Home;
 import com.example.chance.views.Profile;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -17,15 +20,18 @@ import com.example.chance.databinding.ActivityMainBinding;
 import com.example.chance.views.Authentication;
 import com.example.chance.ChanceViewModel;
 import com.example.chance.views.QrcodeScanner;
+import com.example.chance.views.ViewEvent;
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private ChanceViewModel chanceViewModel;
+    private DataStoreManager dsm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dsm = DataStoreManager.getInstance();
 
         // hides the default action bar
         if (getSupportActionBar() != null) {
@@ -53,10 +59,14 @@ public class MainActivity extends AppCompatActivity {
         //region: viewmodel callbacks
         chanceViewModel = new ViewModelProvider(this).get(ChanceViewModel.class);
 
-        chanceViewModel.getNewFragment().observe(this, fragmentClass -> {
+        chanceViewModel.getNewFragment().observe(this, fragmentData -> {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            Class<? extends Fragment> fragmentClass = fragmentData.x;
+            Bundle bundle = fragmentData.y;
             try {
-                transaction.replace(R.id.content_view, fragmentClass.newInstance());
+                Fragment fragment = fragmentClass.newInstance();
+                fragment.setArguments(bundle);
+                transaction.replace(R.id.content_view, fragment);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -67,19 +77,24 @@ public class MainActivity extends AppCompatActivity {
             binding.getRoot().findViewById(R.id.title_bar).setVisibility(visibility);
             binding.getRoot().findViewById(R.id.nav_bar).setVisibility(visibility);
         });
+        chanceViewModel.getEventToOpen().observe(this, eventId -> {
+            Bundle bundle = new Bundle();
+            bundle.putString("event_id", eventId);
+            chanceViewModel.setNewFragment(ViewEvent.class, bundle);
+        });
         //endregion: viewmodel callbacks
     }
     
     private void setupNavBar() {
         View navbar = binding.getRoot().findViewById(R.id.nav_bar);
         navbar.findViewById(R.id.navbar_home_button).setOnClickListener((v) -> {
-            chanceViewModel.setNewFragment(Home.class);
+            chanceViewModel.setNewFragment(Home.class, null);
         });
         navbar.findViewById(R.id.navbar_qr_button).setOnClickListener(v -> {
-            chanceViewModel.setNewFragment(QrcodeScanner.class);
+            chanceViewModel.setNewFragment(QrcodeScanner.class, null);
         });
         navbar.findViewById(R.id.navbar_profile_button).setOnClickListener((v) -> {
-            chanceViewModel.setNewFragment(Profile.class);
+            chanceViewModel.setNewFragment(Profile.class, null);
         });
 
         

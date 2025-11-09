@@ -35,26 +35,35 @@ public class ViewEvent extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding = ViewEventBinding.inflate(inflater, container, false);
         dsm = DataStoreManager.getInstance();
+
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Event event_details = ChanceState.getInstance().getLoadableEvent();
-        binding.eventName.setText(event_details.getName());
-        binding.eventInformation.setText(
-                String.format("* ? users currently in waiting list  /  $%.2f per person.\n%s", event_details.getPrice(), event_details.getLocation()));
-        binding.eventOverview.setText(event_details.getDescription());
-        // now we load the events unique QRCode
-        Bitmap unique_qrcode;
-        try {
-            unique_qrcode = QRCodeHandler.generateQRCode(event_details.getId());
-        } catch (WriterException e) {
-            throw new RuntimeException(e);
-        }
+        Bundle bundle = getArguments();
+        assert bundle != null;
+        String eventID = bundle.getString("event_id");
+        dsm.getEvent(eventID, (event) -> {
+            if (event == null) {
+                throw new RuntimeException("Event not found");
+            }
+            binding.eventName.setText(event.getName());
+            binding.eventInformation.setText(
+                    String.format("* ? users currently in waiting list  /  $%.2f per person.\n%s", event.getPrice(), event.getLocation()));
+            binding.eventOverview.setText(event.getDescription());
+            // now we load the events unique QRCode
+            Bitmap unique_qrcode;
+            try {
+                unique_qrcode = QRCodeHandler.generateQRCode(event.getId());
+            } catch (WriterException e) {
+                throw new RuntimeException(e);
+            }
 
-        binding.qrcodeButton.setImageBitmap(unique_qrcode);
+            binding.qrcodeButton.setImageBitmap(unique_qrcode);
+
+        });
 
         //
     }

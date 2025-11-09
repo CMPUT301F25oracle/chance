@@ -75,7 +75,7 @@ public class Authentication extends Fragment {
     }
 
     private void navigateToHome() {
-        cvm.setNewFragment(Home.class);
+        cvm.setNewFragment(Home.class, null);
         cvm.setNavBarVisible(true);
     }
 

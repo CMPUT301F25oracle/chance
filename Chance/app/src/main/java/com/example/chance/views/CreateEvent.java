@@ -62,7 +62,7 @@ public class CreateEvent extends Fragment {
 
 
             Event new_event = DataStoreManager.getInstance().createEvent(event_name, event_address, maximum_candidates, attendance_price, event_description, event_start_calendar, event_end_calendar, user.getUsername());
-            cvm.setNewFragment(Home.class);
+            cvm.setNewFragment(Home.class, null);
         });
 
 

@@ -110,7 +110,7 @@ public class Profile extends Fragment {
         binding.deleteAccountButton.setOnClickListener(v -> {
             // we redefine to make sure the newest instance is obtained
             dsm.deleteUser(user.getUsername(), (na)->{});
-            cvm.setNewFragment(Authentication.class);
+            cvm.setNewFragment(Authentication.class, null);
         });
 
         //endregion: callback actions

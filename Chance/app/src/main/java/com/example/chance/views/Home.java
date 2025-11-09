@@ -57,10 +57,10 @@ public class Home extends Fragment {
                 View pill = inflater.inflate(R.layout._r_event_pill, event_container, false);
                 ((TextView) pill.findViewById(R.id.event_title)).setText(event.getName());
                 ((TextView) pill.findViewById(R.id.event_description)).setText(event.getDescription());
-                pill.setTag(event);
+                pill.setTag(event.getId());
                 pill.setOnClickListener(v -> {
-                    ChanceState.getInstance().setLoadableEvent((Event) v.getTag());
-                    cvm.setNewFragment(ViewEvent.class);
+                    assert (String) v.getTag() != null;
+                    cvm.requestOpenEvent((String) v.getTag());
                 });
 //                // Optionally bind data to the pill (e.g., set text, images)
 //                TextView title = pill.findViewById(R.id.eventTitle);

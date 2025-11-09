@@ -116,14 +116,12 @@ public class QrcodeScanner extends Fragment {
     }
 
     private class QrCodeAnalyzer implements ImageAnalysis.Analyzer {
-        private final MultiFormatReader reader = new MultiFormatReader();
-
         @Override
         public void analyze(ImageProxy image_frame) {
             Bitmap image_bitmap = image_frame.toBitmap();
             String event_id = QRCodeHandler.decodeQRCode(image_bitmap);
             if (event_id != null) {
-                Log.d("QRcodeScanner", "The event id is: " + event_id);
+                cvm.requestOpenEvent(event_id);
             }
             image_frame.close();
         }
