@@ -27,7 +27,7 @@ public class ChanceViewModel extends ViewModel {
     }
 
     public void sendMessage(String msg) {
-        message.setValue(msg);
+        message.postValue(msg);
     }
 
     // User data
@@ -36,7 +36,7 @@ public class ChanceViewModel extends ViewModel {
     }
 
     public void setCurrentUser(User user) {
-        currentUser.setValue(user);
+        currentUser.postValue(user);
     }
 
     public LiveData<Boolean> getNavBarVisible() {
@@ -44,7 +44,7 @@ public class ChanceViewModel extends ViewModel {
     }
 
     public void setNavBarVisible(boolean visible) {
-        navBarVisible.setValue(visible);
+        navBarVisible.postValue(visible);
     }
 
     public MutableLiveData<Tuple<Class<? extends Fragment>, Bundle>> getNewFragment() {
@@ -52,12 +52,12 @@ public class ChanceViewModel extends ViewModel {
     }
 
     public void setNewFragment(Class<? extends Fragment> fragment, Bundle bundle) {
-        newFragment.setValue(new Tuple<>(fragment, bundle));
+        newFragment.postValue(new Tuple<>(fragment, bundle));
     }
 
     public void requestOpenEvent(String eventID) {
         Log.d("ChanceViewModel", "requestOpenEvent: " + eventID);
-        requestedEventID.setValue(eventID);
+        requestedEventID.postValue(eventID);
     }
 
     public LiveData<String> getEventToOpen() {
@@ -71,7 +71,7 @@ public class ChanceViewModel extends ViewModel {
 
 
     public void setAuthenticationSuccess(boolean success) {
-        authenticationSuccess.setValue(success);
+        authenticationSuccess.postValue(success);
     }
 
 
