@@ -1,13 +1,11 @@
 package com.example.chance.controller;
 
 import com.example.chance.model.Event;
+import com.example.chance.model.EventImage;
 import com.example.chance.model.User;
-import com.example.chance.model.WaitingList;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
@@ -82,6 +80,39 @@ public class DataStoreManager {
         event.leaveWaitingList(entrantId);
         db.setDocument("events", event.getId(), event, onSuccess, (e)->{});
     }
+
+    public void acceptInvitation(Event event, String entrantId, OnSuccessListener<Void> onSuccess) {
+        event.acceptInvitation(entrantId);
+        db.setDocument("events", event.getId(), event, onSuccess, (e)->{});
+    }
+
+    public void rejectInvitation(Event event, String entrantId, OnSuccessListener<Void> onSuccess) {
+        event.rejectInvitation(entrantId);
+        db.setDocument("events", event.getId(), event, onSuccess, (e)->{});
+    }
+
+    public void uploadEventImage(String event_id, Base64 image, OnSuccessListener<Void> onSuccess) {
+        EventImage eventImage = new EventImage(event_id, image);
+        db.setDocument("event_images", event_id, eventImage, onSuccess, (e)->{});
+    }
+
+    public void browseEventImage(String event_id, OnSuccessListener<Base64> onSuccess) {
+        if (event_id.isEmpty()) {
+            onSuccess.onSuccess(null);
+            return;
+        } else {
+            db.getDocument("event_images", event_id, (doc) -> {
+                if (doc.exists()) {
+                    EventImage eventImage = doc.toObject(EventImage.class);
+                    onSuccess.onSuccess(eventImage.getEventImage());
+                } else {
+                    onSuccess.onSuccess(null);
+                }
+            }, (e) -> {
+            });
+        }
+    }
+
 
 
     /**

@@ -3,6 +3,8 @@ package com.example.chance.model;
 import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.IgnoreExtraProperties;
+
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -28,6 +30,9 @@ public class Event {
     private String eventOrganizerName;
 
     private List<String> waitingList;
+
+    private List<String> invitationList;
+
 
     // Required empty constructor for Firestore
     public Event() {}
@@ -120,6 +125,26 @@ public class Event {
 
     public void leaveWaitingList(String userId) {
         waitingList.remove(userId);
+    }
+
+    public List<String> getInvitationList() {
+        return invitationList;
+    }
+
+    public void acceptInvitation(String userId) {
+        invitationList.add(userId);
+    }
+
+    public void rejectInvitation(String userId) {
+        waitingList.remove(userId);
+    }
+
+    public List<String> viewWaitingListEntrants() {
+        return this.getWaitingList();
+    }
+
+    public int viewWaitingListEntrantsCount() {
+        return this.getWaitingList().size();
     }
 
 }
