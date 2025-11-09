@@ -9,7 +9,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.example.chance.ChanceViewModel;
 import com.example.chance.R;
 import com.example.chance.controller.ChanceState;
 import com.example.chance.controller.DataStoreManager;
@@ -20,6 +22,7 @@ import com.example.chance.model.User;
 public class Home extends Fragment {
 
     private HomeBinding binding;
+    private ChanceViewModel cvm;
 
     @Nullable
     @Override
@@ -27,7 +30,7 @@ public class Home extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = HomeBinding.inflate(inflater, container, false);
-
+        cvm = new ViewModelProvider(requireActivity()).get(ChanceViewModel.class);
         return binding.getRoot();
     }
 
@@ -57,9 +60,7 @@ public class Home extends Fragment {
                 pill.setTag(event);
                 pill.setOnClickListener(v -> {
                     ChanceState.getInstance().setLoadableEvent((Event) v.getTag());
-                    requireActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.content_view, new ViewEvent())
-                            .commit();
+                    cvm.setNewFragment(ViewEvent.class);
                 });
 //                // Optionally bind data to the pill (e.g., set text, images)
 //                TextView title = pill.findViewById(R.id.eventTitle);
