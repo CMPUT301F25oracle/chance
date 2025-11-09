@@ -8,6 +8,7 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 /**
  * Represents an event in the Event Lottery System.
@@ -28,6 +29,8 @@ public class Event {
     private Date startDate;    // Event start date
     private Date endDate;     // Event end date
     private String eventOrganizerName;
+    private int maxInvited;   // Max entrants that can be invited
+
 
     private List<String> waitingList;
 
@@ -145,6 +148,17 @@ public class Event {
 
     public int viewWaitingListEntrantsCount() {
         return this.getWaitingList().size();
+    }
+
+    public void pollForInvitation() {
+        int i = 0;
+        List<String> waitingList = this.getWaitingList();
+        while (i < invitationList.size()) {
+            int j = (int)Math.random()*(invitationList.size() - 1);
+            invitationList.add(waitingList.get(j));
+            waitingList.remove(j);
+            i++;
+        }
     }
 
 }
