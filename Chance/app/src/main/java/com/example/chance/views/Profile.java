@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.chance.ChanceViewModel;
 import com.example.chance.R;
 import com.example.chance.controller.ChanceState;
 import com.example.chance.controller.DataStoreManager;
@@ -25,6 +26,7 @@ import java.util.Objects;
 public class Profile extends Fragment {
     private ProfileBinding binding;
     private DataStoreManager dsm;
+    private ChanceViewModel cvm;
 
     @Nullable
     @Override
@@ -108,9 +110,7 @@ public class Profile extends Fragment {
         binding.deleteAccountButton.setOnClickListener(v -> {
             // we redefine to make sure the newest instance is obtained
             dsm.deleteUser(user.getUsername(), (na)->{});
-            requireActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content_view, new Authentication())
-                    .commit();
+            cvm.setNewFragment(Authentication.class);
         });
 
         //endregion: callback actions

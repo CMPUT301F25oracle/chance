@@ -55,6 +55,15 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
+    // CameraX Core library
+    implementation("androidx.camera:camera-core:1.3.1")
+    // CameraX Camera2 extensions
+    implementation("androidx.camera:camera-camera2:1.3.1")
+    // CameraX Lifecycle library
+    implementation("androidx.camera:camera-lifecycle:1.3.1")
+    // CameraX View library for PreviewView
+    implementation("androidx.camera:camera-view:1.3.1")
+    implementation("androidx.camera:camera-extensions:1.3.1")
     implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
     implementation("com.google.firebase:firebase-analytics")
     //implementation("com.journeyapps:zxing-android-embedded:4.3.0")

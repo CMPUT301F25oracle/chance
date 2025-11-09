@@ -62,7 +62,6 @@ public class QRCodeHandler {
             BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(source));
             return new MultiFormatReader().decode(binaryBitmap).getText();
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }

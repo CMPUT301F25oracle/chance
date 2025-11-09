@@ -9,15 +9,8 @@
     app:justifyContent="flex_start"
     android:orientation="vertical">
 
-    <com.google.android.flexbox.FlexboxLayout
+    <androidx.camera.view.PreviewView
+        android:id="@+id/camera_preview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:alignItems="center"
-        app:flexDirection="column"
-        android:orientation="horizontal"
-        android:layout_marginTop="20dp"
-        app:layout_flexGrow="1">
-
-    </com.google.android.flexbox.FlexboxLayout>
-    <include layout="@layout/_nav_bar"></include>
+        android:layout_height="match_parent"/>
 </com.google.android.flexbox.FlexboxLayout>

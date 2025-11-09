@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.chance.databinding.ActivityMainBinding;
 import com.example.chance.views.Authentication;
 import com.example.chance.ChanceViewModel;
+import com.example.chance.views.QrcodeScanner;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -72,15 +73,13 @@ public class MainActivity extends AppCompatActivity {
     private void setupNavBar() {
         View navbar = binding.getRoot().findViewById(R.id.nav_bar);
         navbar.findViewById(R.id.navbar_home_button).setOnClickListener((v) -> {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.content_view, new Home());
-            transaction.commit();
-
+            chanceViewModel.setNewFragment(Home.class);
+        });
+        navbar.findViewById(R.id.navbar_qr_button).setOnClickListener(v -> {
+            chanceViewModel.setNewFragment(QrcodeScanner.class);
         });
         navbar.findViewById(R.id.navbar_profile_button).setOnClickListener((v) -> {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.content_view, new Profile());
-            transaction.commit();
+            chanceViewModel.setNewFragment(Profile.class);
         });
 
         
