@@ -45,5 +45,5 @@
             />
 
         </com.google.android.flexbox.FlexboxLayout>
-    <include layout="@layout/_nav_bar"></include>
+    <include layout="@layout/navbar"></include>
 </com.google.android.flexbox.FlexboxLayout>
