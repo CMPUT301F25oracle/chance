@@ -1,20 +1,32 @@
 package com.example.chance.controller;
 
+import androidx.annotation.NonNull;
+
 import com.example.chance.model.Event;
 import com.example.chance.model.EventImage;
 import com.example.chance.model.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Executor;
+
 
 public class DataStoreManager {
+    private static final String PSEUDO_EMAIL = "@authentication.chance";
     private static DataStoreManager instance;
-
+    private static FirebaseAuth fAuth;
     private final FirebaseManager db;
 
     private DataStoreManager() {
+        fAuth = FirebaseAuth.getInstance();
         db = FirebaseManager.getInstance();
     }
 
@@ -28,6 +40,33 @@ public class DataStoreManager {
         }
         return instance;
     }
+
+    public Boolean isDeviceAuthenticated() {
+        FirebaseUser user = fAuth.getCurrentUser();
+        return user != null;
+    }
+
+    public void AuthenticateUser(String username, String password) {
+
+    }
+
+    public void createNewUser(String username, String password, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+        // source: https://firebase.google.com/docs/auth/android/password-auth
+        fAuth.createUserWithEmailAndPassword(username + PSEUDO_EMAIL, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = fAuth.getCurrentUser();
+                            onSuccess.onSuccess(null);
+                        } else {
+                            onFailure.onFailure(task.getException());
+                        }
+                    }
+                });
+    }
+
+
 
     /**
      * Create a new user in Firestore.

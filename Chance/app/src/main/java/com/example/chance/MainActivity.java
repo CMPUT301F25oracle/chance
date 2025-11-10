@@ -43,8 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
         // we initially hide the title and navigation bars
         // in case we're going to login screen
-        binding.getRoot().findViewById(R.id.title_bar).setVisibility(GONE);
-        binding.getRoot().findViewById(R.id.nav_bar).setVisibility(GONE);
+        chanceViewModel.setLoadMainUI(false);
 
         // Load the Login fragment into the content_view container
         if (savedInstanceState == null) {

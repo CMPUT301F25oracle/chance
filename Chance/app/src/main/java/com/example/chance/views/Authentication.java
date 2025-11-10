@@ -52,6 +52,13 @@ public class Authentication extends Fragment {
 
                 } else {
                     User new_user = dsm.createUser(username, password);
+                    dsm.createNewUser(username, password, (e)->{}, (e)->{
+                        try {
+                            throw new Exception(e);
+                        } catch (Exception ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    });
                     ChanceState.getInstance().setUser(new_user);
                     navigateToHome();
                 }

@@ -44,8 +44,16 @@ android {
 }
 
 dependencies {
-
+    //region: firebase dependencies
+    implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
+    implementation("com.google.firebase:firebase-auth")
+    //endregion
+    //region: ui dependencies
+    implementation("com.google.android.flexbox:flexbox:3.0.0")
+    //endregion
+    //region: javadoc generation line
     //implementation(files("/Users/lamersc/Library/Android/sdk/platforms/android-36/android.jar"))
+    //endregion
     testImplementation("org.mockito:mockito-core:5.11.0")
 
     testImplementation("org.mockito:mockito-inline:5.2.0")
@@ -64,7 +72,7 @@ dependencies {
     // CameraX View library for PreviewView
     implementation("androidx.camera:camera-view:1.3.1")
     implementation("androidx.camera:camera-extensions:1.3.1")
-    implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
+
     implementation("com.google.firebase:firebase-analytics")
     //implementation("com.journeyapps:zxing-android-embedded:4.3.0")
     implementation("com.google.zxing:core:3.5.3")
@@ -78,7 +86,6 @@ dependencies {
     implementation(libs.navigation.ui)
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.storage)
-    implementation("com.google.android.flexbox:flexbox:3.0.0")
     implementation(libs.espresso.intents)
     implementation(libs.ext.junit)
     implementation(libs.runtime)
