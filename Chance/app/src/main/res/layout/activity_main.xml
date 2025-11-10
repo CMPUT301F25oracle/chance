@@ -14,7 +14,7 @@
         android:id="@+id/content_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/activity_main_view_rounding"
+        android:background="@drawable/reusable_main_view_rounding"
         android:clipToOutline="true"/>
     <include layout="@layout/navbar" android:id="@+id/nav_bar"/>
 

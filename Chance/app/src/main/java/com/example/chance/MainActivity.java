@@ -26,20 +26,20 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private ChanceViewModel chanceViewModel;
-    private DataStoreManager dsm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dsm = DataStoreManager.getInstance();
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        chanceViewModel = new ViewModelProvider(this).get(ChanceViewModel.class);
+        setContentView(binding.getRoot());
 
         // hides the default action bar
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+
 
         // we initially hide the title and navigation bars
         // in case we're going to login screen
@@ -56,8 +56,6 @@ public class MainActivity extends AppCompatActivity {
         // Set up bottom navigation
         setupNavBar();
 
-        //region: viewmodel callbacks
-        chanceViewModel = new ViewModelProvider(this).get(ChanceViewModel.class);
 
         chanceViewModel.getNewFragment().observe(this, fragmentData -> {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -72,8 +70,18 @@ public class MainActivity extends AppCompatActivity {
             }
             transaction.commit();
         });
-        chanceViewModel.getNavBarVisible().observe(this, visible -> {
-            int visibility = visible ? View.VISIBLE : View.GONE;
+        chanceViewModel.getLoadMainUI().observe(this, shouldLoad -> {
+            // first we add some styling to the main content view
+            int visibility;
+            int backgroundResource;
+            if (shouldLoad) {
+                visibility = View.VISIBLE;
+                backgroundResource = R.drawable.reusable_main_view_rounding;
+            } else {
+                visibility = View.GONE;
+                backgroundResource = 0;
+            }
+            binding.contentView.setBackgroundResource(backgroundResource);
             binding.getRoot().findViewById(R.id.title_bar).setVisibility(visibility);
             binding.getRoot().findViewById(R.id.nav_bar).setVisibility(visibility);
         });

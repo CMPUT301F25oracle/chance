@@ -39,11 +39,11 @@ public class ChanceViewModel extends ViewModel {
         currentUser.postValue(user);
     }
 
-    public LiveData<Boolean> getNavBarVisible() {
+    public LiveData<Boolean> getLoadMainUI() {
         return navBarVisible;
     }
 
-    public void setNavBarVisible(boolean visible) {
+    public void setLoadMainUI(boolean visible) {
         navBarVisible.postValue(visible);
     }
 

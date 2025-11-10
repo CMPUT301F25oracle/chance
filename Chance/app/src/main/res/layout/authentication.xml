@@ -7,7 +7,7 @@
     app:alignItems="flex_start"
     app:flexDirection="column"
     app:justifyContent="flex_end"
-    android:background="@color/grey"
+    android:background="@drawable/authentication_screen_background_blur"
     >
 
     <com.google.android.flexbox.FlexboxLayout
@@ -18,7 +18,8 @@
         app:alignItems="center"
         app:flexDirection="column"
         app:justifyContent="center"
-        android:background="@color/white"
+        android:background="@drawable/reusable_main_view_rounding"
+        android:backgroundTint="@color/white"
         >
         <LinearLayout
             android:layout_width="wrap_content"
