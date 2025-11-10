@@ -24,7 +24,7 @@ public class Organizer extends User {
     }
 
     public Organizer(String name, String email, String deviceId, String organizationName) {
-        super(name, email, deviceId);
+        super(name);
         this.organizationName = organizationName;
     }
 

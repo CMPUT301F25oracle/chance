@@ -51,7 +51,7 @@ public class Authentication extends Fragment {
                     binding.errorMessage.setText("Account username already taken");
 
                 } else {
-                    User new_user = dsm.createUser(username, password);
+                    //User new_user = dsm.createUser(username, password);
                     dsm.createNewUser(username, password, (e)->{}, (e)->{
                         try {
                             throw new Exception(e);
@@ -59,8 +59,8 @@ public class Authentication extends Fragment {
                             throw new RuntimeException(ex);
                         }
                     });
-                    ChanceState.getInstance().setUser(new_user);
-                    navigateToHome();
+                    //ChanceState.getInstance().setUser(new_user);
+                    //navigateToHome();
                 }
             });
         });
@@ -70,13 +70,13 @@ public class Authentication extends Fragment {
              String username = binding.username.getText().toString();
              String password = binding.password.getText().toString();
              dsm.getUser(username, (user) -> {
-                 if (user == null || !Objects.equals(user.getPassword(), password)) {
-                     binding.errorMessage.setVisibility(VISIBLE);
-                     binding.errorMessage.setText("Username or Password was invalid");
-                 } else {
-                     ChanceState.getInstance().setUser(user);
-                     navigateToHome();
-                 }
+//                 if (user == null || !Objects.equals(user.getPassword(), password)) {
+//                     binding.errorMessage.setVisibility(VISIBLE);
+//                     binding.errorMessage.setText("Username or Password was invalid");
+//                 } else {
+//                     ChanceState.getInstance().setUser(user);
+//                     navigateToHome();
+//                 }
              });
          });
     }

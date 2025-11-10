@@ -12,6 +12,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Base64;
 import java.util.Date;
@@ -20,13 +21,22 @@ import java.util.concurrent.Executor;
 
 
 public class DataStoreManager {
-    private static final String PSEUDO_EMAIL = "@authentication.chance";
+    // firestore requires emails to create new user accounts, so we simply
+    // use our own pseudo domain to get around this; specifically its
+    // preferred we use emails to login over usernames
     private static DataStoreManager instance;
     private static FirebaseAuth fAuth;
+    private static FirebaseFirestore fStore;
     private final FirebaseManager db;
+
+    private final String PSEUDO_EMAIL = "@authentication.chance";
+    private final String USER_COLLECTION = "users";
+    private final String EVENT_COLLECTION = "events";
+    private final String EVENT_IMAGE_COLLECTION = "event_image";
 
     private DataStoreManager() {
         fAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
         db = FirebaseManager.getInstance();
     }
 
@@ -46,13 +56,8 @@ public class DataStoreManager {
         return user != null;
     }
 
-    public void AuthenticateUser(String username, String password) {
-
-    }
-
-    public void createNewUser(String username, String password, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
-        // source: https://firebase.google.com/docs/auth/android/password-auth
-        fAuth.createUserWithEmailAndPassword(username + PSEUDO_EMAIL, password)
+    public void AuthenticateUser(String username, String password, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+        fAuth.signInWithEmailAndPassword(username + PSEUDO_EMAIL, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -66,20 +71,35 @@ public class DataStoreManager {
                 });
     }
 
-
-
-    /**
-     * Create a new user in Firestore.
-     * @param username
-     * @param password
-     * @return
-     */
-    public User createUser(String username, String password) {
-        User new_user = new User(username, password, "");
-        db.setDocument("users", new_user.getUsername(), new_user, (s)->{}, (s)->{});
-        return new_user;
+    public void createNewUser(String username, String password, OnSuccessListener<User> onSuccess, OnFailureListener onFailure) {
+        // source: https://firebase.google.com/docs/auth/android/password-auth
+        fAuth.createUserWithEmailAndPassword(username + PSEUDO_EMAIL, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            FirebaseUser firebaseUser = fAuth.getCurrentUser();
+                            User user = new User(username);
+                            // now that the user is in firestore, we create their db entry
+                            fStore.collection(USER_COLLECTION)
+                                .document(firebaseUser.getUid())
+                                .set(user)
+                                .addOnSuccessListener((__) -> {
+                                    onSuccess.onSuccess(user);
+                                })
+                                .addOnFailureListener((e) -> {
+                                    onFailure.onFailure(e);
+                                });
+                        } else {
+                            onFailure.onFailure(task.getException());
+                        }
+                    }
+                });
     }
-    // TODO: make WAYYYYY more secure.
+
+
+
+
 
     /**
      * Get a user from Firestore.

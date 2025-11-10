@@ -13,8 +13,6 @@ public class User {
     private String fullName;
     private String email;
     private String phoneNumber;
-    private String password;
-    private String deviceId;
     private List<String> joinedEvents;
     private List<String> selectedEvents;
     private List<String> waitingListEvents;
@@ -22,13 +20,13 @@ public class User {
     private boolean notificationsEnabled;
     private String organizationName;
 
+
+
     // Required empty constructor for Firestore
     public User() {}
 
-    public User(String name, String password, String deviceId) {
-        this.username = name;
-        this.password = password;
-        this.deviceId = deviceId;
+    public User(String username) {
+        this.username = username;
         this.notificationsEnabled = true;
     }
 
@@ -69,17 +67,6 @@ public class User {
      */
     public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
 
-    /**
-     * grabs the users device id
-     * @return
-     */
-    public String getDeviceId() { return deviceId; }
-
-    /**
-     * sets the current devices id
-     * @param deviceId
-     */
-    public void setDeviceId(String deviceId) { this.deviceId = deviceId; }
 
     /**
      * gets events the user has joined
@@ -144,22 +131,6 @@ public class User {
     @Override
     public String toString() {
         return username + " (" + email + ")";
-    }
-
-    /**
-     * FIXME: MAKE MORE SECURE
-     * @return
-     */
-    public String getPassword() {
-        return password;
-    }
-
-    /**
-     * @FIXME: MAKE MORE SECURE
-     * @param password
-     */
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     /**
