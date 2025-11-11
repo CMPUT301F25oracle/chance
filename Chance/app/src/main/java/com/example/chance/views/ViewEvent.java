@@ -44,7 +44,6 @@ public class ViewEvent extends Fragment {
         cvm = new ViewModelProvider(requireActivity()).get(ChanceViewModel.class);
         dsm = DataStoreManager.getInstance();
 
-        buttonBackground = binding.enterLotteryButton.getBackground();
 
         return binding.getRoot();
     }
@@ -66,10 +65,16 @@ public class ViewEvent extends Fragment {
                 }
             });
         });
+
+
     }
 
     public void loadEventInformation(Event event, User user) {
         assert event != null;
+        if (event.getWaitingList().contains(user.getID())) {
+            setLotteryButtonAppearance(true);
+        }
+
         binding.eventName.setText(event.getName());
         binding.eventInformation.setText(
                 String.format("* ? users currently in waiting list  /  $%.2f per person.\n%s", event.getPrice(), event.getLocation()));
@@ -96,10 +101,8 @@ public class ViewEvent extends Fragment {
 
     public void setLotteryButtonAppearance(Boolean enteredInLottery) {
         if (enteredInLottery) {
-            binding.enterLotteryButton.setBackgroundResource(R.color.button_red);
             binding.enterLotteryButton.setText("Leave Lottery");
         } else {
-            binding.enterLotteryButton.setBackground(buttonBackground);
             binding.enterLotteryButton.setText("Enter Lottery");
         }
     }

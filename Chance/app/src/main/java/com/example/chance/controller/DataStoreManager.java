@@ -329,10 +329,24 @@ public class DataStoreManager {
             this.event = event;
         }
 
-//        public Boolean isInLottery(User user) {
-//            fStore.collection(EVENT_COLLECTION)
-//                    .document(event.getID());
-//        }
+        public void getUsersInLottery(OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
+            fStore.collection(EVENT_COLLECTION)
+                    .document(event.getID())
+                    .get()
+                    .addOnSuccessListener(snapshot -> {
+                        Event event = snapshot.toObject(Event.class);
+                        List<String> waitingListUsers = event.getWaitingList();
+                        onSuccess.onSuccess(waitingListUsers);
+                    })
+                    .addOnFailureListener(onFailure);
+        }
+
+        public void checkUserInLottery(User user, OnSuccessListener<Boolean> onSuccess) {
+            getUsersInLottery(users -> {
+                boolean isInLottery = users.contains(user.getID());
+                onSuccess.onSuccess(isInLottery);
+            }, e->{});
+        }
 
         public void enterLottery(User user) {
             fStore.collection(EVENT_COLLECTION)
