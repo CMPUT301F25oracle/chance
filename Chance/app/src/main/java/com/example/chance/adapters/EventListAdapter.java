@@ -13,9 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.chance.R;
 import com.example.chance.model.Event;
 
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-
 
 
 /**
@@ -45,7 +42,6 @@ public class EventListAdapter extends ListAdapter<Event, EventListAdapter.EventV
                 }
             };
 
-    // Provide a convenient public constructor that uses the DIFF_CALLBACK above.
     public EventListAdapter() {
         super(DIFF_CALLBACK);
     }
@@ -64,11 +60,8 @@ public class EventListAdapter extends ListAdapter<Event, EventListAdapter.EventV
         Event event = getItem(position);
         if (event == null) return;
 
-        // Bind title and description to the view holder.
         holder.title.setText(event.getName());
         holder.description.setText(event.getDescription());
-
-        // Store event id on the root view if callers want to use it later.
         holder.itemView.setTag(event.getID());
     }
     

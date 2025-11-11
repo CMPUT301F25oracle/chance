@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         //region: viewmodel callbacks
         chanceViewModel.getAuthenticationSuccess().observe(this, user -> {
             this.user = user;
+            chanceViewModel.setCurrentUser(user);
             // now we load the list of events from firestore
             DataStoreManager.getInstance().getAllEvents((events) -> {
                 chanceViewModel.setEvents(events);

@@ -95,43 +95,6 @@ public class Home extends Fragment {
                 return false;
             }
         });
-        // now we setup the onclick listeners for each event
-        eventsContainer.addOnItemTouchListener(new androidx.recyclerview.widget.RecyclerView.SimpleOnItemTouchListener() {
-
-        });
-
-
-//        // now we load events
-//        ViewGroup event_container = binding.homeEventContainer;
-//        DataStoreManager.getInstance().getAllEvents((events) -> {
-//            LayoutInflater inflater = LayoutInflater.from(requireContext());
-//
-//            for (Event event : events) {
-//                // Inflate your event_pill.xml
-//                View pill = inflater.inflate(R.layout._r_event_pill, event_container, false);
-//                ((TextView) pill.findViewById(R.id.event_title)).setText(event.getName());
-//                ((TextView) pill.findViewById(R.id.event_description)).setText(event.getDescription());
-//                assert event.getID() != null;
-//                pill.setTag(event.getID());
-//                pill.setOnClickListener(v -> {
-//                    assert (String) v.getTag() != null;
-//                    cvm.requestOpenEvent((String) v.getTag());
-//                });
-////                // Optionally bind data to the pill (e.g., set text, images)
-////                TextView title = pill.findViewById(R.id.eventTitle);
-////                title.setText(event.getTitle());
-////
-////                // Add the pill to the container
-//                event_container.addView(pill);
-//            }
-//            //event_container.add
-//        });
-
-
-
-        //endregion
-
-
     }
 
     @Override

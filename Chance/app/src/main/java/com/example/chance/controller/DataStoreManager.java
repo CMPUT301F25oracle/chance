@@ -56,6 +56,15 @@ public class DataStoreManager {
         return user != null;
     }
 
+    public void getAuthenticatedUser(OnSuccessListener<User> onSuccess, OnFailureListener onFailure) {
+        FirebaseUser user = fAuth.getCurrentUser();
+        if (user != null) {
+            getUserFromUID(user.getUid(), onSuccess, onFailure);
+        } else {
+            onFailure.onFailure(null);
+        }
+    }
+
     public void authenticateUser(String username, String password, OnSuccessListener<User> onSuccess, OnFailureListener onFailure) {
         fAuth.signInWithEmailAndPassword(username + PSEUDO_EMAIL, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
