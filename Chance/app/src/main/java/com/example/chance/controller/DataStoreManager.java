@@ -12,6 +12,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Base64;
@@ -120,6 +122,16 @@ public class DataStoreManager {
                 onFailure.onFailure(null);
             }
         }, onFailure);
+    }
+
+    public void createNewEvent(Event event, OnSuccessListener<Event> onSuccess, OnFailureListener onFailure) {
+        fStore.collection(EVENT_COLLECTION)
+                .add(event)
+                .addOnSuccessListener(document -> {
+                    event.setID(document.getId());
+                    onSuccess.onSuccess(event);
+                })
+                .addOnFailureListener(onFailure);
     }
 
     /**
@@ -303,5 +315,21 @@ public class DataStoreManager {
             List<Event> events = snapshot.toObjects(Event.class);
             onSuccess.onSuccess(events);
         }, (e)->{});
+    }
+
+    public __event event(Event target_event) {
+        return new __event(target_event);
+    }
+
+    public class __event {
+        Event event;
+        __event(Event event) {
+            this.event = event;
+        }
+
+//        public void enterLottery() {
+//            fStore.collection(EVENT_COLLECTION)
+//
+//        }
     }
 }

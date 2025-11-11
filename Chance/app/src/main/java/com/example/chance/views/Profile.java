@@ -15,7 +15,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.chance.ChanceViewModel;
 import com.example.chance.R;
-import com.example.chance.controller.ChanceState;
 import com.example.chance.controller.DataStoreManager;
 import com.example.chance.databinding.ProfileBinding;
 import com.example.chance.model.User;

@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.chance.ChanceViewModel;
 import com.example.chance.R;
 import com.example.chance.adapters.EventListAdapter;
-import com.example.chance.controller.ChanceState;
 import com.example.chance.controller.DataStoreManager;
 import com.example.chance.databinding.HomeBinding;
 import com.example.chance.model.Event;

@@ -8,7 +8,7 @@ import java.util.List;
 public class User {
 
     @DocumentId
-    private String UID;
+    private String ID;
 
     private String username;
     private String fullName;
@@ -166,11 +166,11 @@ public class User {
         this.fullName = fullName;
     }
 
-    public String getUID() {
-        return UID;
+    public String getID() {
+        return ID;
     }
 
-    public void setUID(String UID) {
-        this.UID = UID;
+    public void setID(String ID) {
+        this.ID = ID;
     }
 }

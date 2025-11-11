@@ -29,7 +29,7 @@ public class Event {
     private String description; // Event details
     private Date startDate;    // Event start date
     private Date endDate;     // Event end date
-    private String eventOrganizerName;
+    private String organizerUID;
     private int maxInvited;   // Max entrants that can be invited
 
 
@@ -41,8 +41,7 @@ public class Event {
     // Required empty constructor for Firestore
     public Event() {}
 
-    public Event(String name, String location, int capacity, double price, String description, Date startDate, Date endDate, String eventOrganizerName) {
-        this.ID = eventOrganizerName + "-" + name;
+    public Event(String name, String location, int capacity, double price, String description, Date startDate, Date endDate, String organizerUID) {
         this.name = name;
         this.location = location;
         this.capacity = capacity;
@@ -50,10 +49,16 @@ public class Event {
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.eventOrganizerName = eventOrganizerName;
+        this.organizerUID = organizerUID;
         this.maxInvited = 10;
         this.waitingList = new ArrayList<>();
         this.invitationList = new ArrayList<>();
+    }
+
+    @Override
+    public String toString() {
+
+        return name + " (" + location + ") on ?";
     }
 
     // --- Getters and Setters ---
@@ -92,18 +97,12 @@ public class Event {
     @Override
     public int hashCode() { return Objects.hash(ID); }
 
-    @Override
-    public String toString() {
-        return name + " (" + location + ") on ?";
+    public String getOrganizerUID() {
+        return organizerUID;
     }
 
-
-    public String getEventOrganizerName() {
-        return eventOrganizerName;
-    }
-
-    public void setEventOrganizerName(String eventOrganizerName) {
-        this.eventOrganizerName = eventOrganizerName;
+    public void setOrganizerUID(String organizerUID) {
+        this.organizerUID = organizerUID;
     }
 
     public Date getStartDate() {

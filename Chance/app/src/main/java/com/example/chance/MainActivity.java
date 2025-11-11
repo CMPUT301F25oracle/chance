@@ -6,7 +6,6 @@ import static android.view.View.GONE;
 import android.os.Bundle;
 import android.view.View;
 
-import com.example.chance.controller.ChanceState;
 import com.example.chance.controller.DataStoreManager;
 import com.example.chance.model.User;
 import com.example.chance.views.Home;

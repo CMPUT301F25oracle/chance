@@ -10,8 +10,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
-import com.example.chance.controller.ChanceState;
+import com.example.chance.ChanceViewModel;
 import com.example.chance.controller.DataStoreManager;
 import com.example.chance.controller.QRCodeHandler;
 import com.example.chance.databinding.ViewEventBinding;
@@ -26,6 +27,7 @@ import java.util.Objects;
 
 public class ViewEvent extends Fragment {
     private ViewEventBinding binding;
+    private ChanceViewModel cvm;
     private DataStoreManager dsm;
 
     @Nullable
@@ -34,6 +36,7 @@ public class ViewEvent extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = ViewEventBinding.inflate(inflater, container, false);
+        cvm = new ViewModelProvider(requireActivity()).get(ChanceViewModel.class);
         dsm = DataStoreManager.getInstance();
 
         return binding.getRoot();
@@ -43,29 +46,35 @@ public class ViewEvent extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Bundle bundle = getArguments();
-        assert bundle != null;
         String eventID = bundle.getString("event_id");
-        dsm.getEvent(eventID, (event) -> {
+        cvm.getEvents().observe(getViewLifecycleOwner(), events -> {
+            Event event = events.stream().filter(ev -> Objects.equals(ev.getID(), eventID)).findFirst().orElse(null);
             if (event == null) {
-                throw new RuntimeException("Event not found");
+                dsm.getEvent(eventID, this::loadEventInformation);
+            } else {
+                loadEventInformation(event);
             }
-            binding.eventName.setText(event.getName());
-            binding.eventInformation.setText(
-                    String.format("* ? users currently in waiting list  /  $%.2f per person.\n%s", event.getPrice(), event.getLocation()));
-            binding.eventOverview.setText(event.getDescription());
-            // now we load the events unique QRCode
-            Bitmap unique_qrcode;
-            try {
-                unique_qrcode = QRCodeHandler.generateQRCode(event.getID());
-            } catch (WriterException e) {
-                throw new RuntimeException(e);
-            }
-
-            binding.qrcodeButton.setImageBitmap(unique_qrcode);
-
         });
+    }
 
-        //
+    public void loadEventInformation(Event event) {
+        assert event != null;
+        binding.eventName.setText(event.getName());
+        binding.eventInformation.setText(
+                String.format("* ? users currently in waiting list  /  $%.2f per person.\n%s", event.getPrice(), event.getLocation()));
+        binding.eventOverview.setText(event.getDescription());
+        // now we load the events unique QRCode
+        Bitmap unique_qrcode;
+        try {
+            unique_qrcode = QRCodeHandler.generateQRCode(event.getID());
+        } catch (WriterException e) {
+            throw new RuntimeException(e);
+        }
+        binding.qrcodeButton.setImageBitmap(unique_qrcode);
+
+//        binding.enterLotteryButton.setOnClickListener(() -> {
+//
+//        });
     }
 
     @Override
