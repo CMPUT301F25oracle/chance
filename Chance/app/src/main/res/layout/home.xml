@@ -6,16 +6,16 @@
     android:background="@color/grey"
     app:alignItems="baseline"
     app:flexDirection="column"
-    app:justifyContent="space_between">
+    app:justifyContent="flex_start">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_height="wrap_content"
+        android:fillViewport="false">
 
         <com.google.android.flexbox.FlexboxLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@color/grey"
             android:orientation="vertical"
             app:alignItems="flex_start"
@@ -150,33 +150,21 @@
                         android:hint="Find an event..." />
                 </com.google.android.flexbox.FlexboxLayout>
 
-
-
-
-
-                <com.google.android.flexbox.FlexboxLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal"
-                    app:flexDirection="row"
-                    app:flexWrap="wrap"
-                    app:justifyContent="space_evenly">
-
-
-
-                </com.google.android.flexbox.FlexboxLayout>
-
             </com.google.android.flexbox.FlexboxLayout>
 
         </com.google.android.flexbox.FlexboxLayout>
 
 
     </ScrollView>
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/events_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        app:layout_flexGrow="1"
+        android:clipToPadding="false"
+        android:paddingTop="8dp">
     </androidx.recyclerview.widget.RecyclerView>
 
 

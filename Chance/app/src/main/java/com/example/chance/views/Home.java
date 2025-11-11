@@ -20,7 +20,9 @@ import com.example.chance.controller.DataStoreManager;
 import com.example.chance.databinding.HomeBinding;
 import com.example.chance.model.Event;
 import com.example.chance.model.User;
+import com.google.android.flexbox.AlignItems;
 import com.google.android.flexbox.FlexDirection;
+import com.google.android.flexbox.FlexWrap;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
 
@@ -68,10 +70,20 @@ public class Home extends Fragment {
         eventsContainer.setAdapter(eventsAdapter);
 
         // next we make sure flexbox is configured on the recyclerview
-        FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(getContext());
-        layoutManager.setFlexDirection(FlexDirection.COLUMN);
-        layoutManager.setJustifyContent(JustifyContent.FLEX_END);
-        eventsContainer.setLayoutManager(layoutManager);
+        FlexboxLayoutManager lm = new FlexboxLayoutManager(getContext());
+        lm.setFlexDirection(FlexDirection.COLUMN); // top→bottom
+        lm.setFlexWrap(FlexWrap.WRAP);              // wrap into next column
+        lm.setJustifyContent(JustifyContent.FLEX_START);
+        lm.setAlignItems(AlignItems.STRETCH);
+        binding.eventsContainer.setLayoutManager(lm);
+
+// simple gap decoration
+        int gap = getResources().getDimensionPixelSize(R.dimen.some_gap);
+        binding.eventsContainer.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override public void getItemOffsets(android.graphics.Rect out, View v, RecyclerView p, RecyclerView.State s) {
+                out.set(gap, gap, gap, gap);
+            }
+        });
 
         // now we load the event data (if there is any)
         cvm.getEvents().observe(getViewLifecycleOwner(), events -> {
