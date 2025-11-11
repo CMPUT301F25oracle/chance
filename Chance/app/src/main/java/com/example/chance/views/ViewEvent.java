@@ -1,6 +1,7 @@
 package com.example.chance.views;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,11 +14,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.chance.ChanceViewModel;
+import com.example.chance.R;
 import com.example.chance.controller.DataStoreManager;
 import com.example.chance.controller.QRCodeHandler;
 import com.example.chance.databinding.ViewEventBinding;
 import com.example.chance.model.Event;
 import com.example.chance.model.User;
+import com.google.rpc.context.AttributeContext;
 import com.google.zxing.WriterException;
 import com.google.zxing.qrcode.encoder.QRCode;
 
@@ -30,6 +33,8 @@ public class ViewEvent extends Fragment {
     private ChanceViewModel cvm;
     private DataStoreManager dsm;
 
+    private Drawable buttonBackground;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -39,6 +44,8 @@ public class ViewEvent extends Fragment {
         cvm = new ViewModelProvider(requireActivity()).get(ChanceViewModel.class);
         dsm = DataStoreManager.getInstance();
 
+        buttonBackground = binding.enterLotteryButton.getBackground();
+
         return binding.getRoot();
     }
 
@@ -46,18 +53,22 @@ public class ViewEvent extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Bundle bundle = getArguments();
-        String eventID = bundle.getString("event_id");
-        cvm.getEvents().observe(getViewLifecycleOwner(), events -> {
-            Event event = events.stream().filter(ev -> Objects.equals(ev.getID(), eventID)).findFirst().orElse(null);
-            if (event == null) {
-                dsm.getEvent(eventID, this::loadEventInformation);
-            } else {
-                loadEventInformation(event);
-            }
+        cvm.getCurrentUser().observe(getViewLifecycleOwner(), user -> {
+            String eventID = bundle.getString("event_id");
+            cvm.getEvents().observe(getViewLifecycleOwner(), events -> {
+                Event event = events.stream().filter(ev -> Objects.equals(ev.getID(), eventID)).findFirst().orElse(null);
+                if (event == null) {
+                    dsm.getEvent(eventID, retrieved_event -> {
+                        loadEventInformation(retrieved_event, user);
+                    });
+                } else {
+                    loadEventInformation(event, user);
+                }
+            });
         });
     }
 
-    public void loadEventInformation(Event event) {
+    public void loadEventInformation(Event event, User user) {
         assert event != null;
         binding.eventName.setText(event.getName());
         binding.eventInformation.setText(
@@ -71,10 +82,26 @@ public class ViewEvent extends Fragment {
             throw new RuntimeException(e);
         }
         binding.qrcodeButton.setImageBitmap(unique_qrcode);
+        binding.enterLotteryButton.setOnClickListener(__ -> {
+            if (event.getWaitingList().contains(user.getID())) {
+                dsm.event(event).leaveLottery(user);
+                setLotteryButtonAppearance(false);
+            } else {
+                dsm.event(event).enterLottery(user);
+                setLotteryButtonAppearance(true);
+            }
 
-//        binding.enterLotteryButton.setOnClickListener(() -> {
-//
-//        });
+        });
+    }
+
+    public void setLotteryButtonAppearance(Boolean enteredInLottery) {
+        if (enteredInLottery) {
+            binding.enterLotteryButton.setBackgroundResource(R.color.button_red);
+            binding.enterLotteryButton.setText("Leave Lottery");
+        } else {
+            binding.enterLotteryButton.setBackground(buttonBackground);
+            binding.enterLotteryButton.setText("Enter Lottery");
+        }
     }
 
     @Override

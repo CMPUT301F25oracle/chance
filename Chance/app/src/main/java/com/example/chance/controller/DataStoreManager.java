@@ -14,6 +14,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Base64;
@@ -327,9 +329,23 @@ public class DataStoreManager {
             this.event = event;
         }
 
-//        public void enterLottery() {
+//        public Boolean isInLottery(User user) {
 //            fStore.collection(EVENT_COLLECTION)
-//
+//                    .document(event.getID());
 //        }
+
+        public void enterLottery(User user) {
+            fStore.collection(EVENT_COLLECTION)
+                    .document(event.getID())
+                    .update("waitingList", FieldValue.arrayUnion(user.getID()));
+            event.addToWaitingList(user.getID());
+        }
+
+        public void leaveLottery(User user) {
+            fStore.collection(EVENT_COLLECTION)
+                    .document(event.getID())
+                    .update("waitingList", FieldValue.arrayRemove(user.getID()));
+            event.leaveWaitingList(user.getID());
+        }
     }
 }

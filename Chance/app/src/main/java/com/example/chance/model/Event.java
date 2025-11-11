@@ -141,7 +141,9 @@ public class Event {
     }
 
     public void addToWaitingList(String userId) {
-        waitingList.add(userId);
+        if (!waitingList.contains(userId)) {
+            waitingList.add(userId);
+        }
     }
 
     public void acceptInvitation(String userId) {
