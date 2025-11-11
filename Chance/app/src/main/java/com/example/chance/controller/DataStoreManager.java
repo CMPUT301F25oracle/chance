@@ -56,13 +56,15 @@ public class DataStoreManager {
         return user != null;
     }
 
-    public void AuthenticateUser(String username, String password, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+    public void authenticateUser(String username, String password, OnSuccessListener<User> onSuccess, OnFailureListener onFailure) {
         fAuth.signInWithEmailAndPassword(username + PSEUDO_EMAIL, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            FirebaseUser user = fAuth.getCurrentUser();
+                            FirebaseUser firestoreUser = fAuth.getCurrentUser();
+                            getUserFromUID(firestoreUser.getUid(), onSuccess, onFailure);
+                            // now we grab the users information from firestore
                             onSuccess.onSuccess(null);
                         } else {
                             onFailure.onFailure(task.getException());
@@ -78,11 +80,12 @@ public class DataStoreManager {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            FirebaseUser firebaseUser = fAuth.getCurrentUser();
+                            FirebaseUser firestoreUser = fAuth.getCurrentUser();
                             User user = new User(username);
                             // now that the user is in firestore, we create their db entry
+                            assert firestoreUser != null;
                             fStore.collection(USER_COLLECTION)
-                                .document(firebaseUser.getUid())
+                                .document(firestoreUser.getUid())
                                 .set(user)
                                 .addOnSuccessListener((__) -> {
                                     onSuccess.onSuccess(user);
@@ -99,7 +102,16 @@ public class DataStoreManager {
 
 
 
-
+    public void getUserFromUID(String uid, OnSuccessListener<User> onSuccess, OnFailureListener onFailure) {
+        db.getDocument("users", uid, (document) -> {
+            if (document.exists()) {
+                User user = document.toObject(User.class);
+                onSuccess.onSuccess(user);
+            } else {
+                onFailure.onFailure(null);
+            }
+        }, onFailure);
+    }
 
     /**
      * Get a user from Firestore.

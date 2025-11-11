@@ -3,6 +3,7 @@ package com.example.chance.views;
 import static android.view.View.VISIBLE;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,23 +46,9 @@ public class Authentication extends Fragment {
         binding.signUpButton.setOnClickListener(v -> {
             String username = binding.username.getText().toString();
             String password = binding.password.getText().toString();
-            dsm.getUser(username, (user) -> {
-                if (user != null) {
-                    binding.errorMessage.setVisibility(VISIBLE);
-                    binding.errorMessage.setText("Account username already taken");
-
-                } else {
-                    //User new_user = dsm.createUser(username, password);
-                    dsm.createNewUser(username, password, (e)->{}, (e)->{
-                        try {
-                            throw new Exception(e);
-                        } catch (Exception ex) {
-                            throw new RuntimeException(ex);
-                        }
-                    });
-                    //ChanceState.getInstance().setUser(new_user);
-                    //navigateToHome();
-                }
+            dsm.createNewUser(username, password, this::userAuthenticated, (e)->{
+                binding.errorMessage.setVisibility(VISIBLE);
+                binding.errorMessage.setText("There was a problem creating the new user");
             });
         });
 
@@ -69,19 +56,15 @@ public class Authentication extends Fragment {
              // first we grab the credentials
              String username = binding.username.getText().toString();
              String password = binding.password.getText().toString();
-             dsm.getUser(username, (user) -> {
-//                 if (user == null || !Objects.equals(user.getPassword(), password)) {
-//                     binding.errorMessage.setVisibility(VISIBLE);
-//                     binding.errorMessage.setText("Username or Password was invalid");
-//                 } else {
-//                     ChanceState.getInstance().setUser(user);
-//                     navigateToHome();
-//                 }
+             dsm.authenticateUser(username, password, this::userAuthenticated,(e)->{
+                 binding.errorMessage.setVisibility(VISIBLE);
+                 binding.errorMessage.setText("There was a problem loggin in");
              });
          });
     }
 
-    private void navigateToHome() {
+    private void userAuthenticated(User user) {
+        cvm.setCurrentUser(user);
         cvm.setNewFragment(Home.class, null);
         cvm.setLoadMainUI(true);
     }

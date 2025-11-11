@@ -37,9 +37,17 @@ public class Home extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ChanceState state = ChanceState.getInstance();
-        User user = state.getUser();
-        binding.homeSystemMessage.setText("Hello, " + user.getUsername());
+
+        // Observe the current user LiveData so UI updates when user is available.
+        cvm.getCurrentUser().observe(getViewLifecycleOwner(), user -> {
+            if (user == null) {
+                // No user yet: show placeholder, loading state, or navigate to auth
+                binding.homeSystemMessage.setText("Hello!");
+                return;
+            }
+            // Update UI once we have a user
+            binding.homeSystemMessage.setText("Hello, " + user.getUsername());
+        });
         //region button press handlers
         binding.buttonCreateEvent.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager().beginTransaction()
@@ -47,31 +55,31 @@ public class Home extends Fragment {
                     .commit();
         });
 
-        // now we load events
-        ViewGroup event_container = binding.homeEventContainer;
-        DataStoreManager.getInstance().getAllEvents((events) -> {
-            LayoutInflater inflater = LayoutInflater.from(requireContext());
-
-            for (Event event : events) {
-                // Inflate your event_pill.xml
-                View pill = inflater.inflate(R.layout._r_event_pill, event_container, false);
-                ((TextView) pill.findViewById(R.id.event_title)).setText(event.getName());
-                ((TextView) pill.findViewById(R.id.event_description)).setText(event.getDescription());
-                assert event.getID() != null;
-                pill.setTag(event.getID());
-                pill.setOnClickListener(v -> {
-                    assert (String) v.getTag() != null;
-                    cvm.requestOpenEvent((String) v.getTag());
-                });
-//                // Optionally bind data to the pill (e.g., set text, images)
-//                TextView title = pill.findViewById(R.id.eventTitle);
-//                title.setText(event.getTitle());
+//        // now we load events
+//        ViewGroup event_container = binding.homeEventContainer;
+//        DataStoreManager.getInstance().getAllEvents((events) -> {
+//            LayoutInflater inflater = LayoutInflater.from(requireContext());
 //
-//                // Add the pill to the container
-                event_container.addView(pill);
-            }
-            //event_container.add
-        });
+//            for (Event event : events) {
+//                // Inflate your event_pill.xml
+//                View pill = inflater.inflate(R.layout._r_event_pill, event_container, false);
+//                ((TextView) pill.findViewById(R.id.event_title)).setText(event.getName());
+//                ((TextView) pill.findViewById(R.id.event_description)).setText(event.getDescription());
+//                assert event.getID() != null;
+//                pill.setTag(event.getID());
+//                pill.setOnClickListener(v -> {
+//                    assert (String) v.getTag() != null;
+//                    cvm.requestOpenEvent((String) v.getTag());
+//                });
+////                // Optionally bind data to the pill (e.g., set text, images)
+////                TextView title = pill.findViewById(R.id.eventTitle);
+////                title.setText(event.getTitle());
+////
+////                // Add the pill to the container
+//                event_container.addView(pill);
+//            }
+//            //event_container.add
+//        });
 
 
 

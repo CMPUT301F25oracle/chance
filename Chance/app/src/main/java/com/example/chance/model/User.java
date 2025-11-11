@@ -8,8 +8,9 @@ import java.util.List;
 public class User {
 
     @DocumentId
-    private String username;
+    private String UID;
 
+    private String username;
     private String fullName;
     private String email;
     private String phoneNumber;
@@ -163,5 +164,13 @@ public class User {
      */
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public String getUID() {
+        return UID;
+    }
+
+    public void setUID(String UID) {
+        this.UID = UID;
     }
 }

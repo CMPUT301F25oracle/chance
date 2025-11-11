@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.example.chance.controller.ChanceState;
 import com.example.chance.controller.DataStoreManager;
+import com.example.chance.model.User;
 import com.example.chance.views.Home;
 import com.example.chance.views.Profile;
 
@@ -23,7 +24,7 @@ import com.example.chance.views.QrcodeScanner;
 import com.example.chance.views.ViewEvent;
 
 public class MainActivity extends AppCompatActivity {
-
+    private User user;
     private ActivityMainBinding binding;
     private ChanceViewModel chanceViewModel;
 
@@ -56,6 +57,10 @@ public class MainActivity extends AppCompatActivity {
         setupNavBar();
 
 
+        //region: viewmodel callbacks
+        chanceViewModel.getCurrentUser().observe(this, user -> {
+            this.user = user;
+        });
         chanceViewModel.getNewFragment().observe(this, fragmentData -> {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             Class<? extends Fragment> fragmentClass = fragmentData.x;
@@ -89,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
             bundle.putString("event_id", eventId);
             chanceViewModel.setNewFragment(ViewEvent.class, bundle);
         });
-        //endregion: viewmodel callbacks
+        //endregion
     }
     
     private void setupNavBar() {
