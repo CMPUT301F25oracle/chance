@@ -114,6 +114,21 @@ public class DataStoreManager {
     }
 
     /**
+     * gets all events from firestore, and returns them through success callback
+     * @param onSuccess
+     * @param onFailure
+     */
+    public void getEvents(OnSuccessListener<List<Event>> onSuccess, OnFailureListener onFailure) {
+        fStore.collection(EVENT_COLLECTION)
+                .get()
+                .addOnSuccessListener((snapshot) -> {
+                    List<Event> events = snapshot.toObjects(Event.class);
+                    onSuccess.onSuccess(events);
+                })
+                .addOnFailureListener(onFailure);
+    }
+
+    /**
      * Get a user from Firestore.
      * @param username
      * @param onSuccess

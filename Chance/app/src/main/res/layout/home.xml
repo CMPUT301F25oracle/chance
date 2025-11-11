@@ -171,6 +171,13 @@
 
         </com.google.android.flexbox.FlexboxLayout>
 
+
     </ScrollView>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/events_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </androidx.recyclerview.widget.RecyclerView>
+
 
 </com.google.android.flexbox.FlexboxLayout>

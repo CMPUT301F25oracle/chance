@@ -9,7 +9,7 @@
     app:justifyContent="flex_end"
     android:background="@color/grey"
     >
-    <include layout="@layout/_title_bar" android:id="@+id/title_bar"/>
+    <include layout="@layout/title_bar" android:id="@+id/title_bar"/>
     <FrameLayout
         android:id="@+id/content_view"
         android:layout_width="match_parent"

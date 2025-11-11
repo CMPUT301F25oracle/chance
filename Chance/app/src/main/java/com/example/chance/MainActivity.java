@@ -58,8 +58,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         //region: viewmodel callbacks
-        chanceViewModel.getCurrentUser().observe(this, user -> {
+        chanceViewModel.getAuthenticationSuccess().observe(this, user -> {
             this.user = user;
+            // now we load the list of events from firestore
+            DataStoreManager.getInstance().getAllEvents((events) -> {
+                chanceViewModel.setEvents(events);
+            });
         });
         chanceViewModel.getNewFragment().observe(this, fragmentData -> {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

@@ -64,7 +64,7 @@ public class Authentication extends Fragment {
     }
 
     private void userAuthenticated(User user) {
-        cvm.setCurrentUser(user);
+        cvm.setAuthenticationSuccess(user);
         cvm.setNewFragment(Home.class, null);
         cvm.setLoadMainUI(true);
     }
