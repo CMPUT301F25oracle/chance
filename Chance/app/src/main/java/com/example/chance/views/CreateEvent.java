@@ -58,7 +58,6 @@ public class CreateEvent extends Fragment {
                             // lets grab the image from the uri
                             InputStream bannerFileStream = getContext().getContentResolver().openInputStream(uri);
                             byte[] bannerBytes = bannerFileStream.readAllBytes();
-                            Glide.with()
                             String bannerBase64 = Base64.getEncoder().encodeToString(bannerBytes);
                             EventImage eventBanner = new EventImage(bannerBase64);
                             eventBanner.setID("coolest_image");

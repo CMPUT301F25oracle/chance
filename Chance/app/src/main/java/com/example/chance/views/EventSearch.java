@@ -54,33 +54,17 @@ public class EventSearch extends Fragment {
         // next we make sure flexbox is configured on the recyclerview
         FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(getContext());
         layoutManager.setFlexDirection(FlexDirection.COLUMN);
-        layoutManager.setFlexWrap(FlexWrap.WRAP);
-        layoutManager.setJustifyContent(JustifyContent.FLEX_START);
-        layoutManager.setAlignItems(AlignItems.STRETCH);
+        layoutManager.setFlexWrap(FlexWrap.NOWRAP);
+        layoutManager.setJustifyContent(JustifyContent.CENTER);
+        layoutManager.setAlignItems(AlignItems.CENTER);
+
+
         eventsContainer.setLayoutManager(layoutManager);
-
-
 
         // now we load the event data (if there is any)
         cvm.getEvents().observe(getViewLifecycleOwner(), events -> {
-            eventsAdapter.submitList(events);
-        });
-
-        eventsContainer.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
-            @Override
-            public boolean onInterceptTouchEvent(@NonNull RecyclerView viewManager, @NonNull MotionEvent touchEvent) {
-                View eventPill = viewManager.findChildViewUnder(touchEvent.getX(), touchEvent.getY());
-                if (eventPill != null) {
-                    if (touchEvent.getAction() == MotionEvent.ACTION_UP) {
-                        // we only act when the user lifts their thumb to give more
-                        // "natural" feedback
-                        String eventId = (String) eventPill.getTag();
-                        cvm.requestOpenEvent(eventId);
-                        return true;
-                    }
-                }
-                return false;
-            }
+            if (events == null) return;
+            eventsAdapter.submitList(new ArrayList<>(events));
         });
 
         eventsContainer.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {

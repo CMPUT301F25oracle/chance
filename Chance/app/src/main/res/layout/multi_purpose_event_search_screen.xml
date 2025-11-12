@@ -4,9 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    app:alignItems="flex_start"
+    app:alignItems="center"
     app:flexDirection="column"
-    app:justifyContent="space_between"
+    app:justifyContent="flex_start"
     android:orientation="vertical"
     android:background="@color/grey">
 
@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         app:alignItems="flex_start"
         app:flexDirection="column"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_marginTop="20dp"
         app:layout_flexGrow="1">
 
@@ -29,14 +29,22 @@
             android:background="@color/white"
             />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/events_search_container"
+        <com.google.android.flexbox.FlexboxLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </androidx.recyclerview.widget.RecyclerView>
-
+            android:layout_height="match_parent"
+            app:flexDirection = "column"
+            app:alignContent="center"
+            app:alignItems="center">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/events_search_container"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_flexGrow="1">
+            </androidx.recyclerview.widget.RecyclerView>
 
     </com.google.android.flexbox.FlexboxLayout>
 
+    </com.google.android.flexbox.FlexboxLayout>
 
 </com.google.android.flexbox.FlexboxLayout>
