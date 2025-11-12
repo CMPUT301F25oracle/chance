@@ -63,11 +63,7 @@ public class EventSearch extends Fragment {
 
         // now we load the event data (if there is any)
         cvm.getEvents().observe(getViewLifecycleOwner(), events -> {
-            List<Event> eventList = new ArrayList<>();
-            for (int i = 0; i < events.size(); i++) {
-                eventList.add(events.get(i));
-            }
-            eventsAdapter.submitList(eventList);
+            eventsAdapter.submitList(events);
         });
 
         eventsContainer.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {

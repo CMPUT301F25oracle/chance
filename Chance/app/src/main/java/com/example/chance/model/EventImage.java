@@ -8,20 +8,28 @@ import java.util.List;
 public class EventImage {
 
     @DocumentId
-    private String event_id;
-    private Base64 event_image;
+    private String ID;
 
-    public EventImage(String event_id, Base64 event_image) {
-        this.event_image = event_image;
-        this.event_id = event_id;
+    private String eventImage;
+
+    public EventImage() {}
+    public EventImage(String eventImage) {
+        this.eventImage = eventImage;
     }
 
-    public Base64 getEventImage() {
-        return event_image;
+    public String getID() {
+        return ID;
     }
 
-    public void setEventImage(String event_id, Base64 event_image) {
-        this.event_image = event_image;
-        this.event_id = event_id;
+    public void setID(String ID) {
+        this.ID = ID;
+    }
+
+    public String getEventImage() {
+        return eventImage;
+    }
+
+    public void setEventImage(String eventImage) {
+        this.eventImage = eventImage;
     }
 }
