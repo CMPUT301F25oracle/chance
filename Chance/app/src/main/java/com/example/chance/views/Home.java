@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,11 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chance.ChanceViewModel;
 import com.example.chance.R;
-import com.example.chance.adapters.EventListAdapter;
+import com.example.chance.adapters.MainEventSearchListAdapter;
 import com.example.chance.controller.DataStoreManager;
 import com.example.chance.databinding.HomeBinding;
 import com.example.chance.model.Event;
-import com.example.chance.model.User;
 import com.google.android.flexbox.AlignItems;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexWrap;
@@ -71,8 +69,8 @@ public class Home extends Fragment {
         // now we set up our event adapter
         RecyclerView eventsContainerLeft = binding.eventsContainerLeft;
         RecyclerView eventsContainerRight = binding.eventsContainerRight;
-        EventListAdapter eventsAdapterLeft = new EventListAdapter();
-        EventListAdapter eventsAdapterRight = new EventListAdapter();
+        MainEventSearchListAdapter eventsAdapterLeft = new MainEventSearchListAdapter();
+        MainEventSearchListAdapter eventsAdapterRight = new MainEventSearchListAdapter();
         eventsContainerLeft.setAdapter(eventsAdapterLeft);
         eventsContainerRight.setAdapter(eventsAdapterRight);
 

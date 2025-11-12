@@ -19,7 +19,7 @@ import com.example.chance.model.Event;
  * Adapter for displaying Event cards in RecyclerView.
  * Used in activity_event_list.xml and event_card.xml layout.
  */
-public class EventListAdapter extends ListAdapter<Event, EventListAdapter.EventViewHolder> {
+public class MainEventSearchListAdapter extends ListAdapter<Event, MainEventSearchListAdapter.EventViewHolder> {
 
     public static final DiffUtil.ItemCallback<Event> DIFF_CALLBACK =
             new DiffUtil.ItemCallback<Event>() {
@@ -42,7 +42,7 @@ public class EventListAdapter extends ListAdapter<Event, EventListAdapter.EventV
                 }
             };
 
-    public EventListAdapter() {
+    public MainEventSearchListAdapter() {
         super(DIFF_CALLBACK);
     }
 
