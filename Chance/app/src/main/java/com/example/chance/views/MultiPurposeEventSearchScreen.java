@@ -13,11 +13,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chance.ChanceViewModel;
-import com.example.chance.R;
 import com.example.chance.adapters.EventSearchScreenListAdapter;
 import com.example.chance.controller.DataStoreManager;
 import com.example.chance.databinding.MultiPurposeEventSearchScreenBinding;
-import com.example.chance.model.Event;
 import com.google.android.flexbox.AlignItems;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexWrap;
@@ -25,8 +23,8 @@ import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
 
 import java.util.ArrayList;
-import java.util.List;
-public class EventSearch extends Fragment {
+
+public class MultiPurposeEventSearchScreen extends Fragment {
     private MultiPurposeEventSearchScreenBinding binding;
     private ChanceViewModel cvm;
     private DataStoreManager dsm;
@@ -52,11 +50,16 @@ public class EventSearch extends Fragment {
         eventsContainer.setAdapter(eventsAdapter);
 
         // next we make sure flexbox is configured on the recyclerview
+//        FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(getContext());
+//        layoutManager.setFlexDirection(FlexDirection.COLUMN);
+//        layoutManager.setFlexWrap(FlexWrap.NOWRAP);
+//        layoutManager.setJustifyContent(JustifyContent.CENTER);
+//        layoutManager.setAlignItems(AlignItems.CENTER);
         FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(getContext());
         layoutManager.setFlexDirection(FlexDirection.COLUMN);
-        layoutManager.setFlexWrap(FlexWrap.NOWRAP);
-        layoutManager.setJustifyContent(JustifyContent.CENTER);
-        layoutManager.setAlignItems(AlignItems.CENTER);
+        layoutManager.setFlexWrap(FlexWrap.WRAP);
+        layoutManager.setJustifyContent(JustifyContent.FLEX_START);
+        layoutManager.setAlignItems(AlignItems.STRETCH);
 
 
         eventsContainer.setLayoutManager(layoutManager);

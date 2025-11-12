@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chance.ChanceViewModel;
-import com.example.chance.R;
 import com.example.chance.adapters.MainEventSearchListAdapter;
 import com.example.chance.controller.DataStoreManager;
 import com.example.chance.databinding.HomeBinding;
@@ -61,7 +60,7 @@ public class Home extends Fragment {
         });
 
         binding.buttonEventCreated.setOnClickListener(__ -> {
-            cvm.setNewFragment(EventSearch.class, null);
+            cvm.setNewFragment(MultiPurposeEventSearchScreen.class, null);
         });
         binding.buttonCreateEvent.setOnClickListener(__ -> {
             cvm.setNewFragment(CreateEvent.class, null);

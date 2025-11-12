@@ -55,7 +55,7 @@ public class EventSearchScreenListAdapter extends ListAdapter<Event, EventSearch
     public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View eventPillView = LayoutInflater
                 .from(parent.getContext())
-                .inflate(R.layout._r_event_pill, parent, false);
+                .inflate(R.layout.event_search, parent, false);
         return new EventViewHolder(eventPillView);
     }
 
@@ -67,15 +67,21 @@ public class EventSearchScreenListAdapter extends ListAdapter<Event, EventSearch
         holder.title.setText(event.getName());
         holder.description.setText(event.getDescription());
         holder.itemView.setTag(event.getID());
+
+        DataStoreManager.getInstance().getEventBannerFromID(event.getID(), eventBitmap -> {
+            holder.banner.setImageBitmap(eventBitmap);
+        }, __ -> {});
     }
 
     public static class EventViewHolder extends RecyclerView.ViewHolder {
         TextView title, description;
+        ImageView banner;
 
         public EventViewHolder(@NonNull View eventPillView) {
             super(eventPillView);
             title = eventPillView.findViewById(R.id.event_title);
             description = eventPillView.findViewById(R.id.event_description);
+            banner = eventPillView.findViewById(R.id.event_image);
         }
     }
 }

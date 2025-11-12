@@ -3,48 +3,106 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    app:alignItems="center"
+    android:background="@color/grey"
+    app:alignItems="baseline"
     app:flexDirection="column"
-    app:justifyContent="flex_start"
-    android:orientation="vertical"
-    android:background="@color/grey">
+    app:justifyContent="flex_start">
 
-    <com.google.android.flexbox.FlexboxLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:alignItems="flex_start"
-        app:flexDirection="column"
-        android:orientation="vertical"
-        android:layout_marginTop="20dp"
-        app:layout_flexGrow="1">
-
-        <!-- This is the search bar -->
-        <EditText
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="15dp"
-            android:layout_width="330dp"
-            android:layout_height="40dp"
-            android:hint="Find an event..."
-            android:background="@color/white"
-            />
+        android:fillViewport="false">
 
         <com.google.android.flexbox.FlexboxLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:flexDirection = "column"
-            app:alignContent="center"
-            app:alignItems="center">
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/events_search_container"
-                android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:background="@color/grey"
+            android:orientation="vertical"
+            app:alignItems="stretch"
+            app:flexDirection="column"
+            app:justifyContent="flex_start">
+
+            <com.google.android.flexbox.FlexboxLayout
+                android:id="@+id/home_event_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_flexGrow="1">
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                app:alignItems="center"
+                app:flexDirection="column"
+                app:justifyContent="center">
+
+                <com.google.android.flexbox.FlexboxLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:alignContent="flex_start"
+                    app:flexDirection="row">
+                    <!-- This is the search bar -->
+                    <EditText
+                        android:layout_width="330dp"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/white"
+                        android:hint="Find an event..." />
+                </com.google.android.flexbox.FlexboxLayout>
+
+            </com.google.android.flexbox.FlexboxLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/events_search_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_flexShrink="1">
             </androidx.recyclerview.widget.RecyclerView>
 
-    </com.google.android.flexbox.FlexboxLayout>
 
-    </com.google.android.flexbox.FlexboxLayout>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp"/>
+        </com.google.android.flexbox.FlexboxLayout>
+    </ScrollView>
+
+
+
 
 </com.google.android.flexbox.FlexboxLayout>
+
+<!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<com.google.android.flexbox.FlexboxLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    app:alignItems="flex_start"-->
+<!--    app:flexDirection="column"-->
+<!--    android:orientation="vertical"-->
+<!--    android:background="@color/grey">-->
+
+<!--    <com.google.android.flexbox.FlexboxLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:alignItems="flex_start"-->
+<!--        app:flexDirection="column"-->
+<!--        android:orientation="vertical"-->
+<!--        android:layout_marginTop="20dp">-->
+
+<!--        &lt;!&ndash; This is the search bar &ndash;&gt;-->
+<!--        <EditText-->
+<!--            android:layout_marginTop="5dp"-->
+<!--            android:layout_marginLeft="15dp"-->
+<!--            android:layout_width="330dp"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:hint="Find an event..."-->
+<!--            android:background="@color/white"-->
+<!--            />-->
+
+<!--    </com.google.android.flexbox.FlexboxLayout>-->
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/events_search_container"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content">-->
+<!--    </androidx.recyclerview.widget.RecyclerView>-->
+
+<!--</com.google.android.flexbox.FlexboxLayout>-->

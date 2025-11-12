@@ -6,15 +6,14 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
     android:orientation="vertical"
-    android:layout_gravity="center_horizontal"
     android:background="@color/white"
-    app:flexDirection="column">
+    app:flexDirection="column"
+    app:layout_flexGrow="1">
 
     <ImageView
         android:id="@+id/event_image"
         android:layout_width="match_parent"
         android:layout_height="220dp"
-        android:layout_gravity="center_horizontal"
         android:scaleType="centerCrop"
         android:src="@drawable/placeholder_banner"/>
 
