@@ -1,5 +1,8 @@
 package com.example.chance.controller;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import androidx.annotation.NonNull;
 
 import com.example.chance.model.Event;
@@ -132,6 +135,53 @@ public class DataStoreManager {
                 .addOnSuccessListener(document -> {
                     event.setID(document.getId());
                     onSuccess.onSuccess(event);
+                })
+                .addOnFailureListener(onFailure);
+    }
+
+    public void getEventBannerFromID(String ID, OnSuccessListener<Bitmap> onSuccess, OnFailureListener onFailure) {
+        fStore.collection(EVENT_IMAGE_COLLECTION)
+                .document(ID)
+                .get()
+                .addOnSuccessListener(document -> {
+                    if (!document.exists()) {
+                        onFailure.onFailure(new Exception("Event image not found for ID: " + ID));
+                        return;
+                    }
+
+                    EventImage eventImage = document.toObject(EventImage.class);
+                    byte[] imageBase64 = Base64.getDecoder().decode(eventImage.getEventImage());
+                    Bitmap imageBitmap = BitmapFactory.decodeByteArray(imageBase64, 0, imageBase64.length);
+                    onSuccess.onSuccess(imageBitmap);
+
+                    // Guard: check that the document actually exists
+//                    if (document == null || !document.exists()) {
+//                        // no document found for this ID
+//                        onFailure.onFailure(new Exception("Event image not found for ID: " + ID));
+//                        return;
+//                    }
+//
+//                    EventImage eventImage = document.toObject(EventImage.class);
+//                    if (eventImage == null || eventImage.getEventImage() == null || eventImage.getEventImage().isEmpty()) {
+//                        onFailure.onFailure(new Exception("Event image data is missing or empty for ID: " + ID));
+//                        return;
+//                    }
+//
+//                    byte[] imageBase64;
+//                    try {
+//                        imageBase64 = Base64.getDecoder().decode(eventImage.getEventImage());
+//                    } catch (IllegalArgumentException ex) {
+//                        onFailure.onFailure(ex); // invalid base64
+//                        return;
+//                    }
+//
+//                    Bitmap imageBitmap = BitmapFactory.decodeByteArray(imageBase64, 0, imageBase64.length);
+//                    if (imageBitmap == null) {
+//                        onFailure.onFailure(new Exception("Failed to decode image bitmap for ID: " + ID));
+//                        return;
+//                    }
+//
+//                    onSuccess.onSuccess(imageBitmap);
                 })
                 .addOnFailureListener(onFailure);
     }

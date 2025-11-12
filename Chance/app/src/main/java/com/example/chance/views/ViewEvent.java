@@ -87,6 +87,9 @@ public class ViewEvent extends Fragment {
             throw new RuntimeException(e);
         }
         binding.qrcodeButton.setImageBitmap(unique_qrcode);
+        dsm.getEventBannerFromID(event.getID(), imageBitmap -> {
+            binding.eventBanner.setImageBitmap(imageBitmap);
+        }, __->{});
         binding.enterLotteryButton.setOnClickListener(__ -> {
             if (event.getWaitingList().contains(user.getID())) {
                 dsm.event(event).leaveLottery(user);
