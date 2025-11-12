@@ -245,32 +245,32 @@ public class DataStoreManager {
      * @param image
      * @param onSuccess
      */
-    public void uploadEventImage(String event_id, Base64 image, OnSuccessListener<Void> onSuccess) {
-        EventImage eventImage = new EventImage(event_id, image);
-        db.setDocument("event_images", event_id, eventImage, onSuccess, (e)->{});
-    }
+//    public void uploadEventImage(String event_id, Base64 image, OnSuccessListener<Void> onSuccess) {
+//        EventImage eventImage = new EventImage(image);
+//        db.setDocument("event_images", event_id, eventImage, onSuccess, (e)->{});
+//    }
 
     /**
      * grabs an events associated poster
      * @param event_id
      * @param onSuccess
      */
-    public void browseEventImage(String event_id, OnSuccessListener<Base64> onSuccess) {
-        if (event_id.isEmpty()) {
-            onSuccess.onSuccess(null);
-            return;
-        } else {
-            db.getDocument("event_images", event_id, (doc) -> {
-                if (doc.exists()) {
-                    EventImage eventImage = doc.toObject(EventImage.class);
-                    onSuccess.onSuccess(eventImage.getEventImage());
-                } else {
-                    onSuccess.onSuccess(null);
-                }
-            }, (e) -> {
-            });
-        }
-    }
+//    public void browseEventImage(String event_id, OnSuccessListener<Base64> onSuccess) {
+//        if (event_id.isEmpty()) {
+//            onSuccess.onSuccess(null);
+//            return;
+//        } else {
+//            db.getDocument("event_images", event_id, (doc) -> {
+//                if (doc.exists()) {
+//                    EventImage eventImage = doc.toObject(EventImage.class);
+//                    onSuccess.onSuccess(eventImage.getEventImage());
+//                } else {
+//                    onSuccess.onSuccess(null);
+//                }
+//            }, (e) -> {
+//            });
+//        }
+//    }
 
 
 
@@ -361,5 +361,25 @@ public class DataStoreManager {
                     .update("waitingList", FieldValue.arrayRemove(user.getID()));
             event.leaveWaitingList(user.getID());
         }
+    }
+
+    public __eventImage eventImage(EventImage target_event_image) {
+        return new __eventImage(target_event_image);
+    }
+
+    public class __eventImage {
+        EventImage eventImage;
+        __eventImage(EventImage eventImage) {
+            this.eventImage = eventImage;
+        }
+
+        public void save(OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+            fStore.collection(EVENT_IMAGE_COLLECTION)
+                    .document(eventImage.getID())
+                    .set(eventImage)
+                    .addOnSuccessListener(onSuccess)
+                    .addOnFailureListener(onFailure);
+        }
+
     }
 }

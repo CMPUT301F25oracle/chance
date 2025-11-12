@@ -125,14 +125,11 @@
             android:hint="Your price..."
             android:padding="5dp"/>
 
-        <TextView
+        <Button
+            android:id="@+id/add_banner_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Upload Event Banner"
-            android:textSize="@dimen/sub_sub_title_text_size"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:text="Add Event Banner"/>
     </com.google.android.flexbox.FlexboxLayout>
     <!--endregion: event information-->
     <com.google.android.flexbox.FlexboxLayout

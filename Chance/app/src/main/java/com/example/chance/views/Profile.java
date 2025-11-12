@@ -52,6 +52,8 @@ public class Profile extends Fragment {
                 binding.phoneInput.setText(user.getPhoneNumber());
             }
         });
+
+
 //        // binding.profileImage.setImageURI(pfp_uri);
 //        binding.usernameInput.setText(user.getUsername());
 //        binding.fullnameInput.setText(user.getFullName());

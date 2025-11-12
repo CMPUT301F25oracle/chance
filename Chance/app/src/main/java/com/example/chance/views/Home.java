@@ -60,10 +60,11 @@ public class Home extends Fragment {
 
         });
 
-        binding.buttonCreateEvent.setOnClickListener(v -> {
-            requireActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content_view, new CreateEvent())
-                    .commit();
+        binding.buttonEventCreated.setOnClickListener(__ -> {
+            cvm.setNewFragment(EventSearch.class, null);
+        });
+        binding.buttonCreateEvent.setOnClickListener(__ -> {
+            cvm.setNewFragment(CreateEvent.class, null);
         });
         
         // now we set up our event adapter

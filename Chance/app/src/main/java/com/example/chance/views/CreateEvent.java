@@ -1,23 +1,36 @@
 package com.example.chance.views;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
 import com.example.chance.ChanceViewModel;
 import com.example.chance.R;
 import com.example.chance.controller.DataStoreManager;
 import com.example.chance.databinding.CreateEventBinding;
 import com.example.chance.model.Event;
+import com.example.chance.model.EventImage;
 import com.example.chance.model.User;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -27,6 +40,7 @@ public class CreateEvent extends Fragment {
     private CreateEventBinding binding;
     private DataStoreManager dsm;
     private ChanceViewModel cvm;
+    private ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
 
     @Nullable
     @Override
@@ -36,12 +50,38 @@ public class CreateEvent extends Fragment {
         binding = CreateEventBinding.inflate(inflater, container, false);
         dsm = DataStoreManager.getInstance();
         cvm = new ViewModelProvider(requireActivity()).get(ChanceViewModel.class);
+
+        pickMedia =
+                registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                    if (uri != null) {
+                        try {
+                            // lets grab the image from the uri
+                            InputStream bannerFileStream = getContext().getContentResolver().openInputStream(uri);
+                            byte[] bannerBytes = bannerFileStream.readAllBytes();
+                            Glide.with()
+                            String bannerBase64 = Base64.getEncoder().encodeToString(bannerBytes);
+                            EventImage eventBanner = new EventImage(bannerBase64);
+                            eventBanner.setID("coolest_image");
+                            dsm.eventImage(eventBanner).save(__->{}, __->{});
+                        } catch (FileNotFoundException e) {
+                            throw new RuntimeException(e);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                    }
+                });
+
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        binding.addBannerButton.setOnClickListener(__ -> {
+            promptImageFromUser();
+            Log.d("CreateEvent", "Add banner clicked");
+        });
         cvm.getCurrentUser().observe(getViewLifecycleOwner(), user -> {
             binding.submitButton.setOnClickListener(v -> {
                 Calendar calendar = Calendar.getInstance();
@@ -71,10 +111,13 @@ public class CreateEvent extends Fragment {
                     }, (__)->{});
             });
         });
+    }
 
-
-
-
+    public void promptImageFromUser() {
+        String mimeType = "image/gif";
+        pickMedia.launch(new PickVisualMediaRequest.Builder()
+                .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                .build());
     }
 
     @Override
