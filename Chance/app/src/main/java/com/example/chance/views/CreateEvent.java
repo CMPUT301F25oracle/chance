@@ -62,11 +62,8 @@ public class CreateEvent extends Fragment {
                         try {
                             // lets grab the image from the uri
                             InputStream bannerFileStream = getContext().getContentResolver().openInputStream(uri);
-<<<<<<< HEAD
-                            byte[] bannerBytes = bannerFileStream.readAllBytes();
-=======
+
                             byte[] bannerBytes = inputStreamToPNGByteArray(bannerFileStream);
->>>>>>> 55f603a2b0d13934b851df5b474a316447c27006
                             String bannerBase64 = Base64.getEncoder().encodeToString(bannerBytes);
                             selectedEventBanner = new EventImage(bannerBase64);
 

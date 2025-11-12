@@ -8,12 +8,11 @@
     android:orientation="vertical"
     android:layout_gravity="center_horizontal"
     android:background="@color/white"
-    app:flexDirection="column"
-    app:layout_flexShrink="1">
+    app:flexDirection="column">
 
     <ImageView
         android:id="@+id/event_image"
-        android:layout_width="330dp"
+        android:layout_width="match_parent"
         android:layout_height="220dp"
         android:layout_gravity="center_horizontal"
         android:scaleType="centerCrop"
