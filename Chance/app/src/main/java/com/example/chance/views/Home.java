@@ -26,6 +26,9 @@ import com.google.android.flexbox.FlexWrap;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Home extends Fragment {
 
     private HomeBinding binding;
@@ -56,6 +59,7 @@ public class Home extends Fragment {
             }
             // Update UI once we have a user
             binding.homeSystemMessage.setText("Hello, " + user.getUsername());
+
         });
 
         binding.buttonCreateEvent.setOnClickListener(v -> {
@@ -65,32 +69,64 @@ public class Home extends Fragment {
         });
         
         // now we set up our event adapter
-        RecyclerView eventsContainer = binding.eventsContainer;
-        EventListAdapter eventsAdapter = new EventListAdapter();
-        eventsContainer.setAdapter(eventsAdapter);
+        RecyclerView eventsContainerLeft = binding.eventsContainerLeft;
+        RecyclerView eventsContainerRight = binding.eventsContainerRight;
+        EventListAdapter eventsAdapterLeft = new EventListAdapter();
+        EventListAdapter eventsAdapterRight = new EventListAdapter();
+        eventsContainerLeft.setAdapter(eventsAdapterLeft);
+        eventsContainerRight.setAdapter(eventsAdapterRight);
 
         // next we make sure flexbox is configured on the recyclerview
-        FlexboxLayoutManager lm = new FlexboxLayoutManager(getContext());
-        lm.setFlexDirection(FlexDirection.COLUMN); // top→bottom
-        lm.setFlexWrap(FlexWrap.WRAP);              // wrap into next column
-        lm.setJustifyContent(JustifyContent.FLEX_START);
-        lm.setAlignItems(AlignItems.STRETCH);
-        binding.eventsContainer.setLayoutManager(lm);
+        FlexboxLayoutManager layoutManagerLeft = new FlexboxLayoutManager(getContext());
+        layoutManagerLeft.setFlexDirection(FlexDirection.COLUMN);
+        layoutManagerLeft.setFlexWrap(FlexWrap.WRAP);
+        layoutManagerLeft.setJustifyContent(JustifyContent.FLEX_START);
+        layoutManagerLeft.setAlignItems(AlignItems.STRETCH);
+        binding.eventsContainerLeft.setLayoutManager(layoutManagerLeft);
 
-// simple gap decoration
-        int gap = getResources().getDimensionPixelSize(R.dimen.some_gap);
-        binding.eventsContainer.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override public void getItemOffsets(android.graphics.Rect out, View v, RecyclerView p, RecyclerView.State s) {
-                out.set(gap, gap, gap, gap);
+        FlexboxLayoutManager layoutManagerRight = new FlexboxLayoutManager(getContext());
+        layoutManagerRight.setFlexDirection(FlexDirection.COLUMN);
+        layoutManagerRight.setFlexWrap(FlexWrap.WRAP);
+        layoutManagerRight.setJustifyContent(JustifyContent.FLEX_START);
+        layoutManagerRight.setAlignItems(AlignItems.STRETCH);
+        binding.eventsContainerRight.setLayoutManager(layoutManagerRight);
+
+
+
+        // now we load the event data (if there is any)
+
+        cvm.getEvents().observe(getViewLifecycleOwner(), events -> {
+            List<Event> leftEventList = new ArrayList<>();
+            List<Event> rightEventList = new ArrayList<>();
+            for (int i = 0; i < events.size(); i++) {
+                if (i % 2 == 0) {
+                    leftEventList.add(events.get(i));
+                } else {
+                    rightEventList.add(events.get(i));
+                }
+            }
+            eventsAdapterLeft.submitList(leftEventList);
+            eventsAdapterRight.submitList(rightEventList);
+        });
+
+        eventsContainerLeft.addOnItemTouchListener(new androidx.recyclerview.widget.RecyclerView.SimpleOnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(@NonNull RecyclerView viewManager, @NonNull MotionEvent touchEvent) {
+                View eventPill = viewManager.findChildViewUnder(touchEvent.getX(), touchEvent.getY());
+                if (eventPill != null) {
+                    if (touchEvent.getAction() == MotionEvent.ACTION_UP) {
+                        // we only act when the user lifts their thumb to give more
+                        // "natural" feedback
+                        String eventId = (String) eventPill.getTag();
+                        cvm.requestOpenEvent(eventId);
+                        return true;
+                    }
+                }
+                return false;
             }
         });
 
-        // now we load the event data (if there is any)
-        cvm.getEvents().observe(getViewLifecycleOwner(), events -> {
-            eventsAdapter.submitList(events);
-        });
-
-        eventsContainer.addOnItemTouchListener(new androidx.recyclerview.widget.RecyclerView.SimpleOnItemTouchListener() {
+        eventsContainerRight.addOnItemTouchListener(new androidx.recyclerview.widget.RecyclerView.SimpleOnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(@NonNull RecyclerView viewManager, @NonNull MotionEvent touchEvent) {
                 View eventPill = viewManager.findChildViewUnder(touchEvent.getX(), touchEvent.getY());

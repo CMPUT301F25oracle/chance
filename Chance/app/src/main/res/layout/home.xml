@@ -152,20 +152,32 @@
 
             </com.google.android.flexbox.FlexboxLayout>
 
+            <com.google.android.flexbox.FlexboxLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:flexDirection="row">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/events_container_left"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_flexShrink="1">
+                </androidx.recyclerview.widget.RecyclerView>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/events_container_right"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_flexShrink="1">
+                </androidx.recyclerview.widget.RecyclerView>
+
+            </com.google.android.flexbox.FlexboxLayout>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp"/>
         </com.google.android.flexbox.FlexboxLayout>
-
-
     </ScrollView>
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/events_container"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_flexGrow="1"
-        android:clipToPadding="false"
-        android:paddingTop="8dp">
-    </androidx.recyclerview.widget.RecyclerView>
 
 
 </com.google.android.flexbox.FlexboxLayout>
