@@ -3,6 +3,7 @@ package com.example.chance.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chance.R;
+import com.example.chance.controller.DataStoreManager;
 import com.example.chance.model.Event;
 
 
@@ -62,16 +64,23 @@ public class MainEventSearchListAdapter extends ListAdapter<Event, MainEventSear
 
         holder.title.setText(event.getName());
         holder.description.setText(event.getDescription());
+
+        DataStoreManager.getInstance().getEventBannerFromID(event.getID(), eventBitmap -> {
+            holder.banner.setImageBitmap(eventBitmap);
+        }, __ -> {});
         holder.itemView.setTag(event.getID());
     }
     
     public static class EventViewHolder extends RecyclerView.ViewHolder {
         TextView title, description;
+        ImageView banner;
 
         public EventViewHolder(@NonNull View eventPillView) {
             super(eventPillView);
             title = eventPillView.findViewById(R.id.event_title);
-            description = itemView.findViewById(R.id.event_description);
+            description = eventPillView.findViewById(R.id.event_description);
+            banner = eventPillView.findViewById(R.id.event_image);
+
         }
     }
 }

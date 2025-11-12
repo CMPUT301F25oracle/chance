@@ -1,7 +1,10 @@
 package com.example.chance.adapters;
+import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -10,8 +13,10 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chance.R;
+import com.example.chance.controller.DataStoreManager;
 import com.example.chance.model.Event;
 
+import java.util.Date;
 
 
 /**
@@ -70,7 +75,7 @@ public class EventSearchScreenListAdapter extends ListAdapter<Event, EventSearch
         public EventViewHolder(@NonNull View eventPillView) {
             super(eventPillView);
             title = eventPillView.findViewById(R.id.event_title);
-            description = itemView.findViewById(R.id.event_description);
+            description = eventPillView.findViewById(R.id.event_description);
         }
     }
 }
