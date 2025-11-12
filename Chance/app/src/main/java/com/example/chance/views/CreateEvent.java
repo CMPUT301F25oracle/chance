@@ -1,6 +1,8 @@
 package com.example.chance.views;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +27,7 @@ import com.example.chance.model.Event;
 import com.example.chance.model.EventImage;
 import com.example.chance.model.User;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -42,6 +45,8 @@ public class CreateEvent extends Fragment {
     private ChanceViewModel cvm;
     private ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
 
+    private EventImage selectedEventBanner;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -57,12 +62,10 @@ public class CreateEvent extends Fragment {
                         try {
                             // lets grab the image from the uri
                             InputStream bannerFileStream = getContext().getContentResolver().openInputStream(uri);
-                            byte[] bannerBytes = bannerFileStream.readAllBytes();
-                            Glide.with()
+                            byte[] bannerBytes = inputStreamToPNGByteArray(bannerFileStream);
                             String bannerBase64 = Base64.getEncoder().encodeToString(bannerBytes);
-                            EventImage eventBanner = new EventImage(bannerBase64);
-                            eventBanner.setID("coolest_image");
-                            dsm.eventImage(eventBanner).save(__->{}, __->{});
+                            selectedEventBanner = new EventImage(bannerBase64);
+
                         } catch (FileNotFoundException e) {
                             throw new RuntimeException(e);
                         } catch (IOException e) {
@@ -106,8 +109,16 @@ public class CreateEvent extends Fragment {
                     // now we add the new event to our internal list of events
                     List<Event> events = cvm.getEvents().getValue();
                     events.add(event);
-                    cvm.setEvents(events);
-                    cvm.setNewFragment(Home.class, null);
+                    if (selectedEventBanner != null) {
+                        selectedEventBanner.setID(event.getID());
+                        dsm.eventImage(selectedEventBanner).save((__)->{
+                            cvm.setEvents(events);
+                            cvm.setNewFragment(Home.class, null);
+                        }, (__)->{});
+                    } else {
+                        cvm.setEvents(events);
+                        cvm.setNewFragment(Home.class, null);
+                    }
                     }, (__)->{});
             });
         });
@@ -118,6 +129,13 @@ public class CreateEvent extends Fragment {
         pickMedia.launch(new PickVisualMediaRequest.Builder()
                 .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
                 .build());
+    }
+
+    public byte[] inputStreamToPNGByteArray(InputStream inputStream) throws IOException {
+        Bitmap imageBitmap = BitmapFactory.decodeStream(inputStream);
+        ByteArrayOutputStream pngImageStream = new ByteArrayOutputStream();
+        imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, pngImageStream);
+        return pngImageStream.toByteArray();
     }
 
     @Override
