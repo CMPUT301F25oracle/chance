@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         chanceViewModel.setLoadMainUI(false);
 
 
-        // Load the spashscreen fragment into the content_view container
+        // Load the splash screen fragment into the content_view container
         if (savedInstanceState == null) {
             chanceViewModel.setNewFragment(SplashScreen.class, null);
         }
