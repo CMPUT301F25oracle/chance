@@ -28,7 +28,7 @@
         android:background="@drawable/navbar_shadow_gradient_unrounded"
         android:clipChildren="false"
         android:elevation="30dp"
-        android:translationY="-3dp"
+        android:translationY="-5dp"
         >
         <LinearLayout
             android:layout_width="109dp"

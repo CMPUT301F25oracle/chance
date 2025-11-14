@@ -9,10 +9,9 @@
         <item name="textAllCaps">false</item>
     </style>
 
-    <!-- Launch (cold-start) splash theme -->
+    <!-- cold-start splash screen -->
     <style name="Theme.Chance.Launcher" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <!-- Make the window background the blue drawable so the system shows it immediately -->
-        <!-- Prevent white flash during theme transition -->
         <item name="android:windowDisablePreview">true</item>
+        <item name="textAppearanceButton">@style/NoCapsButton</item>
     </style>
 </resources>
