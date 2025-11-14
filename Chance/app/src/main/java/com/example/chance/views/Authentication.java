@@ -41,16 +41,6 @@ public class Authentication extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        // see if we can skip authentication check entirely before setting
-        // up callbacks
-        if (dsm.isDeviceAuthenticated()) {
-            dsm.getAuthenticatedUser(this::userAuthenticated, (e) -> {
-                binding.errorMessage.setVisibility(VISIBLE);
-                binding.errorMessage.setText("Failed to automatically authenticate user");
-            });
-        }
-
         binding.signUpButton.setOnClickListener(v -> {
             String username = binding.username.getText().toString();
             String password = binding.password.getText().toString();

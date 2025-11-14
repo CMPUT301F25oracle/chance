@@ -7,7 +7,7 @@
     app:alignItems="flex_start"
     app:flexDirection="column"
     app:justifyContent="flex_end"
-    android:background="@color/grey"
+    android:background="@color/theme_blue"
     >
     <include layout="@layout/title_bar" android:id="@+id/title_bar"/>
     <FrameLayout
