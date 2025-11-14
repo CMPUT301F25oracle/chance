@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/title_text_size"
                 android:text="Welcome to "
-                android:fontFamily="@font/abc_marfa_regular"
+                android:fontFamily="@font/chance_core"
                 android:textStyle="bold"
                 android:textColor="#939393"/>
             <TextView
@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/title_text_size"
                 android:text="Chance"
-                android:fontFamily="@font/abc_marfa_regular"
+                android:fontFamily="@font/chance_core"
                 android:textStyle="bold"
                 android:textColor="@color/theme_blue"/>
         </LinearLayout>
@@ -82,7 +82,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/common_text_size"
             android:text="N/A"
-            android:fontFamily="@font/abc_marfa_regular"
+            android:fontFamily="@font/chance_core"
             android:visibility="invisible"
             android:textColor="@color/button_red"/>
     </com.google.android.flexbox.FlexboxLayout>

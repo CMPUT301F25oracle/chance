@@ -20,6 +20,7 @@ import com.example.chance.databinding.ActivityMainBinding;
 import com.example.chance.views.Authentication;
 import com.example.chance.ChanceViewModel;
 import com.example.chance.views.QrcodeScanner;
+import com.example.chance.views.SplashScreen;
 import com.example.chance.views.ViewEvent;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,17 +40,14 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
-
-
         // we initially hide the title and navigation bars
         // in case we're going to login screen
         chanceViewModel.setLoadMainUI(false);
 
-        // Load the Login fragment into the content_view container
+
+        // Load the spashscreen fragment into the content_view container
         if (savedInstanceState == null) {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.content_view, new Authentication());
-            transaction.commit();
+            chanceViewModel.setNewFragment(SplashScreen.class, null);
         }
         
         // Set up bottom navigation
