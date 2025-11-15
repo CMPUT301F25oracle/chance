@@ -45,6 +45,8 @@ public class SplashScreen extends Fragment {
             }, (e) -> {
                 cvm.setNewFragment(Authentication.class, null);
             });
+        } else {
+            cvm.setNewFragment(Authentication.class, null);
         }
     }
 
