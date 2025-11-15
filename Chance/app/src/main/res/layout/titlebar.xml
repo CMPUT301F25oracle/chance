@@ -22,7 +22,7 @@
             app:layout_flexBasisPercent="50%"
             android:gravity="center_vertical"
             android:textSize="@dimen/title_text_size"
-            android:text="Chance"
+            android:text="chance"
             android:textStyle="bold"
             android:textColor="@color/white"
             />

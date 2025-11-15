@@ -141,6 +141,7 @@
                     app:alignContent="flex_start"
                     app:flexDirection="row">
                     <!-- This is the search bar -->
+                    <include layout="@layout/chance_text_input_left_icon"/>
                     <EditText
                         android:layout_width="330dp"
                         android:layout_height="40dp"

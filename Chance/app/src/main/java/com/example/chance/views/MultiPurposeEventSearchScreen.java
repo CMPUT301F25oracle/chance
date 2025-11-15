@@ -61,7 +61,6 @@ public class MultiPurposeEventSearchScreen extends Fragment {
         layoutManager.setJustifyContent(JustifyContent.FLEX_START);
         layoutManager.setAlignItems(AlignItems.STRETCH);
 
-
         eventsContainer.setLayoutManager(layoutManager);
 
         // now we load the event data (if there is any)
