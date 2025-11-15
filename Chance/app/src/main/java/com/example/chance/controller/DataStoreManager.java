@@ -91,6 +91,10 @@ public class DataStoreManager {
                 });
     }
 
+    public void logoutAuthenticatedUser() {
+        fAuth.signOut();
+    }
+
     public void createNewUser(String username, String password, OnSuccessListener<User> onSuccess, OnFailureListener onFailure) {
         // source: https://firebase.google.com/docs/auth/android/password-auth
         fAuth.createUserWithEmailAndPassword(username + PSEUDO_EMAIL, password)

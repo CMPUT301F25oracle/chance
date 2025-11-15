@@ -17,6 +17,6 @@
         android:textSize="60dp"
         android:textStyle="bold"
         android:textColor="@color/white"
-        android:text="Chance"/>
+        android:text="chance"/>
 
 </com.google.android.flexbox.FlexboxLayout>

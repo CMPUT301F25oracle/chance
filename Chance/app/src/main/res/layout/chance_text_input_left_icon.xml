@@ -1,0 +1,26 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools">
+<data>
+    <variable name="hint" type="java.lang.String" />
+    <variable name="icon" type="java.lang.String" />
+</data>
+    <com.google.android.flexbox.FlexboxLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="fitCenter"
+            android:src="@{icon}"
+            tool:src="@drawable/navbar_profile"/>
+
+        <EditText
+            android:id="@+id/inputField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@{hint}"
+            tool:hint="Type here"/>
+    </com.google.android.flexbox.FlexboxLayout>
+
+</layout>

@@ -159,11 +159,12 @@
             />
 
         <Button
+            android:id="@+id/logout_button"
             android:layout_marginLeft="27dp"
             android:layout_width="350dp"
             android:layout_height="40dp"
-            android:backgroundTint="@color/button_blue"
-            android:text="Disable Notification"
+            android:backgroundTint="@color/black"
+            android:text="Logout"
             android:textColor="@color/white"
             />
 
