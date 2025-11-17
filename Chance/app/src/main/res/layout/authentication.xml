@@ -60,6 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:hint="Password..."
+                app:hiddenInput="true"
                 app:icon="@drawable/authentication_lock_icon"
                 app:iconDimensions="30"/>
             <LinearLayout

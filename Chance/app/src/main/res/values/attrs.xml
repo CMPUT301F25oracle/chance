@@ -4,5 +4,6 @@
         <attr name="icon" format="reference" />
         <attr name="hint" format="string" />
         <attr name="iconDimensions" format="integer" />
+        <attr name="hiddenInput" format="boolean" />
     </declare-styleable>
 </resources>

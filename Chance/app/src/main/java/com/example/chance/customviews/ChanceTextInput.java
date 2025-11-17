@@ -2,6 +2,7 @@ package com.example.chance.customviews;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.text.InputType;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.ViewGroup;
@@ -24,17 +25,9 @@ public class ChanceTextInput extends FlexboxLayout {
         super(context, attrs);
         icon = new ImageView(context);
         textInput = new EditText(context);
-        addView(icon);
-        addView(textInput);
 
-        // Use TypedArray to obtain custom attributes
+        // grabs list of custom attributes
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ChanceTextInput);
-        int iconResource = a.getResourceId(R.styleable.ChanceTextInput_icon, -1);
-        int iconDimensions = a.getInteger(R.styleable.ChanceTextInput_iconDimensions, 40);
-        String hint = a.getString(R.styleable.ChanceTextInput_hint);
-        if (hint == null) hint = "";
-        a.recycle(); // Important: always recycle TypedArray
-
 
         //region: flexbox styles
         setAlignItems(AlignItems.CENTER);
@@ -42,6 +35,8 @@ public class ChanceTextInput extends FlexboxLayout {
         //endregion
 
         //region: icon styles
+        int iconResource = a.getResourceId(R.styleable.ChanceTextInput_icon, -1);
+        int iconDimensions = a.getInteger(R.styleable.ChanceTextInput_iconDimensions, 40);
         TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, getResources().getDisplayMetrics());
         FlexboxLayout.LayoutParams iconLayoutParams = new FlexboxLayout.LayoutParams(
                 dpToPx(iconDimensions), dpToPx(iconDimensions));
@@ -57,6 +52,9 @@ public class ChanceTextInput extends FlexboxLayout {
         //endregion
 
         //region: edit text styles
+        String hint = a.getString(R.styleable.ChanceTextInput_hint);
+        if (hint == null) hint = "";
+        boolean hiddenInput = a.getBoolean(R.styleable.ChanceTextInput_hiddenInput, false);
         FlexboxLayout.LayoutParams textInputLayoutParams = new FlexboxLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, dpToPx(40));
         textInputLayoutParams.setFlexGrow(1f);
@@ -66,7 +64,14 @@ public class ChanceTextInput extends FlexboxLayout {
         textInput.setBackgroundTintList(
                 context.getResources().getColorStateList(R.color.white, context.getTheme())
         );
+        if (hiddenInput) {
+            textInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        }
         //endregion
+        a.recycle();
+
+        addView(icon);
+        addView(textInput);
     }
 
     //src: https://stackoverflow.com/questions/4605527/converting-pixels-to-dp
