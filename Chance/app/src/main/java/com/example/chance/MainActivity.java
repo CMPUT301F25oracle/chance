@@ -98,10 +98,10 @@ public class MainActivity extends AppCompatActivity {
             chanceViewModel.setNewFragment(Home.class, null, "none");
         });
         navbar.findViewById(R.id.navbar_qr_button).setOnClickListener(v -> {
-            chanceViewModel.setNewFragment(QrcodeScanner.class, null, "circular");
+            chanceViewModel.setNewFragment(QrcodeScanner.class, null, "circular:350");
         });
         navbar.findViewById(R.id.navbar_profile_button).setOnClickListener((v) -> {
-            chanceViewModel.setNewFragment(Profile.class, null, "circular");
+            chanceViewModel.setNewFragment(Profile.class, null, "none");
         });
 
     }
@@ -116,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
             Fragment fragment = fragmentClass.newInstance();
             fragment.setArguments(bundle);
             animateFragmentTransition(transaction, fragment, transitionType);
+            // commit MUST always occur here for consistency
             transaction.commit();
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -129,7 +130,15 @@ public class MainActivity extends AppCompatActivity {
      * @param transitionType
      */
     private void animateFragmentTransition(FragmentTransaction transaction, Fragment newFragment, String transitionType) {
-        switch (transitionType) {
+        // we need to parse transitionType in case it mentions time in milliseconds
+        String[] transitionTypeComponents = transitionType.split(":");
+        String transition = transitionTypeComponents[0];
+        int duration = 500;
+        if (transitionTypeComponents.length > 1) {
+            duration = Integer.parseInt(transitionTypeComponents[1]);
+        }
+
+        switch (transition) {
             case "fade": {
                 transaction.setCustomAnimations(
                     android.R.anim.fade_in,
@@ -139,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
             case "circular": {
-                circularRevealAnimation(transaction, newFragment);
+                circularRevealAnimation(transaction, newFragment, duration);
                 break;
             }
             default: {
@@ -149,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void circularRevealAnimation(FragmentTransaction transaction, Fragment newFragment) {
+    private void circularRevealAnimation(FragmentTransaction transaction, Fragment newFragment, int duration) {
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.content_view);
         transaction.add(R.id.content_view, newFragment);
 
@@ -169,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
                         ,0
                         ,finalRadius
                 );
-                circularReveal.setDuration(1000);
+                circularReveal.setDuration(duration);
                 circularReveal.addListener(new android.animation.Animator.AnimatorListener() {
                     @Override
                     public void onAnimationCancel(@NonNull Animator animation) {

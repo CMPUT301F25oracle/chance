@@ -82,7 +82,13 @@ public class QrcodeScanner extends Fragment {
             try {
                 ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
                 Preview cameraPreview = new Preview.Builder().build();
-                cameraPreview.setSurfaceProvider(binding.cameraPreview.getSurfaceProvider());
+                try {
+                    cameraPreview.setSurfaceProvider(binding.cameraPreview.getSurfaceProvider());
+                } catch (Exception e) {
+                    // view was likely destroyed, so we shouldn't have much to worry about.
+                    // just return gracefully.
+                    return;
+                }
 
                 if (cameraProvider != null) {
                     cameraProvider.unbindAll();
@@ -111,12 +117,6 @@ public class QrcodeScanner extends Fragment {
         }, ContextCompat.getMainExecutor(requireContext()));
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
-
     private class QrCodeAnalyzer implements ImageAnalysis.Analyzer {
         @Override
         public void analyze(ImageProxy image_frame) {
@@ -127,5 +127,11 @@ public class QrcodeScanner extends Fragment {
             }
             image_frame.close();
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }
