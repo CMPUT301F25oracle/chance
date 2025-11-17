@@ -13,7 +13,7 @@
         android:layout_height="45dp"
         app:alignItems="center"
         app:justifyContent="space_between"
-        android:layout_marginHorizontal="@dimen/chance_horizontal_margin"
+        android:layout_marginHorizontal="@dimen/chance_margin"
         app:layout_flexShrink="0"
         >
         <TextView
