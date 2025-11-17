@@ -1,8 +1,11 @@
 
 package com.example.chance;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
 import static com.google.common.collect.ComparisonChain.start;
 
+import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +16,7 @@ import com.example.chance.util.Tuple3;
 import com.example.chance.views.Home;
 import com.example.chance.views.Profile;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -70,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
             int visibility;
             int backgroundResource;
             if (shouldLoad) {
-                visibility = View.VISIBLE;
+                visibility = VISIBLE;
                 backgroundResource = R.drawable.reusable_main_view_rounding;
             } else {
                 visibility = View.GONE;
@@ -91,13 +95,13 @@ public class MainActivity extends AppCompatActivity {
     private void setupNavBar() {
         View navbar = binding.getRoot().findViewById(R.id.nav_bar);
         navbar.findViewById(R.id.navbar_home_button).setOnClickListener((v) -> {
-            chanceViewModel.setNewFragment(Home.class, null, "fade");
+            chanceViewModel.setNewFragment(Home.class, null, "none");
         });
         navbar.findViewById(R.id.navbar_qr_button).setOnClickListener(v -> {
-            chanceViewModel.setNewFragment(QrcodeScanner.class, null, "fade");
+            chanceViewModel.setNewFragment(QrcodeScanner.class, null, "circular");
         });
         navbar.findViewById(R.id.navbar_profile_button).setOnClickListener((v) -> {
-            chanceViewModel.setNewFragment(Profile.class, null, "fade");
+            chanceViewModel.setNewFragment(Profile.class, null, "circular");
         });
 
     }
@@ -118,6 +122,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Set of custom animations for fragment transitions
+     * @param transaction
+     * @param newFragment
+     * @param transitionType
+     */
     private void animateFragmentTransition(FragmentTransaction transaction, Fragment newFragment, String transitionType) {
         switch (transitionType) {
             case "fade": {
@@ -125,93 +135,67 @@ public class MainActivity extends AppCompatActivity {
                     android.R.anim.fade_in,
                     android.R.anim.fade_out
                 );
+                transaction.replace(R.id.content_view, newFragment);
                 break;
             }
             case "circular": {
-                transaction.setCustomAnimations(R.anim.pop_in, 0);
+                circularRevealAnimation(transaction, newFragment);
+                break;
+            }
+            default: {
+                transaction.replace(R.id.content_view, newFragment);
                 break;
             }
         }
-        transaction.replace(R.id.content_view, newFragment);
     }
 
-//    private void animateFragmentTransition(FragmentTransaction transaction, Fragment newFragment, String transitionType, OnSuccessListener<Void> onComplete) {
-//        // Set animations BEFORE calling replace
-//        if ("fade".equals(transitionType)) {
-//            transaction.setCustomAnimations(
-//                android.R.anim.fade_in,
-//                android.R.anim.fade_out
-//            );
-//        } else if ("circular".equals(transitionType)) {
-//            // No XML animations for circular reveal - we'll handle it manually
-//            // Using fade_in as a fallback to prevent blank screen
-//            transaction.setCustomAnimations(android.R.anim.fade_in, 0);
-//        } else if (!"none".equals(transitionType)) {
-//            // Default animation for anything other than "none"
-//            transaction.setCustomAnimations(
-//                android.R.anim.fade_in,
-//                android.R.anim.fade_out
-//            );
-//        }
-//
-//        // Now replace the fragment
-//        transaction.replace(R.id.content_view, newFragment);
-//
-//        // Apply circular reveal after fragment is attached and laid out
-//        if ("circular".equals(transitionType)) {
-//            transaction.runOnCommit(() -> {
-//                View fragmentView = newFragment.getView();
-//                if (fragmentView != null && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-//                    // Wait for the view to be laid out
-//                    fragmentView.post(() -> applyCircularReveal(fragmentView, newFragment));
-//                }
-//            });
-//        }
-//
-//        if (onComplete != null) {
-//            onComplete.onSuccess(null);
-//        }
-//    }
+    private void circularRevealAnimation(FragmentTransaction transaction, Fragment newFragment) {
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.content_view);
+        transaction.add(R.id.content_view, newFragment);
 
-//    private void applyCircularReveal(View view, Fragment fragment) {
-//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-//            // Make sure the view has dimensions
-//            if (view.getWidth() == 0 || view.getHeight() == 0) {
-//                return;
-//            }
-//
-//            Bundle args = fragment.getArguments();
-//
-//            // Get reveal coordinates from bundle, or use center as default
-//            int centerX = view.getWidth() / 2;
-//            int centerY = view.getHeight() / 2;
-//
-//            if (args != null && args.containsKey("reveal_x") && args.containsKey("reveal_y")) {
-//                int[] contentLocation = new int[2];
-//                view.getLocationOnScreen(contentLocation);
-//                centerX = args.getInt("reveal_x") - contentLocation[0];
-//                centerY = args.getInt("reveal_y") - contentLocation[1];
-//            }
-//
-//            // Calculate the final radius to cover the entire view
-//            float finalRadius = (float) Math.hypot(
-//                Math.max(centerX, view.getWidth() - centerX),
-//                Math.max(centerY, view.getHeight() - centerY)
-//            );
-//
-//            // Make view visible but invisible initially for the animation
-//            view.setVisibility(View.VISIBLE);
-//
-//            // Create and start the animation
-//            android.animation.Animator circularReveal = android.view.ViewAnimationUtils.createCircularReveal(
-//                view,
-//                centerX,
-//                centerY,
-//                0,
-//                finalRadius
-//            );
-//            circularReveal.setDuration(500);
-//            circularReveal.start();
-//        }
-//    }
+        View mainView = findViewById(R.id.content_view);
+        int viewCenterX = mainView.getWidth() / 2;
+        int viewCenterY = mainView.getHeight() / 2;
+        float finalRadius = (float) Math.hypot(viewCenterX, viewCenterY);
+
+        transaction.runOnCommit(() -> {
+            View newFragmentView = newFragment.getView();
+            newFragmentView.setVisibility(INVISIBLE);
+            mainView.post(() -> {
+                android.animation.Animator circularReveal = android.view.ViewAnimationUtils.createCircularReveal(
+                        newFragment.getView()
+                        ,viewCenterX
+                        ,viewCenterY
+                        ,0
+                        ,finalRadius
+                );
+                circularReveal.setDuration(1000);
+                circularReveal.addListener(new android.animation.Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationCancel(@NonNull Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(@NonNull Animator animation) {
+                        getSupportFragmentManager().beginTransaction().remove(currentFragment).commit();
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(@NonNull Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationStart(@NonNull Animator animation) {
+
+                    }
+                });
+                circularReveal.start();
+                newFragmentView.setVisibility(VISIBLE);
+            });
+
+        });
+
+    }
 }

@@ -16,16 +16,10 @@
         android:background="@drawable/reusable_main_view_rounding"
         android:clipToOutline="true">
         <FrameLayout
-            android:id="@+id/transition_content_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:backgroundTint="@color/black"
-            android:clipToOutline="true"/>
-        <FrameLayout
             android:id="@+id/content_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clipToOutline="true"/>
+            android:clipToOutline="true" />
 
     </FrameLayout>
 

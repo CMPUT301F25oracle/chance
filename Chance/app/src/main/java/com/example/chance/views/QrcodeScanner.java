@@ -24,9 +24,11 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.transition.TransitionInflater;
 
 import com.bumptech.glide.Glide;
 import com.example.chance.ChanceViewModel;
+import com.example.chance.R;
 import com.example.chance.controller.QRCodeHandler;
 import com.example.chance.databinding.QrcodeScannerBinding;
 import com.google.common.util.concurrent.ListenableFuture;
