@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="ChanceLabeledEditText">
-        <attr name="labelText" format="string"/>
-        <attr name="hintText" format="string"/>
+    <declare-styleable name="ChanceTextInput">
+        <attr name="icon" format="reference" />
+        <attr name="hint" format="string" />
+        <attr name="iconDimensions" format="integer" />
     </declare-styleable>
 </resources>

@@ -142,7 +142,8 @@ public class Profile extends Fragment {
 
     public void logoutUser() {
         dsm.logoutAuthenticatedUser();
-        cvm.setNewFragment(Authentication.class, null);
+        cvm.setLoadMainUI(false);
+        cvm.setNewFragment(Authentication.class, null, "");
     }
 
     @Override

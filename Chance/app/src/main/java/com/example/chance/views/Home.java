@@ -60,10 +60,10 @@ public class Home extends Fragment {
         });
 
         binding.buttonEventCreated.setOnClickListener(__ -> {
-            cvm.setNewFragment(MultiPurposeEventSearchScreen.class, null);
+            cvm.setNewFragment(MultiPurposeEventSearchScreen.class, null, "");
         });
         binding.buttonCreateEvent.setOnClickListener(__ -> {
-            cvm.setNewFragment(CreateEvent.class, null);
+            cvm.setNewFragment(CreateEvent.class, null, "");
         });
         
         // now we set up our event adapter

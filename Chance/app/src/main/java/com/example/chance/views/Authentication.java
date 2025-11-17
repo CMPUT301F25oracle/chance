@@ -17,6 +17,7 @@ import com.example.chance.ChanceViewModel;
 import com.example.chance.R;
 import com.example.chance.controller.DataStoreManager;
 import com.example.chance.databinding.AuthenticationBinding;
+import com.example.chance.databinding.ChanceTextInputBinding;
 import com.example.chance.model.User;
 
 import java.util.Objects;
@@ -41,9 +42,10 @@ public class Authentication extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         binding.signUpButton.setOnClickListener(v -> {
-            String username = binding.username.getText().toString();
-            String password = binding.password.getText().toString();
+            String username = binding.username.getText();
+            String password = binding.password.getText();
             dsm.createNewUser(username, password, this::userAuthenticated, (e)->{
                 binding.errorMessage.setVisibility(VISIBLE);
                 binding.errorMessage.setText("There was a problem creating the new user");
@@ -52,8 +54,8 @@ public class Authentication extends Fragment {
 
          binding.loginButton.setOnClickListener(v -> {
              // first we grab the credentials
-             String username = binding.username.getText().toString();
-             String password = binding.password.getText().toString();
+             String username = binding.username.getText();
+             String password = binding.password.getText();
              dsm.authenticateUser(username, password, this::userAuthenticated,(e)->{
                  binding.errorMessage.setVisibility(VISIBLE);
                  binding.errorMessage.setText("There was a problem loggin in");
@@ -63,7 +65,7 @@ public class Authentication extends Fragment {
 
     private void userAuthenticated(User user) {
         cvm.setAuthenticationSuccess(user);
-        cvm.setNewFragment(Home.class, null);
+        cvm.setNewFragment(Home.class, null, "");
         cvm.setLoadMainUI(true);
     }
 

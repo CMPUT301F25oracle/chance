@@ -40,13 +40,13 @@ public class SplashScreen extends Fragment {
         if (dsm.isDeviceAuthenticated()) {
             dsm.getAuthenticatedUser(user -> {
                 cvm.setAuthenticationSuccess(user);
-                cvm.setNewFragment(Home.class, null);
+                cvm.setNewFragment(Home.class, null, "");
                 cvm.setLoadMainUI(true);
             }, (e) -> {
-                cvm.setNewFragment(Authentication.class, null);
+                cvm.setNewFragment(Authentication.class, null, "");
             });
         } else {
-            cvm.setNewFragment(Authentication.class, null);
+            cvm.setNewFragment(Authentication.class, null, "");
         }
     }
 

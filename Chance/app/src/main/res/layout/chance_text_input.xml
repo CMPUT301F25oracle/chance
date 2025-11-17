@@ -3,7 +3,7 @@
     xmlns:tool="http://schemas.android.com/tools">
 <data>
     <variable name="hint" type="java.lang.String" />
-    <variable name="icon" type="java.lang.String" />
+    <variable name="icon" type="java.lang.Integer" />
 </data>
     <com.google.android.flexbox.FlexboxLayout
         android:layout_width="match_parent"

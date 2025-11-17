@@ -114,11 +114,11 @@ public class CreateEvent extends Fragment {
                         selectedEventBanner.setID(event.getID());
                         dsm.eventImage(selectedEventBanner).save((__)->{
                             cvm.setEvents(events);
-                            cvm.setNewFragment(Home.class, null);
+                            cvm.setNewFragment(Home.class, null, "");
                         }, (__)->{});
                     } else {
                         cvm.setEvents(events);
-                        cvm.setNewFragment(Home.class, null);
+                        cvm.setNewFragment(Home.class, null, "");
                     }
                     }, (__)->{});
             });

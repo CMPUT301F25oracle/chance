@@ -19,76 +19,83 @@
         app:flexDirection="column"
         app:justifyContent="center"
         android:background="@drawable/reusable_main_view_rounding"
-        android:backgroundTint="@color/white"
+        android:backgroundTint="@color/grey"
         >
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/title_text_size"
-                android:text="Welcome to "
-                android:fontFamily="@font/chance_core"
-                android:textStyle="bold"
-                android:textColor="#939393"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/title_text_size"
-                android:text="Chance"
-                android:fontFamily="@font/chance_core"
-                android:textStyle="bold"
-                android:textColor="@color/theme_blue"/>
-        </LinearLayout>
-        <EditText
-            android:id="@+id/username"
-            android:layout_width="200dp"
+        <com.google.android.flexbox.FlexboxLayout
+            android:layout_width="246dp"
             android:layout_height="wrap_content"
-            android:hint="Username..."/>
-        <LinearLayout
-            android:layout_width="300dp"
-            android:layout_height="wrap_content">
-            <include layout="@layout/chance_text_input_left_icon"/>
-        </LinearLayout>
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:hint="Password..."/>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <Button
-                android:id="@+id/sign_up_button"
+            app:alignItems="center"
+            app:flexDirection="column"
+            app:justifyContent="center">
+            <LinearLayout
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/title_text_size"
+                    android:text="Welcome to "
+                    android:fontFamily="@font/chance_core"
+                    android:textStyle="bold"
+                    android:textColor="#939393"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/title_text_size"
+                    android:text="Chance"
+                    android:fontFamily="@font/chance_core"
+                    android:textStyle="bold"
+                    android:textColor="@color/theme_blue"/>
+            </LinearLayout>
+            <com.example.chance.customviews.ChanceTextInput
+                android:id="@+id/username"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/button_blue"
-                android:textColor="@color/black"
-                android:text="Sign up"/>
+                app:hint="Username..."
+                app:icon="@drawable/authentication_profile_icon"
+                app:iconDimensions="30"
+                android:layout_marginBottom="5dp"/>
+            <com.example.chance.customviews.ChanceTextInput
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:hint="Password..."
+                app:icon="@drawable/authentication_lock_icon"
+                app:iconDimensions="30"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <Button
+                    android:id="@+id/sign_up_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/button_blue"
+                    android:textColor="@color/black"
+                    android:text="Sign up"/>
+                <Space
+                    android:layout_width="20px"
+                    android:layout_height="wrap_content"/>
+                <Button
+                    android:id="@+id/login_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/button_blue"
+                    android:textColor="@color/black"
+                    android:text="Login"/>
+            </LinearLayout>
             <Space
                 android:layout_width="20px"
                 android:layout_height="wrap_content"/>
-            <Button
-                android:id="@+id/login_button"
+            <TextView
+                android:id="@+id/error_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/button_blue"
-                android:textColor="@color/black"
-                android:text="Login"/>
-        </LinearLayout>
-        <Space
-            android:layout_width="20px"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:id="@+id/error_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/common_text_size"
-            android:text="N/A"
-            android:fontFamily="@font/chance_core"
-            android:visibility="invisible"
-            android:textColor="@color/button_red"/>
+                android:textSize="@dimen/common_text_size"
+                android:text="N/A"
+                android:fontFamily="@font/chance_core"
+                android:visibility="invisible"
+                android:textColor="@color/button_red"/>
+        </com.google.android.flexbox.FlexboxLayout>
     </com.google.android.flexbox.FlexboxLayout>
 
 
