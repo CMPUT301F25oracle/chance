@@ -16,11 +16,10 @@ import com.example.chance.ChanceViewModel;
 import com.example.chance.controller.DataStoreManager;
 import com.example.chance.databinding.SplashScreenBinding;
 import com.example.chance.model.User;
+import com.example.chance.views.base.ChanceFragment;
 
-public class SplashScreen extends Fragment {
+public class SplashScreen extends ChanceFragment {
     private SplashScreenBinding binding;
-    private DataStoreManager dsm;
-    private ChanceViewModel cvm;
 
     @Nullable
     @Override
@@ -28,8 +27,6 @@ public class SplashScreen extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = SplashScreenBinding.inflate(inflater, container, false);
-        dsm = DataStoreManager.getInstance();
-        cvm = new ViewModelProvider(requireActivity()).get(ChanceViewModel.class);
         return binding.getRoot();
     }
 

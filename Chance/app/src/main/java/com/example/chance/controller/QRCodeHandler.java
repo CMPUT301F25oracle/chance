@@ -65,4 +65,30 @@ public class QRCodeHandler {
             return null;
         }
     }
+
+    public static String decodeQrCode(byte[] imageBytes, int imageWidth, int imageHeight) {
+        try {
+            // Convert the byte array (which should represent ARGB or RGB pixel data)
+            // into an int[] that ZXing can understand.
+            int[] pixels = new int[imageWidth * imageHeight];
+
+            // Assuming imageBytes contains raw ARGB/RGB data (e.g., from ImageProxy YUV conversion).
+            // If it's already ARGB_8888, you can wrap it directly. Otherwise, you may need
+            // to convert YUV -> RGB first.
+            for (int i = 0; i < pixels.length; i++) {
+                int r = imageBytes[i * 3] & 0xFF;
+                int g = imageBytes[i * 3 + 1] & 0xFF;
+                int b = imageBytes[i * 3 + 2] & 0xFF;
+                pixels[i] = 0xFF000000 | (r << 16) | (g << 8) | b;
+            }
+
+            // Feed into ZXing
+            RGBLuminanceSource source = new RGBLuminanceSource(imageWidth, imageHeight, pixels);
+            BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(source));
+            return new MultiFormatReader().decode(binaryBitmap).getText();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 }

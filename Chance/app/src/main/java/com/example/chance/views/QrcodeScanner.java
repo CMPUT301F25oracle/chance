@@ -31,21 +31,27 @@ import com.example.chance.ChanceViewModel;
 import com.example.chance.R;
 import com.example.chance.controller.QRCodeHandler;
 import com.example.chance.databinding.QrcodeScannerBinding;
+import com.example.chance.views.base.ChanceFragment;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.zxing.MultiFormatReader;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class QrcodeScanner extends Fragment {
+public class QrcodeScanner extends ChanceFragment {
     private static final int CAMERA_PERMISSION_CODE = 100;
     private static final String TAG = "QrcodeScanner";
     
     private QrcodeScannerBinding binding;
-    private ChanceViewModel cvm;
+    ActivityResultLauncher<String> requestPermissionPopup;
+
+    static Preview cameraPreview = null;
+    static ImageAnalysis qrcodeAnalyzer = null;
+    private ExecutorService cameraExecutor;
 
     @Nullable
     @Override
@@ -53,7 +59,6 @@ public class QrcodeScanner extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = QrcodeScannerBinding.inflate(inflater, container, false);
-        cvm = new ViewModelProvider(requireActivity()).get(ChanceViewModel.class);
         return binding.getRoot();
     }
 
@@ -62,18 +67,24 @@ public class QrcodeScanner extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // check for camera permissions, and attempt to load scanner routine
-        ActivityResultLauncher<String> requestPermissionPopup = registerForActivityResult(new ActivityResultContracts.RequestPermission(), (granted) -> {
+        requestPermissionPopup = registerForActivityResult(new ActivityResultContracts.RequestPermission(), (granted) -> {
             if (granted) {
                 QRCodeScannerRoutine();
             } else {
                 throw new RuntimeException("QRCode scanner failed to start.");
             }
         });
+    }
 
+    /**
+     * Here we wait for the transition to complete before loading data,
+     * as *something* (or a multitude of things) tend to freeze the ui
+     * thread when the transition animation plays
+     */
+    @Override
+    public void chanceEnterTransitionComplete() {
+        super.chanceEnterTransitionComplete();
         requestPermissionPopup.launch(android.Manifest.permission.CAMERA);
-
-
-
     }
 
     private void QRCodeScannerRoutine() {
@@ -81,7 +92,9 @@ public class QrcodeScanner extends Fragment {
         cameraProviderFuture.addListener(() -> {
             try {
                 ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
-                Preview cameraPreview = new Preview.Builder().build();
+                if (cameraPreview == null) {
+                    cameraPreview = new Preview.Builder().build();
+                }
                 try {
                     cameraPreview.setSurfaceProvider(binding.cameraPreview.getSurfaceProvider());
                 } catch (Exception e) {
@@ -96,10 +109,12 @@ public class QrcodeScanner extends Fragment {
                 assert cameraProvider != null;
 
                 // now that we have a working camera view, start looking for qr codes in video frames
-                ImageAnalysis qrcodeAnalyzer = new ImageAnalysis.Builder()
-                        .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                        .build();
-                ExecutorService cameraExecutor = Executors.newSingleThreadExecutor();
+                if (qrcodeAnalyzer == null) {
+                    qrcodeAnalyzer = new ImageAnalysis.Builder()
+                            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                            .build();
+                }
+                cameraExecutor = Executors.newSingleThreadExecutor();
                 qrcodeAnalyzer.setAnalyzer(cameraExecutor, new QrCodeAnalyzer());
 
                 cameraProvider.bindToLifecycle(
@@ -118,8 +133,15 @@ public class QrcodeScanner extends Fragment {
     }
 
     private class QrCodeAnalyzer implements ImageAnalysis.Analyzer {
+        private long timeSinceLastDecode = 0;
+
         @Override
         public void analyze(ImageProxy image_frame) {
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - timeSinceLastDecode < 500) {
+                image_frame.close();
+                return;
+            }
             Bitmap image_bitmap = image_frame.toBitmap();
             String event_id = QRCodeHandler.decodeQRCode(image_bitmap);
             if (event_id != null) {
@@ -133,5 +155,7 @@ public class QrcodeScanner extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+        qrcodeAnalyzer.clearAnalyzer();
+        cameraExecutor.shutdownNow();
     }
 }

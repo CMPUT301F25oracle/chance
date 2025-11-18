@@ -8,6 +8,7 @@ import static com.google.common.collect.ComparisonChain.start;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.example.chance.controller.DataStoreManager;
@@ -20,12 +21,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.chance.databinding.ActivityMainBinding;
 import com.example.chance.views.QrcodeScanner;
 import com.example.chance.views.SplashScreen;
 import com.example.chance.views.ViewEvent;
+import com.example.chance.views.base.ChanceFragment;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 public class MainActivity extends AppCompatActivity {
@@ -95,13 +98,13 @@ public class MainActivity extends AppCompatActivity {
     private void setupNavBar() {
         View navbar = binding.getRoot().findViewById(R.id.nav_bar);
         navbar.findViewById(R.id.navbar_home_button).setOnClickListener((v) -> {
-            chanceViewModel.setNewFragment(Home.class, null, "none");
+            chanceViewModel.setNewFragment(Home.class, null, "fade");
         });
         navbar.findViewById(R.id.navbar_qr_button).setOnClickListener(v -> {
             chanceViewModel.setNewFragment(QrcodeScanner.class, null, "circular:350");
         });
         navbar.findViewById(R.id.navbar_profile_button).setOnClickListener((v) -> {
-            chanceViewModel.setNewFragment(Profile.class, null, "none");
+            chanceViewModel.setNewFragment(Profile.class, null, "fade");
         });
 
     }
@@ -115,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             Fragment fragment = fragmentClass.newInstance();
             fragment.setArguments(bundle);
-            animateFragmentTransition(transaction, fragment, transitionType);
+            animateFragmentTransition(transaction, (ChanceFragment) fragment, transitionType);
             // commit MUST always occur here for consistency
             transaction.commit();
         } catch (Exception e) {
@@ -129,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
      * @param newFragment
      * @param transitionType
      */
-    private void animateFragmentTransition(FragmentTransaction transaction, Fragment newFragment, String transitionType) {
+    private void animateFragmentTransition(FragmentTransaction transaction, ChanceFragment newFragment, String transitionType) {
         // we need to parse transitionType in case it mentions time in milliseconds
         String[] transitionTypeComponents = transitionType.split(":");
         String transition = transitionTypeComponents[0];
@@ -145,21 +148,26 @@ public class MainActivity extends AppCompatActivity {
                     android.R.anim.fade_out
                 );
                 transaction.replace(R.id.content_view, newFragment);
+                newFragment.chanceEnterTransitionComplete();
                 break;
             }
             case "circular": {
+                Log.d("Circular", "We're alive");
                 circularRevealAnimation(transaction, newFragment, duration);
                 break;
             }
             default: {
                 transaction.replace(R.id.content_view, newFragment);
+                newFragment.chanceEnterTransitionComplete();
                 break;
             }
         }
+        // make sure any waiting fragment code is executed now
+
     }
 
-    private void circularRevealAnimation(FragmentTransaction transaction, Fragment newFragment, int duration) {
-        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.content_view);
+    private void circularRevealAnimation(FragmentTransaction transaction, ChanceFragment newFragment, int duration) {
+        ChanceFragment currentFragment = (ChanceFragment) getSupportFragmentManager().findFragmentById(R.id.content_view);
         transaction.add(R.id.content_view, newFragment);
 
         View mainView = findViewById(R.id.content_view);
@@ -188,6 +196,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onAnimationEnd(@NonNull Animator animation) {
                         getSupportFragmentManager().beginTransaction().remove(currentFragment).commit();
+                        newFragment.chanceEnterTransitionComplete();
                     }
 
                     @Override
@@ -197,7 +206,6 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onAnimationStart(@NonNull Animator animation) {
-
                     }
                 });
                 circularReveal.start();

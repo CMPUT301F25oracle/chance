@@ -16,6 +16,7 @@ import com.example.chance.ChanceViewModel;
 import com.example.chance.adapters.EventSearchScreenListAdapter;
 import com.example.chance.controller.DataStoreManager;
 import com.example.chance.databinding.MultiPurposeEventSearchScreenBinding;
+import com.example.chance.views.base.ChanceFragment;
 import com.google.android.flexbox.AlignItems;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexWrap;
@@ -24,10 +25,8 @@ import com.google.android.flexbox.JustifyContent;
 
 import java.util.ArrayList;
 
-public class MultiPurposeEventSearchScreen extends Fragment {
+public class MultiPurposeEventSearchScreen extends ChanceFragment {
     private MultiPurposeEventSearchScreenBinding binding;
-    private ChanceViewModel cvm;
-    private DataStoreManager dsm;
 
     @Nullable
     @Override

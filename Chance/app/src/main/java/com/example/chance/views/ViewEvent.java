@@ -20,6 +20,7 @@ import com.example.chance.controller.QRCodeHandler;
 import com.example.chance.databinding.ViewEventBinding;
 import com.example.chance.model.Event;
 import com.example.chance.model.User;
+import com.example.chance.views.base.ChanceFragment;
 import com.google.rpc.context.AttributeContext;
 import com.google.zxing.WriterException;
 import com.google.zxing.qrcode.encoder.QRCode;
@@ -31,10 +32,8 @@ import java.util.Locale;
 import java.util.Objects;
 
 
-public class ViewEvent extends Fragment {
+public class ViewEvent extends ChanceFragment {
     private ViewEventBinding binding;
-    private ChanceViewModel cvm;
-    private DataStoreManager dsm;
 
     private Drawable buttonBackground;
 
@@ -44,10 +43,6 @@ public class ViewEvent extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = ViewEventBinding.inflate(inflater, container, false);
-        cvm = new ViewModelProvider(requireActivity()).get(ChanceViewModel.class);
-        dsm = DataStoreManager.getInstance();
-
-
         return binding.getRoot();
     }
 

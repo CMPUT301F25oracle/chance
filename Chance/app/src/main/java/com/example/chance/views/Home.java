@@ -17,6 +17,7 @@ import com.example.chance.adapters.MainEventSearchListAdapter;
 import com.example.chance.controller.DataStoreManager;
 import com.example.chance.databinding.HomeBinding;
 import com.example.chance.model.Event;
+import com.example.chance.views.base.ChanceFragment;
 import com.google.android.flexbox.AlignItems;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexWrap;
@@ -26,11 +27,9 @@ import com.google.android.flexbox.JustifyContent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Home extends Fragment {
+public class Home extends ChanceFragment {
 
     private HomeBinding binding;
-    private DataStoreManager dsm;
-    private ChanceViewModel cvm;
 
     @Nullable
     @Override
@@ -38,8 +37,6 @@ public class Home extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = HomeBinding.inflate(inflater, container, false);
-        dsm = DataStoreManager.getInstance();
-        cvm = new ViewModelProvider(requireActivity()).get(ChanceViewModel.class);
         return binding.getRoot();
     }
 
@@ -140,6 +137,11 @@ public class Home extends Fragment {
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override

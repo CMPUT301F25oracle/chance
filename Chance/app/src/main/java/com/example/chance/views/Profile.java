@@ -18,15 +18,14 @@ import com.example.chance.R;
 import com.example.chance.controller.DataStoreManager;
 import com.example.chance.databinding.ProfileBinding;
 import com.example.chance.model.User;
+import com.example.chance.views.base.ChanceFragment;
 
 import java.net.URI;
 import java.util.Objects;
 
 
-public class Profile extends Fragment {
+public class Profile extends ChanceFragment {
     private ProfileBinding binding;
-    private DataStoreManager dsm;
-    private ChanceViewModel cvm;
 
     @Nullable
     @Override
@@ -34,8 +33,6 @@ public class Profile extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = ProfileBinding.inflate(inflater, container, false);
-        cvm = new ViewModelProvider(requireActivity()).get(ChanceViewModel.class);
-        dsm = DataStoreManager.getInstance();
         return binding.getRoot();
     }
 

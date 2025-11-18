@@ -19,14 +19,13 @@ import com.example.chance.controller.DataStoreManager;
 import com.example.chance.databinding.AuthenticationBinding;
 import com.example.chance.databinding.ChanceTextInputBinding;
 import com.example.chance.model.User;
+import com.example.chance.views.base.ChanceFragment;
 
 import java.util.Objects;
 
-public class Authentication extends Fragment {
+public class Authentication extends ChanceFragment {
 
     private AuthenticationBinding binding;
-    private DataStoreManager dsm;
-    private ChanceViewModel cvm;
 
     @Nullable
     @Override
@@ -34,8 +33,6 @@ public class Authentication extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = AuthenticationBinding.inflate(inflater, container, false);
-        dsm = DataStoreManager.getInstance();
-        cvm = new ViewModelProvider(requireActivity()).get(ChanceViewModel.class);
         return binding.getRoot();
     }
 

@@ -26,6 +26,7 @@ import com.example.chance.databinding.CreateEventBinding;
 import com.example.chance.model.Event;
 import com.example.chance.model.EventImage;
 import com.example.chance.model.User;
+import com.example.chance.views.base.ChanceFragment;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -38,11 +39,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class CreateEvent extends Fragment {
+public class CreateEvent extends ChanceFragment {
 
     private CreateEventBinding binding;
-    private DataStoreManager dsm;
-    private ChanceViewModel cvm;
     private ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
 
     private EventImage selectedEventBanner;
@@ -53,8 +52,6 @@ public class CreateEvent extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = CreateEventBinding.inflate(inflater, container, false);
-        dsm = DataStoreManager.getInstance();
-        cvm = new ViewModelProvider(requireActivity()).get(ChanceViewModel.class);
 
         pickMedia =
                 registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
