@@ -58,7 +58,7 @@ public class Home extends ChanceFragment {
         });
 
         binding.buttonEventCreated.setOnClickListener(__ -> {
-            cvm.setNewFragment(MultiPurposeEventSearchScreen.class, null, "");
+            cvm.setNewFragment(CreatedEvents.class, null, "");
         });
         binding.buttonCreateEvent.setOnClickListener(__ -> {
             cvm.setNewFragment(CreateEvent.class, null, "");

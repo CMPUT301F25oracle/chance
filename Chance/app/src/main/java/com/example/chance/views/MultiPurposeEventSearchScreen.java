@@ -16,6 +16,7 @@ import com.example.chance.ChanceViewModel;
 import com.example.chance.adapters.EventSearchScreenListAdapter;
 import com.example.chance.controller.DataStoreManager;
 import com.example.chance.databinding.MultiPurposeEventSearchScreenBinding;
+import com.example.chance.model.Event;
 import com.example.chance.views.base.ChanceFragment;
 import com.google.android.flexbox.AlignItems;
 import com.google.android.flexbox.FlexDirection;
@@ -24,9 +25,11 @@ import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MultiPurposeEventSearchScreen extends ChanceFragment {
     private MultiPurposeEventSearchScreenBinding binding;
+    private EventSearchScreenListAdapter eventsAdapter;
 
     @Nullable
     @Override
@@ -34,8 +37,6 @@ public class MultiPurposeEventSearchScreen extends ChanceFragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = MultiPurposeEventSearchScreenBinding.inflate(inflater, container, false);
-        dsm = DataStoreManager.getInstance();
-        cvm = new ViewModelProvider(requireActivity()).get(ChanceViewModel.class);
         return binding.getRoot();
     }
 
@@ -45,7 +46,7 @@ public class MultiPurposeEventSearchScreen extends ChanceFragment {
 
         // now we set up our event adapter
         RecyclerView eventsContainer = binding.eventsSearchContainer;
-        EventSearchScreenListAdapter eventsAdapter = new EventSearchScreenListAdapter();
+        eventsAdapter = new EventSearchScreenListAdapter();
         eventsContainer.setAdapter(eventsAdapter);
 
         // next we make sure flexbox is configured on the recyclerview
@@ -61,12 +62,6 @@ public class MultiPurposeEventSearchScreen extends ChanceFragment {
         layoutManager.setAlignItems(AlignItems.STRETCH);
 
         eventsContainer.setLayoutManager(layoutManager);
-
-        // now we load the event data (if there is any)
-        cvm.getEvents().observe(getViewLifecycleOwner(), events -> {
-            if (events == null) return;
-            eventsAdapter.submitList(new ArrayList<>(events));
-        });
 
         eventsContainer.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
             @Override
@@ -84,6 +79,10 @@ public class MultiPurposeEventSearchScreen extends ChanceFragment {
                 return false;
             }
         });
+    }
+
+    public void submitList(List<Event> events) {
+        eventsAdapter.submitList(events);
     }
 
     @Override
