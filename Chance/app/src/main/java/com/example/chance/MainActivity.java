@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.example.chance.controller.DataStoreManager;
+import com.example.chance.model.Event;
 import com.example.chance.model.User;
 import com.example.chance.util.Tuple3;
 import com.example.chance.views.Home;
@@ -30,6 +31,9 @@ import com.example.chance.views.SplashScreen;
 import com.example.chance.views.ViewEvent;
 import com.example.chance.views.base.ChanceFragment;
 import com.google.android.gms.tasks.OnSuccessListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private User user;
@@ -67,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
             this.user = user;
             chanceViewModel.setCurrentUser(user);
             // now we load the list of events from firestore
+            List<Event> emptyList = new ArrayList<>();
+            chanceViewModel.setEvents(emptyList);
             DataStoreManager.getInstance().getAllEvents((events) -> {
                 chanceViewModel.setEvents(events);
             });
@@ -101,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
             chanceViewModel.setNewFragment(Home.class, null, "fade");
         });
         navbar.findViewById(R.id.navbar_qr_button).setOnClickListener(v -> {
-            chanceViewModel.setNewFragment(QrcodeScanner.class, null, "circular:350");
+            chanceViewModel.setNewFragment(QrcodeScanner.class, null, "circular:300");
         });
         navbar.findViewById(R.id.navbar_profile_button).setOnClickListener((v) -> {
             chanceViewModel.setNewFragment(Profile.class, null, "fade");

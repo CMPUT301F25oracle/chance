@@ -8,13 +8,9 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.chance.ChanceViewModel;
 import com.example.chance.adapters.MainEventSearchListAdapter;
-import com.example.chance.controller.DataStoreManager;
 import com.example.chance.databinding.HomeBinding;
 import com.example.chance.model.Event;
 import com.example.chance.views.base.ChanceFragment;
@@ -26,10 +22,15 @@ import com.google.android.flexbox.JustifyContent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import io.reactivex.rxjava3.disposables.Disposable;
 
 public class Home extends ChanceFragment {
 
     private HomeBinding binding;
+    // defined here to later clean up the observer
+    private Disposable eventsDisposable;
 
     @Nullable
     @Override
@@ -89,20 +90,57 @@ public class Home extends ChanceFragment {
 
 
         // now we load the event data (if there is any)
+        List<Event> leftEventList = new ArrayList<>();
+        List<Event> rightEventList = new ArrayList<>();
+        eventsAdapterLeft.submitList(leftEventList);
+        eventsAdapterRight.submitList(rightEventList);
 
+        // here's the problem: ui work is expensive, and freezes the ui thread
+        // (technically since we're testing on a single core system, the *whole*
+        // thread, resulting in very choppy animations between context switches.
+        // How can we resolve this? *RxJava*. Using it, we're able to keep the
+        // async operations, and add an interval between processing array elements
+        // so we can gradually populate the visible events while not making
+        // animations unbearable to the user.
+
+        AtomicInteger leftIdx = new AtomicInteger();
+        AtomicInteger rightIdx = new AtomicInteger();
         cvm.getEvents().observe(getViewLifecycleOwner(), events -> {
-            List<Event> leftEventList = new ArrayList<>();
-            List<Event> rightEventList = new ArrayList<>();
-            for (int i = 0; i < events.size(); i++) {
-                if (i % 2 == 0) {
-                    leftEventList.add(events.get(i));
-                } else {
-                    rightEventList.add(events.get(i));
-                }
-            }
-            eventsAdapterLeft.submitList(leftEventList);
-            eventsAdapterRight.submitList(rightEventList);
+            eventsDisposable = io.reactivex.rxjava3.core.Observable
+                    .fromIterable(events)
+                    .concatMap(ev ->
+                            io.reactivex.rxjava3.core.Observable
+                                    .just(ev)
+                                    .delay(50, java.util.concurrent.TimeUnit.MILLISECONDS)
+                    )
+
+                    //.subscribeOn(io.reactivex.rxjava3.schedulers.Schedulers.computation())
+                    .observeOn(io.reactivex.rxjava3.android.schedulers.AndroidSchedulers.mainThread())
+                    .subscribe(event -> {
+                        if ((leftIdx.get() + rightIdx.get()) % 2 == 0) {
+                            leftEventList.add(event);
+                            eventsAdapterLeft.notifyItemInserted((leftEventList.size() + leftIdx.get()) % leftEventList.size());
+                            leftIdx.getAndIncrement();
+                        } else {
+                            rightEventList.add(event);
+                            eventsAdapterRight.notifyItemInserted((rightEventList.size() + rightIdx.get()) % rightEventList.size());
+                            rightIdx.getAndIncrement();
+                        }
+                    }, throwable -> {
+                        throwable.printStackTrace();
+                    });
         });
+//        cvm.getEvents().observe(getViewLifecycleOwner(), events -> {
+//            for (int i = 0; i < events.size(); i++) {
+//                if (i % 2 == 0) {
+//                    leftEventList.add(events.get(i));
+//                    eventsAdapterLeft.notifyItemChanged(i);
+//                } else {
+//                    rightEventList.add(events.get(i));
+//                    eventsAdapterRight.notifyItemChanged(i);
+//                }
+//            }
+//        });
 
         eventsContainerLeft.addOnItemTouchListener(new androidx.recyclerview.widget.RecyclerView.SimpleOnItemTouchListener() {
             @Override
@@ -140,13 +178,9 @@ public class Home extends ChanceFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
     public void onDestroyView() {
         super.onDestroyView();
+        eventsDisposable.dispose();
         binding = null;
     }
 }

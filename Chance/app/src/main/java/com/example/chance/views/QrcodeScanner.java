@@ -1,11 +1,14 @@
 package com.example.chance.views;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +45,10 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Scheduler;
+
 public class QrcodeScanner extends ChanceFragment {
     private static final int CAMERA_PERMISSION_CODE = 100;
     private static final String TAG = "QrcodeScanner";
@@ -74,6 +81,7 @@ public class QrcodeScanner extends ChanceFragment {
                 throw new RuntimeException("QRCode scanner failed to start.");
             }
         });
+        //requestPermissionPopup.launch(android.Manifest.permission.CAMERA);
     }
 
     /**
@@ -87,50 +95,56 @@ public class QrcodeScanner extends ChanceFragment {
         requestPermissionPopup.launch(android.Manifest.permission.CAMERA);
     }
 
+    @SuppressLint("CheckResult")
     private void QRCodeScannerRoutine() {
-        ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext());
-        cameraProviderFuture.addListener(() -> {
-            try {
-                ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
-                if (cameraPreview == null) {
-                    cameraPreview = new Preview.Builder().build();
-                }
-                try {
-                    cameraPreview.setSurfaceProvider(binding.cameraPreview.getSurfaceProvider());
-                } catch (Exception e) {
-                    // view was likely destroyed, so we shouldn't have much to worry about.
-                    // just return gracefully.
-                    return;
-                }
+        Scheduler ioSchedulerSubscribable = io.reactivex.rxjava3.schedulers.Schedulers.io();
+        Scheduler androidSchedulerObservable = AndroidSchedulers.mainThread();
+        com.google.common.util.concurrent.ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext());
 
-                if (cameraProvider != null) {
-                    cameraProvider.unbindAll();
-                }
-                assert cameraProvider != null;
-
-                // now that we have a working camera view, start looking for qr codes in video frames
-                if (qrcodeAnalyzer == null) {
-                    qrcodeAnalyzer = new ImageAnalysis.Builder()
-                            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                            .build();
-                }
-                cameraExecutor = Executors.newSingleThreadExecutor();
-                qrcodeAnalyzer.setAnalyzer(cameraExecutor, new QrCodeAnalyzer());
-
-                cameraProvider.bindToLifecycle(
-                        getViewLifecycleOwner(),
-                        CameraSelector.DEFAULT_BACK_CAMERA,
-                        cameraPreview,
-                        qrcodeAnalyzer
-                );
+        Executor qrcodeInitThread = Executors.newSingleThreadExecutor();
+        Handler workHandler = new Handler(Looper.getMainLooper());
 
 
+        io.reactivex.rxjava3.core.Single.fromFuture(cameraProviderFuture)
+                .subscribeOn(io.reactivex.rxjava3.schedulers.Schedulers.io()) // run the future/get on IO thread
+                .observeOn(io.reactivex.rxjava3.android.schedulers.AndroidSchedulers.mainThread()) // back to main for UI work
+                .subscribe(cameraProvider -> {
+                    if (cameraPreview == null) {
+                        cameraPreview = new Preview.Builder().build();
+                    }
 
-            } catch (ExecutionException | InterruptedException e) {
-                throw new RuntimeException("QRCode scanner failed to run.");
-            }
-        }, ContextCompat.getMainExecutor(requireContext()));
-    }
+                    try {
+                        cameraPreview.setSurfaceProvider(binding.cameraPreview.getSurfaceProvider());
+
+                    } catch (Exception e) {
+                        // view was likely destroyed, just return
+                        return;
+                    }
+
+                    if (cameraProvider != null) {
+                        cameraProvider.unbindAll();
+                    }
+                    // now that we have a working camera view, start looking for qr codes in video frames
+                    if (qrcodeAnalyzer == null) {
+                        qrcodeAnalyzer = new ImageAnalysis.Builder()
+                                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                                .build();
+                    }
+                    cameraExecutor = Executors.newSingleThreadExecutor();
+                    qrcodeAnalyzer.setAnalyzer(cameraExecutor, new QrCodeAnalyzer());
+
+                    cameraProvider.bindToLifecycle(
+                            getViewLifecycleOwner(),
+                            CameraSelector.DEFAULT_BACK_CAMERA,
+                            cameraPreview,
+                            qrcodeAnalyzer
+                    );
+                }, throwable -> {
+                    // handle error (execution/interrupt or other)
+                    throw new RuntimeException("QRCode scanner failed to run.", throwable);
+                });
+        Log.d("fish", "Bottom lol");
+}
 
     private class QrCodeAnalyzer implements ImageAnalysis.Analyzer {
         private long timeSinceLastDecode = 0;
