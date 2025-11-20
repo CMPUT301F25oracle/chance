@@ -109,60 +109,66 @@
             <Space
                 android:layout_width="0px"
                 android:layout_height="40px"/>
+            <LinearLayout
+                android:id="@+id/organizer_buttons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+                <Button
+                    android:layout_marginLeft="27dp"
+                    android:layout_width="350dp"
+                    android:layout_height="40dp"
+                    android:backgroundTint="@color/black"
+                    android:text="View Final List of Entrants"
+                    android:textColor="@color/white"
+                    />
 
-            <Button
-                android:layout_marginLeft="27dp"
-                android:layout_width="350dp"
-                android:layout_height="40dp"
-                android:backgroundTint="@color/black"
-                android:text="View Final List of Entrants"
-                android:textColor="@color/white"
-                />
+                <Button
+                    android:layout_marginLeft="27dp"
+                    android:layout_width="350dp"
+                    android:layout_height="40dp"
+                    android:backgroundTint="@color/black"
+                    android:text="Export Final List of Entranats"
+                    android:textColor="@color/white"
+                    />
 
-            <Button
-                android:layout_marginLeft="27dp"
-                android:layout_width="350dp"
-                android:layout_height="40dp"
-                android:backgroundTint="@color/black"
-                android:text="Export Final List of Entranats"
-                android:textColor="@color/white"
-                />
+                <Button
+                    android:layout_marginLeft="27dp"
+                    android:layout_width="350dp"
+                    android:layout_height="40dp"
+                    android:backgroundTint="@color/black"
+                    android:text="Remove unregistered entrants"
+                    android:textColor="@color/white"
+                    />
 
-            <Button
-                android:layout_marginLeft="27dp"
-                android:layout_width="350dp"
-                android:layout_height="40dp"
-                android:backgroundTint="@color/black"
-                android:text="Remove unregistered entrants"
-                android:textColor="@color/white"
-                />
+                <Button
+                    android:layout_marginLeft="27dp"
+                    android:layout_width="350dp"
+                    android:layout_height="40dp"
+                    android:backgroundTint="@color/black"
+                    android:text="View Cancelled List of Entrants"
+                    android:textColor="@color/white"
+                    />
 
-            <Button
-                android:layout_marginLeft="27dp"
-                android:layout_width="350dp"
-                android:layout_height="40dp"
-                android:backgroundTint="@color/black"
-                android:text="View Cancelled List of Entrants"
-                android:textColor="@color/white"
-                />
+                <Button
+                    android:layout_marginLeft="27dp"
+                    android:layout_width="350dp"
+                    android:layout_height="40dp"
+                    android:backgroundTint="@color/black"
+                    android:text="View Chosen List of Entrants"
+                    android:textColor="@color/white"
+                    />
 
-            <Button
-                android:layout_marginLeft="27dp"
-                android:layout_width="350dp"
-                android:layout_height="40dp"
-                android:backgroundTint="@color/black"
-                android:text="View Chosen List of Entrants"
-                android:textColor="@color/white"
-                />
-
-            <Button
-                android:layout_marginLeft="27dp"
-                android:layout_width="350dp"
-                android:layout_height="40dp"
-                android:backgroundTint="@color/black"
-                android:text="Draw Replacement Applicants"
-                android:textColor="@color/white"
-                />
+                <Button
+                    android:layout_marginLeft="27dp"
+                    android:layout_width="350dp"
+                    android:layout_height="40dp"
+                    android:backgroundTint="@color/black"
+                    android:text="Draw Replacement Applicants"
+                    android:textColor="@color/white"
+                    />
+            </LinearLayout>
 
 
         </com.google.android.flexbox.FlexboxLayout>
