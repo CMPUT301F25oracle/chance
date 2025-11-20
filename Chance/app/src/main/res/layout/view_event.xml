@@ -111,6 +111,7 @@
                 android:layout_height="40px"/>
             <LinearLayout
                 android:id="@+id/organizer_buttons"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -188,11 +189,11 @@
                 android:scaleType="centerCrop"/>
             <Button
                 android:id="@+id/enter_lottery_button"
-                android:layout_width="wrap_content"
+                android:layout_width="130dp"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/button_blue"
                 android:textColor="@color/white"
                 android:background="@drawable/box_rounded_corners"
+                android:backgroundTint="@color/black"
                 android:text="Enter Lottery"/>
         </com.google.android.flexbox.FlexboxLayout>
 
