@@ -33,17 +33,19 @@ public class SplashScreen extends ChanceFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("addToBackStack", false);
 
         if (dsm.isDeviceAuthenticated()) {
             dsm.getAuthenticatedUser(user -> {
                 cvm.setAuthenticationSuccess(user);
-                cvm.setNewFragment(Home.class, null, "");
+                cvm.setNewFragment(Home.class, bundle, "");
                 cvm.setLoadMainUI(true);
             }, (e) -> {
-                cvm.setNewFragment(Authentication.class, null, "");
+                cvm.setNewFragment(Authentication.class, bundle, "");
             });
         } else {
-            cvm.setNewFragment(Authentication.class, null, "");
+            cvm.setNewFragment(Authentication.class, bundle, "");
         }
     }
 

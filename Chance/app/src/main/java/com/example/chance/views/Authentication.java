@@ -61,8 +61,10 @@ public class Authentication extends ChanceFragment {
     }
 
     private void userAuthenticated(User user) {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("addToBackStack", false);
         cvm.setAuthenticationSuccess(user);
-        cvm.setNewFragment(Home.class, null, "");
+        cvm.setNewFragment(Home.class, bundle, "fade");
         cvm.setLoadMainUI(true);
     }
 

@@ -137,9 +137,11 @@ public class Profile extends ChanceFragment {
     }
 
     public void logoutUser() {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("addToBackStack", false);
         dsm.logoutAuthenticatedUser();
         cvm.setLoadMainUI(false);
-        cvm.setNewFragment(Authentication.class, null, "");
+        cvm.setNewFragment(Authentication.class, bundle, "circular:300");
     }
 
     @Override

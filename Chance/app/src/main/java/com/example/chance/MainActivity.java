@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
 
     private List<Class<? extends ChanceFragment>> fragmentHistory = new ArrayList<>();
     // todo: make a less hacky back button implementation
-    private boolean goingBack = false;
     private int fragmentHistoryLength = 20;
 
 
@@ -115,9 +114,10 @@ public class MainActivity extends AppCompatActivity {
             public void handleOnBackPressed() {
                 int fragmentHistorySize = fragmentHistory.size();
                 if (fragmentHistorySize > 0) {
-                    goingBack = true;
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("addToBackStack", false);
                     Class<? extends ChanceFragment> nextFragment = fragmentHistory.removeLast();
-                    chanceViewModel.setNewFragment(nextFragment, null, "fade");
+                    chanceViewModel.setNewFragment(nextFragment, bundle, "fade");
                 } else {
                     finish();
                 }
@@ -150,14 +150,19 @@ public class MainActivity extends AppCompatActivity {
         Bundle bundle = fragmentData.y;
         String transitionType = fragmentData.z;
 
-        ChanceFragment currentFragment = (ChanceFragment) getSupportFragmentManager().findFragmentById(R.id.content_view);
-        if (currentFragment != null && !goingBack) {
-            Class<? extends ChanceFragment> currentFragmentClass = currentFragment.getClass();
-            if (currentFragmentClass != SplashScreen.class && currentFragmentClass != Authentication.class) {
-                fragmentHistory.addLast(currentFragment.getClass());
-            }
+        //region: !!!TEMPORARY FIX!!!
+        if (bundle == null) {
+            bundle = new Bundle();
         }
-        goingBack = false;
+        //endregion
+
+        boolean addToBackStack = bundle.getBoolean("addToBackStack", true);
+
+        ChanceFragment currentFragment = (ChanceFragment) getSupportFragmentManager().findFragmentById(R.id.content_view);
+        if (currentFragment != null && addToBackStack) {
+            Class<? extends ChanceFragment> currentFragmentClass = currentFragment.getClass();
+            fragmentHistory.addLast(currentFragment.getClass());
+        }
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         try {
