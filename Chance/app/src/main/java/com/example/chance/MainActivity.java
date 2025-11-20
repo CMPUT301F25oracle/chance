@@ -8,6 +8,7 @@ import android.animation.Animator;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.window.OnBackInvokedDispatcher;
 
 import com.example.chance.controller.DataStoreManager;
 import com.example.chance.model.Event;
@@ -16,8 +17,10 @@ import com.example.chance.util.Tuple3;
 import com.example.chance.views.Home;
 import com.example.chance.views.Profile;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.collection.CircularArray;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
@@ -35,6 +38,12 @@ public class MainActivity extends AppCompatActivity {
     private User user;
     private ActivityMainBinding binding;
     private ChanceViewModel chanceViewModel;
+
+    private List<Class<? extends ChanceFragment>> fragmentHistory = new ArrayList<>();
+    // todo: make a less hacky back button implementation
+    private boolean goingBack = false;
+    private int fragmentHistoryLength = 20;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +106,27 @@ public class MainActivity extends AppCompatActivity {
             chanceViewModel.setNewFragment(ViewEvent.class, bundle, "");
         });
         //endregion
+
+        //region: back button handler
+        OnBackPressedCallback backCallback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                int fragmentHistorySize = fragmentHistory.size();
+                if (fragmentHistorySize > 0) {
+                    goingBack = true;
+                    Class<? extends ChanceFragment> nextFragment = fragmentHistory.removeLast();
+                    chanceViewModel.setNewFragment(nextFragment, null, "fade");
+                } else {
+                    finish();
+                }
+            }
+        };
+
+        getOnBackPressedDispatcher().addCallback(this, backCallback);
+        //endregion
     }
+
+
 
     private void setupNavBar() {
         View navbar = binding.getRoot().findViewById(R.id.nav_bar);
@@ -118,6 +147,16 @@ public class MainActivity extends AppCompatActivity {
         Class<? extends Fragment> fragmentClass = fragmentData.x;
         Bundle bundle = fragmentData.y;
         String transitionType = fragmentData.z;
+
+        ChanceFragment currentFragment = (ChanceFragment) getSupportFragmentManager().findFragmentById(R.id.content_view);
+        if (currentFragment != null && !goingBack) {
+            Class<? extends ChanceFragment> currentFragmentClass = currentFragment.getClass();
+            if (currentFragmentClass != SplashScreen.class) {
+                fragmentHistory.addLast(currentFragment.getClass());
+            }
+        }
+        goingBack = false;
+
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         try {
             Fragment fragment = fragmentClass.newInstance();
