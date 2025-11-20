@@ -18,7 +18,7 @@
         app:alignItems="center"
         app:flexDirection="column"
         app:justifyContent="center"
-        android:background="@drawable/reusable_main_view_rounding"
+        android:background="@drawable/reusable_view_rounding"
         android:backgroundTint="@color/grey"
         >
         <com.google.android.flexbox.FlexboxLayout
