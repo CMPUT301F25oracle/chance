@@ -14,6 +14,7 @@ import com.example.chance.controller.DataStoreManager;
 import com.example.chance.model.Event;
 import com.example.chance.model.User;
 import com.example.chance.util.Tuple3;
+import com.example.chance.views.Authentication;
 import com.example.chance.views.Home;
 import com.example.chance.views.Profile;
 
@@ -84,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         });
         chanceViewModel.getNewFragment().observe(this, this::getNewFragmentCallback);
         chanceViewModel.getLoadMainUI().observe(this, shouldLoad -> {
+            fragmentHistory.clear();
             // first we add some styling to the main content view
             int visibility;
             int backgroundResource;
@@ -151,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
         ChanceFragment currentFragment = (ChanceFragment) getSupportFragmentManager().findFragmentById(R.id.content_view);
         if (currentFragment != null && !goingBack) {
             Class<? extends ChanceFragment> currentFragmentClass = currentFragment.getClass();
-            if (currentFragmentClass != SplashScreen.class) {
+            if (currentFragmentClass != SplashScreen.class && currentFragmentClass != Authentication.class) {
                 fragmentHistory.addLast(currentFragment.getClass());
             }
         }
