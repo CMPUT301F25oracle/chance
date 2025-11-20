@@ -41,7 +41,7 @@ public class Event {
     // Required empty constructor for Firestore
     public Event() {}
 
-    public Event(String name, String location, int capacity, double price, String description, Date startDate, Date endDate, String organizerUID) {
+    public Event(String name, String location, int capacity, double price, String description, Date startDate, Date endDate, String organizerUID, int maxInvited) {
         this.name = name;
         this.location = location;
         this.capacity = capacity;
@@ -50,7 +50,7 @@ public class Event {
         this.startDate = startDate;
         this.endDate = endDate;
         this.organizerUID = organizerUID;
-        this.maxInvited = 10;
+        this.maxInvited = maxInvited;
         this.waitingList = new ArrayList<>();
         this.invitationList = new ArrayList<>();
     }
@@ -180,4 +180,6 @@ public class Event {
     public void setMaxInvited(int maxInvited) {
         this.maxInvited = maxInvited;
     }
+
+
 }
