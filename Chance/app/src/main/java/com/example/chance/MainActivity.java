@@ -3,10 +3,8 @@ package com.example.chance;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
-import static com.google.common.collect.ComparisonChain.start;
 
 import android.animation.Animator;
-import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,7 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.chance.databinding.ActivityMainBinding;
@@ -30,7 +27,6 @@ import com.example.chance.views.QrcodeScanner;
 import com.example.chance.views.SplashScreen;
 import com.example.chance.views.ViewEvent;
 import com.example.chance.views.base.ChanceFragment;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
             int backgroundResource;
             if (shouldLoad) {
                 visibility = VISIBLE;
-                backgroundResource = R.drawable.reusable_main_view_rounding;
+                backgroundResource = R.drawable.reusable_view_rounding;
             } else {
                 visibility = View.GONE;
                 backgroundResource = 0;

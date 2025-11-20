@@ -181,7 +181,10 @@
             </com.google.android.flexbox.FlexboxLayout>
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="20dp"/>
+                android:layout_height="7.5dp"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/chance_margin"/>
         </com.google.android.flexbox.FlexboxLayout>
     </ScrollView>
 

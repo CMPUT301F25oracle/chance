@@ -13,13 +13,13 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/reusable_main_view_rounding"
+        android:background="@drawable/reusable_view_rounding"
         android:clipToOutline="true">
         <FrameLayout
             android:id="@+id/content_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clipToOutline="true" />
+            android:clipToOutline="true"/>
 
     </FrameLayout>
 
