@@ -14,8 +14,8 @@ import com.google.android.flexbox.AlignItems;
 import com.google.android.flexbox.FlexboxLayout;
 
 public class ChanceTextInput extends FlexboxLayout {
-    private ImageView icon;
-    private EditText textInput;
+    private final ImageView icon;
+    private final EditText textInput;
 
     final static int BLACK = 0xFF000000;
     final static int WHITE = 0xFFFFFFFF;

@@ -11,7 +11,7 @@ import com.example.chance.model.WaitingList;
  */
 public class EntrantTest {
 
-    private WaitingList mock_waitingList = new WaitingList();
+    private final WaitingList mock_waitingList = new WaitingList();
 
     @Test
     public void common_waiting_list_id() {

@@ -8,7 +8,7 @@ import com.example.chance.model.Administrator;
 // For the six Admin tests, we will implement them
 public class AdminToolsTest {
 
-    private Administrator admin = new Administrator();
+    private final Administrator admin = new Administrator();
 
     @Test
     public void browse_uploaded_images() {}

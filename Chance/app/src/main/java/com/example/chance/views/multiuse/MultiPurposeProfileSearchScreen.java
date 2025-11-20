@@ -58,7 +58,7 @@ public class MultiPurposeProfileSearchScreen extends ChanceFragment {
 
 
         profilesContainer.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
-            GestureDetector gestureHandler = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
+            final GestureDetector gestureHandler = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
                 @Override
                 public boolean onFling(MotionEvent __, MotionEvent ___, float velocityX, float velocityY) {
                     // Let RecyclerView handle the fling

@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 // For the view and join and leave waiting list tests, we will implement them
 public class WaitingListTest {
 
-    private WaitingList waitingList = new WaitingList();
+    private final WaitingList waitingList = new WaitingList();
 
     @Test
     public void add_entrant() {

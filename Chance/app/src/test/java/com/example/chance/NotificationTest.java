@@ -11,7 +11,7 @@ import android.app.Notification;
 // For the four notification tests, we will implement them
 public class NotificationTest {
 
-    private Notification notification = new Notification();
+    private final Notification notification = new Notification();
 
     @Test
     public void opt_out_of_notifications() {}

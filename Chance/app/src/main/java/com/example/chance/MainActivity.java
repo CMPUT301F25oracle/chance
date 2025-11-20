@@ -8,21 +8,17 @@ import android.animation.Animator;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.window.OnBackInvokedDispatcher;
 
 import com.example.chance.controller.DataStoreManager;
 import com.example.chance.model.Event;
 import com.example.chance.model.User;
 import com.example.chance.util.Tuple3;
-import com.example.chance.views.Authentication;
 import com.example.chance.views.Home;
 import com.example.chance.views.Profile;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.collection.CircularArray;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -40,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private ChanceViewModel chanceViewModel;
 
-    private List<BackstackFragment> backstackHistory = new ArrayList<>();
+    private final List<BackstackFragment> backstackHistory = new ArrayList<>();
 
 
     @Override
@@ -169,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
             fragment.meta = bundle;
 
             fragment.setArguments(bundle);
-            animateFragmentTransition(transaction, (ChanceFragment) fragment, transitionType);
+            animateFragmentTransition(transaction, fragment, transitionType);
             // commit MUST always occur here for consistency
             transaction.commit();
         } catch (Exception e) {

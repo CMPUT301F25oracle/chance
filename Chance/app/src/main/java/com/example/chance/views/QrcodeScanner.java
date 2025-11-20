@@ -147,7 +147,7 @@ public class QrcodeScanner extends ChanceFragment {
 }
 
     private class QrCodeAnalyzer implements ImageAnalysis.Analyzer {
-        private long timeSinceLastDecode = 0;
+        private final long timeSinceLastDecode = 0;
 
         @Override
         public void analyze(ImageProxy image_frame) {

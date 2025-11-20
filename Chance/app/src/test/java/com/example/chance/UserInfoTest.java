@@ -13,7 +13,7 @@ import com.example.chance.model.User;
  */
 public class UserInfoTest {
 
-    private User mock_user = new User();
+    private final User mock_user = new User();
 
     @Test
     public void common_user_name() {
