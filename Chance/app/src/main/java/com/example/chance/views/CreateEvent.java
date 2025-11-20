@@ -43,7 +43,6 @@ public class CreateEvent extends ChanceFragment {
 
     private CreateEventBinding binding;
     private ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
-
     private EventImage selectedEventBanner;
 
     @Nullable

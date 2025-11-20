@@ -1,5 +1,7 @@
 package com.example.chance.views;
 
+import static android.view.View.INVISIBLE;
+
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -56,6 +58,9 @@ public class ViewEvent extends ChanceFragment {
                 Event event = events.stream().filter(ev -> Objects.equals(ev.getID(), eventID)).findFirst().orElse(null);
                 if (event == null) {
                     dsm.getEvent(eventID, retrieved_event -> {
+                        if (retrieved_event.getOrganizerUID().equals(user.getID())) {
+                            binding.organizerButtons.setVisibility(INVISIBLE);
+                        }
                         loadEventInformation(retrieved_event, user);
                     });
                 } else {
@@ -63,8 +68,6 @@ public class ViewEvent extends ChanceFragment {
                 }
             });
         });
-
-
     }
 
     public void loadEventInformation(Event event, User user) {
