@@ -67,14 +67,11 @@ public class ViewEvent extends ChanceFragment {
                     dsm.getEvent(eventID, retrieved_event -> {
                         // NOTE: Keeping the organizerButtons visibility check here for existing logic
                         if (retrieved_event.getOrganizerUID().equals(user.getID())) {
-                            binding.organizerButtons.setVisibility(VISIBLE);
+                            binding.organizerButtons.setVisibility(INVISIBLE);
                         }
                         loadEventInformation(retrieved_event, user);
                     });
                 } else {
-                    if (event.getOrganizerUID().equals(user.getID())) {
-                        binding.organizerButtons.setVisibility(VISIBLE);
-                    }
                     loadEventInformation(event, user);
                 }
             });
