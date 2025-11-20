@@ -171,6 +171,10 @@ public class ViewEvent extends ChanceFragment {
     }
     // END: BANNER REMOVAL FEATURE
 
+    private void setupEventRemoval(Event event, User user) {
+
+    }
+
     private String formatDate(Date date) {
         if (date == null) {
             return "the event end date";
