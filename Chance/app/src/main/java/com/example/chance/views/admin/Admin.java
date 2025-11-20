@@ -1,4 +1,4 @@
-package com.example.chance.views;
+package com.example.chance.views.admin;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.chance.databinding.AdminBinding;
-import com.example.chance.databinding.HomeBinding;
 import com.example.chance.views.base.ChanceFragment;
 
 public class Admin extends ChanceFragment {
@@ -26,6 +25,8 @@ public class Admin extends ChanceFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
 
     }
 }

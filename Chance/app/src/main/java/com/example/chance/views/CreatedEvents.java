@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.chance.model.Event;
+import com.example.chance.views.multiuse.MultiPurposeEventSearchScreen;
 
 import java.util.List;
 import java.util.Objects;

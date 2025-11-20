@@ -1,31 +1,22 @@
-package com.example.chance.views;
+package com.example.chance.views.multiuse;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.GestureDetector;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Scroller;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.chance.ChanceViewModel;
-import com.example.chance.adapters.EventSearchScreenListAdapter;
-import com.example.chance.adapters.MultiPurposeEventSearchScreenListAdapter;
-import com.example.chance.controller.DataStoreManager;
-import com.example.chance.databinding.MultiPurposeEventSearchScreenBinding;
-import com.example.chance.model.Event;
+import com.example.chance.adapters.MultiPurposeProfileSearchScreenListAdapter;
+import com.example.chance.databinding.MultiPurposeProfileSearchScreenBinding;
+import com.example.chance.model.User;
 import com.example.chance.views.base.ChanceFragment;
-import com.google.android.flexbox.AlignItems;
 import com.google.android.flexbox.FlexDirection;
-import com.google.android.flexbox.FlexWrap;
 import com.google.android.flexbox.FlexboxLayoutManager;
-import com.google.android.flexbox.JustifyContent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,18 +24,18 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import io.reactivex.rxjava3.disposables.Disposable;
 
-abstract public class MultiPurposeEventSearchScreen extends ChanceFragment {
-    private MultiPurposeEventSearchScreenBinding binding;
-    List<Event> eventList = new ArrayList<>();
-    private MultiPurposeEventSearchScreenListAdapter eventsAdapter;
-    private Disposable eventsDisposable;
+public class MultiPurposeProfileSearchScreen extends ChanceFragment {
+    private MultiPurposeProfileSearchScreenBinding binding;
+    List<User> profileList = new ArrayList<>();
+    private MultiPurposeProfileSearchScreenListAdapter profileAdapter;
+    private Disposable profilesDisposable;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        binding = MultiPurposeEventSearchScreenBinding.inflate(inflater, container, false);
+        binding = MultiPurposeProfileSearchScreenBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
@@ -53,33 +44,33 @@ abstract public class MultiPurposeEventSearchScreen extends ChanceFragment {
         super.onViewCreated(view, savedInstanceState);
 
         // now we set up our event adapter
-        RecyclerView eventsContainer = binding.eventsContainer;
-        eventsAdapter = new MultiPurposeEventSearchScreenListAdapter();
-        eventsContainer.setAdapter(eventsAdapter);
-        eventsAdapter.submitList(eventList);
+        RecyclerView profilesContainer = binding.profilesContainer;
+        profileAdapter = new MultiPurposeProfileSearchScreenListAdapter();
+        profilesContainer.setAdapter(profileAdapter);
+        profileAdapter.submitList(profileList);
 
 
         FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(getContext());
         layoutManager.setFlexDirection(FlexDirection.ROW);
-        eventsContainer.setLayoutManager(layoutManager);
+        profilesContainer.setLayoutManager(layoutManager);
 
 
 
 
-        eventsContainer.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
+        profilesContainer.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
             GestureDetector gestureHandler = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
                 @Override
                 public boolean onFling(MotionEvent __, MotionEvent ___, float velocityX, float velocityY) {
                     // Let RecyclerView handle the fling
-                    eventsContainer.fling((int) velocityX, (int) velocityY);
+                    profilesContainer.fling((int) velocityX, (int) velocityY);
                     return true;
                 }
 
                 @Override
                 public boolean onSingleTapUp(MotionEvent motionEvent) {
-                    View eventPill = eventsContainer.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
-                    if (eventPill != null) {
-                        String eventId = (String) eventPill.getTag();
+                    View profilePill = profilesContainer.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
+                    if (profilePill != null) {
+                        String eventId = (String) profilePill.getTag();
                         cvm.requestOpenEvent(eventId);
                         return true;
                     }
@@ -94,23 +85,23 @@ abstract public class MultiPurposeEventSearchScreen extends ChanceFragment {
         });
     }
 
-    public void submitList(List<Event> events) {
+    public void submitList(List<User> users) {
         //region: load events asynchronously
 
         // we create a new eventList to gradually load events into UI,
         // mitigating ui thread freezes
         AtomicInteger idx = new AtomicInteger();
-        eventsDisposable = io.reactivex.rxjava3.core.Observable
-            .fromIterable(events)
+        profilesDisposable = io.reactivex.rxjava3.core.Observable
+            .fromIterable(users)
             .concatMap(ev ->
                 io.reactivex.rxjava3.core.Observable
-                .just(ev)
-                .delay(50, java.util.concurrent.TimeUnit.MILLISECONDS)
+                    .just(ev)
+                    .delay(50, java.util.concurrent.TimeUnit.MILLISECONDS)
             )
             .observeOn(io.reactivex.rxjava3.android.schedulers.AndroidSchedulers.mainThread())
-            .subscribe(event -> {
-                eventList.add(event);
-                eventsAdapter.notifyItemInserted(
+            .subscribe(user -> {
+                profileList.add(user);
+                profileAdapter.notifyItemInserted(
                     idx.getAndIncrement());
             });
         //endregion
@@ -119,7 +110,8 @@ abstract public class MultiPurposeEventSearchScreen extends ChanceFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        eventsDisposable.dispose();
+        profilesDisposable.dispose();
         binding = null;
     }
+
 }
