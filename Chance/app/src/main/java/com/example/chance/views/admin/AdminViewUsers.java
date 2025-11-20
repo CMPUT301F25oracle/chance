@@ -6,12 +6,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.chance.model.Event;
-import com.example.chance.views.base.ChanceFragment;
-import com.example.chance.views.multiuse.MultiPurposeProfileSearchScreen;
-
-import java.util.List;
-import java.util.Objects;
+import com.example.chance.views.base.MultiPurposeProfileSearchScreen;
 
 public class AdminViewUsers extends MultiPurposeProfileSearchScreen {
 
