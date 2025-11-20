@@ -2,9 +2,11 @@ package com.example.chance.views;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Scroller;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chance.ChanceViewModel;
 import com.example.chance.adapters.EventSearchScreenListAdapter;
+import com.example.chance.adapters.MultiPurposeEventSearchScreenListAdapter;
 import com.example.chance.controller.DataStoreManager;
 import com.example.chance.databinding.MultiPurposeEventSearchScreenBinding;
 import com.example.chance.model.Event;
@@ -27,9 +30,9 @@ import com.google.android.flexbox.JustifyContent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MultiPurposeEventSearchScreen extends ChanceFragment {
+abstract public class MultiPurposeEventSearchScreen extends ChanceFragment {
     private MultiPurposeEventSearchScreenBinding binding;
-    private EventSearchScreenListAdapter eventsAdapter;
+    private MultiPurposeEventSearchScreenListAdapter eventsAdapter;
 
     @Nullable
     @Override
@@ -45,37 +48,38 @@ public class MultiPurposeEventSearchScreen extends ChanceFragment {
         super.onViewCreated(view, savedInstanceState);
 
         // now we set up our event adapter
-        RecyclerView eventsContainer = binding.eventsSearchContainer;
-        eventsAdapter = new EventSearchScreenListAdapter();
+        RecyclerView eventsContainer = binding.eventsContainer;
+        eventsAdapter = new MultiPurposeEventSearchScreenListAdapter();
         eventsContainer.setAdapter(eventsAdapter);
 
-        // next we make sure flexbox is configured on the recyclerview
-//        FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(getContext());
-//        layoutManager.setFlexDirection(FlexDirection.COLUMN);
-//        layoutManager.setFlexWrap(FlexWrap.NOWRAP);
-//        layoutManager.setJustifyContent(JustifyContent.CENTER);
-//        layoutManager.setAlignItems(AlignItems.CENTER);
-        FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(getContext());
-        layoutManager.setFlexDirection(FlexDirection.COLUMN);
-        layoutManager.setFlexWrap(FlexWrap.WRAP);
-        layoutManager.setJustifyContent(JustifyContent.FLEX_START);
-        layoutManager.setAlignItems(AlignItems.STRETCH);
 
+        FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(getContext());
+        layoutManager.setFlexDirection(FlexDirection.ROW);
         eventsContainer.setLayoutManager(layoutManager);
 
         eventsContainer.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
-            @Override
-            public boolean onInterceptTouchEvent(@NonNull RecyclerView viewManager, @NonNull MotionEvent touchEvent) {
-                View eventPill = viewManager.findChildViewUnder(touchEvent.getX(), touchEvent.getY());
-                if (eventPill != null) {
-                    if (touchEvent.getAction() == MotionEvent.ACTION_UP) {
-                        // we only act when the user lifts their thumb to give more
-                        // "natural" feedback
+            GestureDetector gestureHandler = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
+                @Override
+                public boolean onFling(MotionEvent __, MotionEvent ___, float velocityX, float velocityY) {
+                    // Let RecyclerView handle the fling
+                    eventsContainer.fling((int) velocityX, (int) velocityY);
+                    return true;
+                }
+
+                @Override
+                public boolean onSingleTapUp(MotionEvent motionEvent) {
+                    View eventPill = eventsContainer.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
+                    if (eventPill != null) {
                         String eventId = (String) eventPill.getTag();
                         cvm.requestOpenEvent(eventId);
                         return true;
                     }
+                    return false;
                 }
+            });
+            @Override
+            public boolean onInterceptTouchEvent(@NonNull RecyclerView viewManager, @NonNull MotionEvent touchEvent) {
+                gestureHandler.onTouchEvent(touchEvent);
                 return false;
             }
         });
