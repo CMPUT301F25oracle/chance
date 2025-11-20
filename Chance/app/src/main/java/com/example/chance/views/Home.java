@@ -1,5 +1,7 @@
 package com.example.chance.views;
 
+import static android.view.View.VISIBLE;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -22,6 +24,7 @@ import com.google.android.flexbox.JustifyContent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.reactivex.rxjava3.disposables.Disposable;
@@ -44,7 +47,6 @@ public class Home extends ChanceFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         // Observe the current user LiveData so UI updates when user is available.
         cvm.getCurrentUser().observe(getViewLifecycleOwner(), user -> {
             if (user == null) {
@@ -54,6 +56,17 @@ public class Home extends ChanceFragment {
             }
             // Update UI once we have a user
             binding.homeSystemMessage.setText("Hello, " + user.getUsername());
+
+            //region: admin tools
+
+            // we want to show the admin button if the user is an admin
+            if (Objects.equals(user.getUsername(), "admin")) {
+                binding.adminButton.setVisibility(VISIBLE);
+                binding.adminButton.setOnClickListener(__ -> {
+                    cvm.setNewFragment(Admin.class, null, "fade");
+                });
+            }
+            //endregion
 
         });
 

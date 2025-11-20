@@ -10,8 +10,6 @@
     android:orientation="vertical"
     android:background="@color/grey">
 
-    <include layout="@layout/titlebar" />
-
     <com.google.android.flexbox.FlexboxLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -45,5 +43,4 @@
             />
 
         </com.google.android.flexbox.FlexboxLayout>
-    <include layout="@layout/navbar"></include>
 </com.google.android.flexbox.FlexboxLayout>
