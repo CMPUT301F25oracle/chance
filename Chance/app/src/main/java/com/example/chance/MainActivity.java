@@ -40,9 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private ChanceViewModel chanceViewModel;
 
-    private List<Class<? extends ChanceFragment>> fragmentHistory = new ArrayList<>();
-    // todo: make a less hacky back button implementation
-    private int fragmentHistoryLength = 20;
+    private List<BackstackFragment> backstackHistory = new ArrayList<>();
 
 
     @Override
@@ -84,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         });
         chanceViewModel.getNewFragment().observe(this, this::getNewFragmentCallback);
         chanceViewModel.getLoadMainUI().observe(this, shouldLoad -> {
-            fragmentHistory.clear();
+            backstackHistory.clear();
             // first we add some styling to the main content view
             int visibility;
             int backgroundResource;
@@ -103,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         });
         chanceViewModel.getEventToOpen().observe(this, eventId -> {
             Bundle bundle = new Bundle();
-            bundle.putString("event_id", eventId);
+            bundle.putString("eventID", eventId);
             chanceViewModel.setNewFragment(ViewEvent.class, bundle, "");
         });
         //endregion
@@ -112,12 +110,13 @@ public class MainActivity extends AppCompatActivity {
         OnBackPressedCallback backCallback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                int fragmentHistorySize = fragmentHistory.size();
+                int fragmentHistorySize = backstackHistory.size();
                 if (fragmentHistorySize > 0) {
-                    Bundle bundle = new Bundle();
-                    bundle.putBoolean("addToBackStack", false);
-                    Class<? extends ChanceFragment> nextFragment = fragmentHistory.removeLast();
-                    chanceViewModel.setNewFragment(nextFragment, bundle, "fade");
+                    BackstackFragment nextBackstackFragment = backstackHistory.removeLast();
+                    Class<? extends ChanceFragment> fragmentClass = nextBackstackFragment.fragmentClass;
+                    Bundle metaBundle = nextBackstackFragment.metaBundle;
+                    metaBundle.putBoolean("addToBackStack", false);
+                    chanceViewModel.setNewFragment(fragmentClass, metaBundle, "fade");
                 } else {
                     finish();
                 }
@@ -145,8 +144,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void getNewFragmentCallback(Tuple3<Class<? extends Fragment>, Bundle, String> fragmentData) {
-        Class<? extends Fragment> fragmentClass = fragmentData.x;
+    private void getNewFragmentCallback(Tuple3<Class<? extends ChanceFragment>, Bundle, String> fragmentData) {
+        Class<? extends ChanceFragment> fragmentClass = fragmentData.x;
         Bundle bundle = fragmentData.y;
         String transitionType = fragmentData.z;
 
@@ -161,12 +160,14 @@ public class MainActivity extends AppCompatActivity {
         ChanceFragment currentFragment = (ChanceFragment) getSupportFragmentManager().findFragmentById(R.id.content_view);
         if (currentFragment != null && addToBackStack) {
             Class<? extends ChanceFragment> currentFragmentClass = currentFragment.getClass();
-            fragmentHistory.addLast(currentFragment.getClass());
+            backstackHistory.addLast(new BackstackFragment(currentFragmentClass, currentFragment.meta));
         }
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         try {
-            Fragment fragment = fragmentClass.newInstance();
+            ChanceFragment fragment = fragmentClass.newInstance();
+            fragment.meta = bundle;
+
             fragment.setArguments(bundle);
             animateFragmentTransition(transaction, (ChanceFragment) fragment, transitionType);
             // commit MUST always occur here for consistency
@@ -264,5 +265,16 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+    }
+
+
+    private static class BackstackFragment {
+        public Class<? extends ChanceFragment> fragmentClass;
+        public Bundle metaBundle;
+
+        BackstackFragment(Class<? extends ChanceFragment> fragmentClass, Bundle metaBundle) {
+            this.fragmentClass = fragmentClass;
+            this.metaBundle = metaBundle;
+        }
     }
 }

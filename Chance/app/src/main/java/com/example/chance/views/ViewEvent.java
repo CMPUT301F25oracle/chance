@@ -61,7 +61,10 @@ public class ViewEvent extends ChanceFragment {
         super.onViewCreated(view, savedInstanceState);
         Bundle bundle = getArguments();
         cvm.getCurrentUser().observe(getViewLifecycleOwner(), user -> {
-            String eventID = bundle.getString("event_id");
+            String eventID = meta.getString("eventID");
+            if (eventID == null) {
+                throw new RuntimeException("Event ID cannot be null");
+            }
             cvm.getEvents().observe(getViewLifecycleOwner(), events -> {
                 Event event = events.stream().filter(ev -> Objects.equals(ev.getID(), eventID)).findFirst().orElse(null);
                 if (event == null) {

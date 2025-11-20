@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModel;
 import com.example.chance.model.Event;
 import com.example.chance.model.User;
 import com.example.chance.util.Tuple3;
+import com.example.chance.views.base.ChanceFragment;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class ChanceViewModel extends ViewModel {
     private final MutableLiveData<User> currentUser = new MutableLiveData<>();
     private final MutableLiveData<User> authenticationSuccess = new MutableLiveData<>();
     private final MutableLiveData<Boolean> navBarVisible = new MutableLiveData<>();
-    private final MutableLiveData<Tuple3<Class<? extends Fragment>, Bundle, String>> newFragment = new MutableLiveData<>();
+    private final MutableLiveData<Tuple3<Class<? extends ChanceFragment>, Bundle, String>> newFragment = new MutableLiveData<>();
     private final MutableLiveData<String> requestedEventID = new MutableLiveData<>();
     private final MutableLiveData<List<Event>> events = new MutableLiveData<>();
 
@@ -61,7 +62,7 @@ public class ChanceViewModel extends ViewModel {
      * gets the new fragment to be loaded
      * @return
      */
-    public MutableLiveData<Tuple3<Class<? extends Fragment>, Bundle, String>> getNewFragment() {
+    public MutableLiveData<Tuple3<Class<? extends ChanceFragment>, Bundle, String>> getNewFragment() {
         return newFragment;
     }
 
@@ -70,7 +71,7 @@ public class ChanceViewModel extends ViewModel {
      * @param fragment
      * @param bundle
      */
-    public void setNewFragment(Class<? extends Fragment> fragment, Bundle bundle, String transition) {
+    public void setNewFragment(Class<? extends ChanceFragment> fragment, Bundle bundle, String transition) {
         newFragment.postValue(new Tuple3<>(fragment, bundle, transition));
     }
 

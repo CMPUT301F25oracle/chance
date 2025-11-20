@@ -20,6 +20,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class ChanceFragment extends Fragment {
     protected DataStoreManager dsm;
     protected ChanceViewModel cvm;
+    public Bundle meta = new Bundle();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
