@@ -78,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
             // first we add some styling to the main content view
             int visibility;
             int backgroundResource;
+            // used to make sure we don't overlap the android status bar
+            //int titleBarOffset = insets.getInsetsIgnoringVisibility(WindowInsets.Type.statusBars()).top;
             if (shouldLoad) {
                 visibility = VISIBLE;
                 backgroundResource = R.drawable.reusable_view_rounding;

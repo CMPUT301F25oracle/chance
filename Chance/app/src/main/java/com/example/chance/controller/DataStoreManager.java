@@ -566,6 +566,16 @@ public class DataStoreManager {
                 });
     }
 
+    public void getAllUsers(OnSuccessListener<List<User>> onSuccess, OnFailureListener onFailure) {
+        fStore.collection(USER_COLLECTION)
+                .get()
+                .addOnSuccessListener((snapshot) -> {
+                    List<User> users = snapshot.toObjects(User.class);
+                    onSuccess.onSuccess(users);
+                })
+                .addOnFailureListener(onFailure);
+    }
+
 
 
     public void getUserFromUID(String uid, OnSuccessListener<User> onSuccess, OnFailureListener onFailure) {

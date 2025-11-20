@@ -48,7 +48,7 @@ public class MultiPurposeProfileSearchScreenListAdapter extends ListAdapter<User
     public ProfileViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View eventPillView = LayoutInflater
             .from(parent.getContext())
-            .inflate(R.layout.multi_purpose_event_search_screen_event_pill, parent, false);
+            .inflate(R.layout.multi_purpose_profile_search_screen_profile_pill, parent, false);
 
         return new ProfileViewHolder(eventPillView);
     }

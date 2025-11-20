@@ -26,7 +26,9 @@ public class Admin extends ChanceFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
+        binding.browseProfilesButton.setOnClickListener(v -> {
+            cvm.setNewFragment(AdminViewUsers.class, null, "fade");
+        });
 
     }
 }
