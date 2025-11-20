@@ -14,408 +14,195 @@
         app:layout_flexGrow="1"
         android:fillViewport="true">
 
+    <com.google.android.flexbox.FlexboxLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:alignItems="flex_start"
+        app:flexDirection="column">
+        <ImageView
+            android:id="@+id/event_banner"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:src="@drawable/placeholder_banner"
+            android:scaleType="centerCrop"/>
         <com.google.android.flexbox.FlexboxLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             app:alignItems="flex_start"
-            app:flexDirection="column">
-            <ImageView
-                android:id="@+id/event_banner"
-                android:layout_width="match_parent"
-                android:layout_height="220dp"
-                android:src="@drawable/placeholder_banner"
-                android:scaleType="centerCrop"/>
-            <com.google.android.flexbox.FlexboxLayout
-                android:layout_width="match_parent"
+            app:flexDirection="column"
+            android:padding="30px"
+            app:layout_flexGrow="1">
+            <TextView
+                android:id="@+id/event_name"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:alignItems="flex_start"
-                app:flexDirection="column"
-                android:padding="30px"
-                app:layout_flexGrow="1">
-                <TextView
-                    android:id="@+id/event_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/title_text_size"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:text="{Event Name}"/>
-                <TextView
-                    android:id="@+id/event_information"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/common_text_size"
-                    android:textColor="@color/black"
-                    android:alpha="0.70"
-                    android:text=
-                        "* {} users currently in waiting list  /  ${} per person.
+                android:textSize="@dimen/title_text_size"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:text="{Event Name}"/>
+            <TextView
+                android:id="@+id/event_information"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/common_text_size"
+                android:textColor="@color/black"
+                android:alpha="0.70"
+                android:text=
+                    "* {} users currently in waiting list  /  ${} per person.
                         {location}
                         "/>
-                <Space
-                    android:layout_width="0px"
-                    android:layout_height="40px"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/sub_title_text_size"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:text="Overview"/>
-                <TextView
-                    android:id="@+id/event_overview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/common_text_size"
-                    android:textColor="@color/black"
-                    android:alpha="0.70"
-                    android:text=
-                        "*Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec lorem nec justo pretium viverra vulputate in tellus. Curabitur"/>
-
-                <Space
-                    android:layout_width="0px"
-                    android:layout_height="40px"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/sub_title_text_size"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:text="Availability"/>
-
-                <TextView
-                    android:id="@+id/availability_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/common_text_size"
-                    android:textColor="@color/black"
-                    android:alpha="0.70"
-                    android:text="The event is now available. you can sign up for the event and wait for a poll for 20 candidates at a designated date."/>
-
-                <Space
-                    android:layout_width="0px"
-                    android:layout_height="20px"/>
-
-                <TextView
-                    android:id="@+id/poll_condition"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/common_text_size"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:alpha="0.70"
-                    android:text="About conditions for poll >"/>
-
-                <Space
-                    android:layout_width="0px"
-                    android:layout_height="40px"/>
-                <LinearLayout
-                    android:id="@+id/organizer_buttons"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    >
-                    <Button
-                        android:id="@+id/remove_banner_button"
-                        android:layout_marginLeft="27dp"
-                        android:layout_width="350dp"
-                        android:layout_height="40dp"
-                        android:backgroundTint="@color/black"
-                        android:text="Remove Event Banner"
-                        android:textColor="@color/white"
-                        />
-                    <Button
-                        android:layout_marginLeft="27dp"
-                        android:layout_width="350dp"
-                        android:layout_height="40dp"
-                        android:backgroundTint="@color/black"
-                        android:text="View Final List of Entrants"
-                        android:textColor="@color/white"
-                        />
-
-                    <Button
-                        android:layout_marginLeft="27dp"
-                        android:layout_width="350dp"
-                        android:layout_height="40dp"
-                        android:backgroundTint="@color/black"
-                        android:text="Export Final List of Entranats"
-                        android:textColor="@color/white"
-                        />
-
-                    <Button
-                        android:layout_marginLeft="27dp"
-                        android:layout_width="350dp"
-                        android:layout_height="40dp"
-                        android:backgroundTint="@color/black"
-                        android:text="Remove unregistered entrants"
-                        android:textColor="@color/white"
-                        />
-
-                    <Button
-                        android:layout_marginLeft="27dp"
-                        android:layout_width="350dp"
-                        android:layout_height="40dp"
-                        android:backgroundTint="@color/black"
-                        android:text="View Cancelled List of Entrants"
-                        android:textColor="@color/white"
-                        />
-
-                    <Button
-                        android:layout_marginLeft="27dp"
-                        android:layout_width="350dp"
-                        android:layout_height="40dp"
-                        android:backgroundTint="@color/black"
-                        android:text="View Chosen List of Entrants"
-                        android:textColor="@color/white"
-                        />
-
-                    <Button
-                        android:layout_marginLeft="27dp"
-                        android:layout_width="350dp"
-                        android:layout_height="40dp"
-                        android:backgroundTint="@color/black"
-                        android:text="Draw Replacement Applicants"
-                        android:textColor="@color/white"
-                        />
-                </LinearLayout>
-
-
-            </com.google.android.flexbox.FlexboxLayout>
-
-            <com.google.android.flexbox.FlexboxLayout
-                android:layout_width="match_parent"
+            <Space
+                android:layout_width="0px"
+                android:layout_height="40px"/>
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:alignItems="flex_end"
-                app:justifyContent="space_between"
-                app:flexDirection="row"
-                android:paddingHorizontal="25px">
-                <ImageButton
-                    android:id="@+id/qrcode_button"
-                    android:layout_width="225px"
-                    android:layout_height="225px"
-                    android:background="@drawable/template_qrcode"
-                    android:scaleType="centerCrop"/>
+                android:textSize="@dimen/sub_title_text_size"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:text="Overview"/>
+            <TextView
+                android:id="@+id/event_overview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/common_text_size"
+                android:textColor="@color/black"
+                android:alpha="0.70"
+                android:text=
+                    "*Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec lorem nec justo pretium viverra vulputate in tellus. Curabitur"/>
+
+            <Space
+                android:layout_width="0px"
+                android:layout_height="40px"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/sub_title_text_size"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:text="Availability"/>
+
+            <TextView
+                android:id="@+id/availability_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/common_text_size"
+                android:textColor="@color/black"
+                android:alpha="0.70"
+                android:text="The event is now available. you can sign up for the event and wait for a poll for 20 candidates at a designated date."/>
+
+            <Space
+                android:layout_width="0px"
+                android:layout_height="20px"/>
+
+            <TextView
+                android:id="@+id/poll_condition"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/common_text_size"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:alpha="0.70"
+                android:text="About conditions for poll >"/>
+
+            <Space
+                android:layout_width="0px"
+                android:layout_height="40px"/>
+            <LinearLayout
+                android:id="@+id/organizer_buttons"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
                 <Button
-                    android:id="@+id/enter_lottery_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/button_blue"
+                    android:layout_marginLeft="27dp"
+                    android:layout_width="350dp"
+                    android:layout_height="40dp"
+                    android:backgroundTint="@color/black"
+                    android:text="View Final List of Entrants"
                     android:textColor="@color/white"
-                    android:background="@drawable/box_rounded_corners"
-                    android:text="Enter Lottery"/>
-            </com.google.android.flexbox.FlexboxLayout>
+                    />
+
+                <Button
+                    android:layout_marginLeft="27dp"
+                    android:layout_width="350dp"
+                    android:layout_height="40dp"
+                    android:backgroundTint="@color/black"
+                    android:text="Export Final List of Entranats"
+                    android:textColor="@color/white"
+                    />
+
+                <Button
+                    android:layout_marginLeft="27dp"
+                    android:layout_width="350dp"
+                    android:layout_height="40dp"
+                    android:backgroundTint="@color/black"
+                    android:text="Remove unregistered entrants"
+                    android:textColor="@color/white"
+                    />
+
+                <Button
+                    android:layout_marginLeft="27dp"
+                    android:layout_width="350dp"
+                    android:layout_height="40dp"
+                    android:backgroundTint="@color/black"
+                    android:text="View Cancelled List of Entrants"
+                    android:textColor="@color/white"
+                    />
+
+                <Button
+                    android:layout_marginLeft="27dp"
+                    android:layout_width="350dp"
+                    android:layout_height="40dp"
+                    android:backgroundTint="@color/black"
+                    android:text="View Chosen List of Entrants"
+                    android:textColor="@color/white"
+                    />
+
+                <Button
+                    android:layout_marginLeft="27dp"
+                    android:layout_width="350dp"
+                    android:layout_height="40dp"
+                    android:backgroundTint="@color/black"
+                    android:text="Draw Replacement Applicants"
+                    android:textColor="@color/white"
+                    />
+            </LinearLayout>
 
 
         </com.google.android.flexbox.FlexboxLayout>
+
+        <com.google.android.flexbox.FlexboxLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:alignItems="flex_end"
+            app:justifyContent="space_between"
+            app:flexDirection="row"
+            android:paddingHorizontal="25px">
+            <ImageButton
+                android:id="@+id/qrcode_button"
+                android:layout_width="225px"
+                android:layout_height="225px"
+                android:background="@drawable/template_qrcode"
+                android:scaleType="centerCrop"/>
+            <Button
+                android:id="@+id/enter_lottery_button"
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:background="@drawable/box_rounded_corners"
+                android:backgroundTint="@color/black"
+                android:text="Enter Lottery"/>
+        </com.google.android.flexbox.FlexboxLayout>
+
+
+    </com.google.android.flexbox.FlexboxLayout>
     </ScrollView>
 
 
 </com.google.android.flexbox.FlexboxLayout>
-
-<!--<com.google.android.flexbox.FlexboxLayout-->
-<!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
-<!--    android:layout_width="match_parent"-->
-<!--    android:layout_height="match_parent"-->
-<!--    app:alignItems="flex_start"-->
-<!--    app:flexDirection="column"-->
-<!--    app:justifyContent="space_between"-->
-<!--    android:orientation="vertical"-->
-<!--    android:background="@color/grey">-->
-<!--    <ScrollView-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
-<!--        app:layout_flexGrow="1"-->
-<!--        android:fillViewport="true">-->
-
-<!--    <com.google.android.flexbox.FlexboxLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        app:alignItems="flex_start"-->
-<!--        app:flexDirection="column">-->
-<!--        <ImageView-->
-<!--            android:id="@+id/event_banner"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="220dp"-->
-<!--            android:src="@drawable/placeholder_banner"-->
-<!--            android:scaleType="centerCrop"/>-->
-<!--        <com.google.android.flexbox.FlexboxLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:alignItems="flex_start"-->
-<!--            app:flexDirection="column"-->
-<!--            android:padding="30px"-->
-<!--            app:layout_flexGrow="1">-->
-<!--            <TextView-->
-<!--                android:id="@+id/event_name"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:textSize="@dimen/title_text_size"-->
-<!--                android:textColor="@color/black"-->
-<!--                android:textStyle="bold"-->
-<!--                android:text="{Event Name}"/>-->
-<!--            <TextView-->
-<!--                android:id="@+id/event_information"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:textSize="@dimen/common_text_size"-->
-<!--                android:textColor="@color/black"-->
-<!--                android:alpha="0.70"-->
-<!--                android:text=-->
-<!--                    "* {} users currently in waiting list  /  ${} per person.-->
-<!--                        {location}-->
-<!--                        "/>-->
-<!--            <Space-->
-<!--                android:layout_width="0px"-->
-<!--                android:layout_height="40px"/>-->
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:textSize="@dimen/sub_title_text_size"-->
-<!--                android:textColor="@color/black"-->
-<!--                android:textStyle="bold"-->
-<!--                android:text="Overview"/>-->
-<!--            <TextView-->
-<!--                android:id="@+id/event_overview"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:textSize="@dimen/common_text_size"-->
-<!--                android:textColor="@color/black"-->
-<!--                android:alpha="0.70"-->
-<!--                android:text=-->
-<!--                    "*Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec lorem nec justo pretium viverra vulputate in tellus. Curabitur"/>-->
-
-<!--            <Space-->
-<!--                android:layout_width="0px"-->
-<!--                android:layout_height="40px"/>-->
-
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:textSize="@dimen/sub_title_text_size"-->
-<!--                android:textColor="@color/black"-->
-<!--                android:textStyle="bold"-->
-<!--                android:text="Availability"/>-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/availability_text"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:textSize="@dimen/common_text_size"-->
-<!--                android:textColor="@color/black"-->
-<!--                android:alpha="0.70"-->
-<!--                android:text="The event is now available. you can sign up for the event and wait for a poll for 20 candidates at a designated date."/>-->
-
-<!--            <Space-->
-<!--                android:layout_width="0px"-->
-<!--                android:layout_height="20px"/>-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/poll_condition"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:textSize="@dimen/common_text_size"-->
-<!--                android:textColor="@color/black"-->
-<!--                android:textStyle="bold"-->
-<!--                android:alpha="0.70"-->
-<!--                android:text="About conditions for poll >"/>-->
-
-<!--            <Space-->
-<!--                android:layout_width="0px"-->
-<!--                android:layout_height="40px"/>-->
-<!--            <LinearLayout-->
-<!--                android:id="@+id/organizer_buttons"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:orientation="vertical"-->
-<!--                >-->
-<!--                <Button-->
-<!--                    android:layout_marginLeft="27dp"-->
-<!--                    android:layout_width="350dp"-->
-<!--                    android:layout_height="40dp"-->
-<!--                    android:backgroundTint="@color/black"-->
-<!--                    android:text="View Final List of Entrants"-->
-<!--                    android:textColor="@color/white"-->
-<!--                    />-->
-
-<!--                <Button-->
-<!--                    android:layout_marginLeft="27dp"-->
-<!--                    android:layout_width="350dp"-->
-<!--                    android:layout_height="40dp"-->
-<!--                    android:backgroundTint="@color/black"-->
-<!--                    android:text="Export Final List of Entranats"-->
-<!--                    android:textColor="@color/white"-->
-<!--                    />-->
-
-<!--                <Button-->
-<!--                    android:layout_marginLeft="27dp"-->
-<!--                    android:layout_width="350dp"-->
-<!--                    android:layout_height="40dp"-->
-<!--                    android:backgroundTint="@color/black"-->
-<!--                    android:text="Remove unregistered entrants"-->
-<!--                    android:textColor="@color/white"-->
-<!--                    />-->
-
-<!--                <Button-->
-<!--                    android:layout_marginLeft="27dp"-->
-<!--                    android:layout_width="350dp"-->
-<!--                    android:layout_height="40dp"-->
-<!--                    android:backgroundTint="@color/black"-->
-<!--                    android:text="View Cancelled List of Entrants"-->
-<!--                    android:textColor="@color/white"-->
-<!--                    />-->
-
-<!--                <Button-->
-<!--                    android:layout_marginLeft="27dp"-->
-<!--                    android:layout_width="350dp"-->
-<!--                    android:layout_height="40dp"-->
-<!--                    android:backgroundTint="@color/black"-->
-<!--                    android:text="View Chosen List of Entrants"-->
-<!--                    android:textColor="@color/white"-->
-<!--                    />-->
-
-<!--                <Button-->
-<!--                    android:layout_marginLeft="27dp"-->
-<!--                    android:layout_width="350dp"-->
-<!--                    android:layout_height="40dp"-->
-<!--                    android:backgroundTint="@color/black"-->
-<!--                    android:text="Draw Replacement Applicants"-->
-<!--                    android:textColor="@color/white"-->
-<!--                    />-->
-<!--            </LinearLayout>-->
-
-
-<!--        </com.google.android.flexbox.FlexboxLayout>-->
-
-<!--        <com.google.android.flexbox.FlexboxLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:alignItems="flex_end"-->
-<!--            app:justifyContent="space_between"-->
-<!--            app:flexDirection="row"-->
-<!--            android:paddingHorizontal="25px">-->
-<!--            <ImageButton-->
-<!--                android:id="@+id/qrcode_button"-->
-<!--                android:layout_width="225px"-->
-<!--                android:layout_height="225px"-->
-<!--                android:background="@drawable/template_qrcode"-->
-<!--                android:scaleType="centerCrop"/>-->
-<!--            <Button-->
-<!--                android:id="@+id/enter_lottery_button"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:backgroundTint="@color/button_blue"-->
-<!--                android:textColor="@color/white"-->
-<!--                android:background="@drawable/box_rounded_corners"-->
-<!--                android:text="Enter Lottery"/>-->
-<!--        </com.google.android.flexbox.FlexboxLayout>-->
-
-
-<!--    </com.google.android.flexbox.FlexboxLayout>-->
-<!--    </ScrollView>-->
-
-
-<!--</com.google.android.flexbox.FlexboxLayout>-->
 
 
 

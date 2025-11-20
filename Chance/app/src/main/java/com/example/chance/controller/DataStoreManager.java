@@ -687,12 +687,11 @@ public class DataStoreManager {
 
     /**
      * updates the user in firebase
-     * @param username
      * @param updatedUser
      * @param onSuccess
      */
-    public void updateUser(String username, User updatedUser, OnSuccessListener<Void> onSuccess) {
-        db.setDocument("users", username, updatedUser, onSuccess, (e)->{});
+    public void updateUser(User updatedUser, OnSuccessListener<Void> onSuccess) {
+        db.setDocument("users", updatedUser.getID(), updatedUser, onSuccess, (e)->{});
     }
 
     /**
