@@ -125,6 +125,23 @@
             android:hint="Your price..."
             android:padding="5dp"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Limit number of entrants in the waiting list (optional)"
+            android:textSize="@dimen/sub_sub_title_text_size"/>
+
+        <EditText
+            android:id="@+id/waitinglist_restriction"
+            android:layout_marginTop="5dp"
+            android:layout_width="350dp"
+            android:layout_height="30dp"
+            android:background="@color/white"
+            android:inputType="numberDecimal"
+            android:hint="Size of waitinglist..."
+            android:padding="5dp"/>
+
+
         <Button
             android:id="@+id/add_banner_button"
             android:layout_width="wrap_content"

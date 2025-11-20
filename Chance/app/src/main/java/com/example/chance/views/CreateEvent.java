@@ -90,6 +90,7 @@ public class CreateEvent extends ChanceFragment {
                 String event_name = binding.eventNameInput.getText().toString();
                 String event_address = binding.eventAddressInput.getText().toString();
                 int maximum_candidates = Integer.parseInt(binding.candidateMaximumInput.getText().toString());
+                int maximum_waitinglist = Integer.parseInt(binding.waitinglistRestriction.getText().toString());
                 float attendance_price = Float.parseFloat(binding.priceInput.getText().toString());
 
                 DatePicker event_reg_start = binding.registrationStartInput;
@@ -102,7 +103,7 @@ public class CreateEvent extends ChanceFragment {
 
                 String event_description = binding.descriptionInput.getText().toString();
 
-                Event new_event = new Event(event_name, event_address, maximum_candidates, attendance_price, event_description, event_start_calendar, event_end_calendar, user.getID());
+                Event new_event = new Event(event_name, event_address, maximum_candidates, attendance_price, event_description, event_start_calendar, event_end_calendar, user.getID(), maximum_waitinglist);
                 dsm.createNewEvent(new_event, (event) -> {
                     // now we add the new event to our internal list of events
                     List<Event> events = cvm.getEvents().getValue();
