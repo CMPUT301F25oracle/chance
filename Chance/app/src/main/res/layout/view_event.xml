@@ -9,6 +9,7 @@
     android:orientation="vertical"
     android:background="@color/grey">
     <!--region: event information-->
+    <ScrollView android:layout_width="match_parent" android:layout_height="0dp" app:layout_flexGrow="1" android:fillViewport="true">
     <com.google.android.flexbox.FlexboxLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -54,6 +55,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/sub_title_text_size"
                 android:textColor="@color/black"
+                android:textStyle="bold"
                 android:text="Overview"/>
             <TextView
                 android:id="@+id/event_overview"
@@ -74,6 +76,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/sub_title_text_size"
                 android:textColor="@color/black"
+                android:textStyle="bold"
                 android:text="Availability"/>
 
             <TextView
@@ -87,14 +90,82 @@
 
             <Space
                 android:layout_width="0px"
+                android:layout_height="20px"/>
+
+            <TextView
+                android:id="@+id/poll_condition"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/common_text_size"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:alpha="0.70"
+                android:text="About conditions for poll >"/>
+
+            <Space
+                android:layout_width="0px"
                 android:layout_height="40px"/>
+
+            <Button
+                android:layout_marginLeft="27dp"
+                android:layout_width="350dp"
+                android:layout_height="40dp"
+                android:backgroundTint="@color/black"
+                android:text="View Final List of Entrants"
+                android:textColor="@color/white"
+                />
+
+            <Button
+                android:layout_marginLeft="27dp"
+                android:layout_width="350dp"
+                android:layout_height="40dp"
+                android:backgroundTint="@color/black"
+                android:text="Export Final List of Entranats"
+                android:textColor="@color/white"
+                />
+
+            <Button
+                android:layout_marginLeft="27dp"
+                android:layout_width="350dp"
+                android:layout_height="40dp"
+                android:backgroundTint="@color/black"
+                android:text="Remove unregistered entrants"
+                android:textColor="@color/white"
+                />
+
+            <Button
+                android:layout_marginLeft="27dp"
+                android:layout_width="350dp"
+                android:layout_height="40dp"
+                android:backgroundTint="@color/black"
+                android:text="View Cancelled List of Entrants"
+                android:textColor="@color/white"
+                />
+
+            <Button
+                android:layout_marginLeft="27dp"
+                android:layout_width="350dp"
+                android:layout_height="40dp"
+                android:backgroundTint="@color/black"
+                android:text="View Chosen List of Entrants"
+                android:textColor="@color/white"
+                />
+
+            <Button
+                android:layout_marginLeft="27dp"
+                android:layout_width="350dp"
+                android:layout_height="40dp"
+                android:backgroundTint="@color/black"
+                android:text="Draw Replacement Applicants"
+                android:textColor="@color/white"
+                />
+
 
         </com.google.android.flexbox.FlexboxLayout>
 
         <com.google.android.flexbox.FlexboxLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             app:alignItems="flex_end"
             app:justifyContent="space_between"
             app:flexDirection="row"
@@ -117,6 +188,7 @@
 
 
     </com.google.android.flexbox.FlexboxLayout>
+    </ScrollView>
 
 
 </com.google.android.flexbox.FlexboxLayout>
