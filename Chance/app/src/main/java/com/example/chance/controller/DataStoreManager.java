@@ -439,9 +439,9 @@
 //
 //    }
 //}
-
-
-
+//
+//
+//
 package com.example.chance.controller;
 
 import android.graphics.Bitmap;
@@ -844,6 +844,10 @@ public class DataStoreManager {
 
     public __event event(Event target_event) {
         return new __event(target_event);
+    }
+
+    public void removeEvent(Event event, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+        db.deleteDocument("events", event.getID(), onSuccess, onFailure);
     }
 
     public class __event {
