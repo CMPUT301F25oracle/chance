@@ -29,10 +29,15 @@ import com.google.android.flexbox.JustifyContent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import io.reactivex.rxjava3.disposables.Disposable;
 
 abstract public class MultiPurposeEventSearchScreen extends ChanceFragment {
     private MultiPurposeEventSearchScreenBinding binding;
+    List<Event> eventList = new ArrayList<>();
     private MultiPurposeEventSearchScreenListAdapter eventsAdapter;
+    private Disposable eventsDisposable;
 
     @Nullable
     @Override
@@ -51,11 +56,15 @@ abstract public class MultiPurposeEventSearchScreen extends ChanceFragment {
         RecyclerView eventsContainer = binding.eventsContainer;
         eventsAdapter = new MultiPurposeEventSearchScreenListAdapter();
         eventsContainer.setAdapter(eventsAdapter);
+        eventsAdapter.submitList(eventList);
 
 
         FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(getContext());
         layoutManager.setFlexDirection(FlexDirection.ROW);
         eventsContainer.setLayoutManager(layoutManager);
+
+
+
 
         eventsContainer.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
             GestureDetector gestureHandler = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
@@ -86,12 +95,31 @@ abstract public class MultiPurposeEventSearchScreen extends ChanceFragment {
     }
 
     public void submitList(List<Event> events) {
-        eventsAdapter.submitList(events);
+        //region: load events asynchronously
+
+        // we create a new eventList to gradually load events into UI,
+        // mitigating ui thread freezes
+        AtomicInteger idx = new AtomicInteger();
+        eventsDisposable = io.reactivex.rxjava3.core.Observable
+            .fromIterable(events)
+            .concatMap(ev ->
+                io.reactivex.rxjava3.core.Observable
+                .just(ev)
+                .delay(50, java.util.concurrent.TimeUnit.MILLISECONDS)
+            )
+            .observeOn(io.reactivex.rxjava3.android.schedulers.AndroidSchedulers.mainThread())
+            .subscribe(event -> {
+                eventList.add(event);
+                eventsAdapter.notifyItemInserted(
+                    idx.getAndIncrement());
+            });
+        //endregion
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        eventsDisposable.dispose();
         binding = null;
     }
 }

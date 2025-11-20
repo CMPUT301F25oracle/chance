@@ -57,11 +57,14 @@ public class Home extends ChanceFragment {
 
         });
 
+        binding.buttonRegistered.setOnClickListener(__ -> {
+            cvm.setNewFragment(RegisteredEvents.class, null, "fade");
+        });
         binding.buttonEventCreated.setOnClickListener(__ -> {
-            cvm.setNewFragment(CreatedEvents.class, null, "");
+            cvm.setNewFragment(CreatedEvents.class, null, "fade");
         });
         binding.buttonCreateEvent.setOnClickListener(__ -> {
-            cvm.setNewFragment(CreateEvent.class, null, "");
+            cvm.setNewFragment(CreateEvent.class, null, "fade");
         });
         
         // now we set up our event adapter
@@ -119,12 +122,10 @@ public class Home extends ChanceFragment {
                     .subscribe(event -> {
                         if ((leftIdx.get() + rightIdx.get()) % 2 == 0) {
                             leftEventList.add(event);
-                            eventsAdapterLeft.notifyItemInserted((leftEventList.size() + leftIdx.get()) % leftEventList.size());
-                            leftIdx.getAndIncrement();
+                            eventsAdapterLeft.notifyItemInserted((leftEventList.size() + leftIdx.getAndIncrement()) % leftEventList.size());
                         } else {
                             rightEventList.add(event);
-                            eventsAdapterRight.notifyItemInserted((rightEventList.size() + rightIdx.get()) % rightEventList.size());
-                            rightIdx.getAndIncrement();
+                            eventsAdapterRight.notifyItemInserted((rightEventList.size() + rightIdx.getAndIncrement()) % rightEventList.size());
                         }
                     }, throwable -> {
                         throwable.printStackTrace();
