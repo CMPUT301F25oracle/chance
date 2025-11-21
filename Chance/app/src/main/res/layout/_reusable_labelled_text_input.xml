@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/label"
+        android:layout_marginTop="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Some label..."
+        android:textSize="@dimen/sub_sub_title_text_size"
+        >
+
+    </TextView>
+
+    <EditText
+        android:id="@+id/input"
+        android:layout_marginTop="5dp"
+        android:layout_width="350dp"
+        android:layout_height="30dp"
+        android:hint="Some hint..."
+        android:background="@color/white"/>
+</merge>

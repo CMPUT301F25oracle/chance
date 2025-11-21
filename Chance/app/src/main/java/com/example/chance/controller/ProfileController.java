@@ -1,11 +1,10 @@
 package com.example.chance.controller;
 
-import com.example.chance.model.Entrant;
+import com.example.chance.model.User;
 import com.example.chance.model.Organizer;
 import com.example.chance.model.Administrator;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
 
 /**
  * ProfileController manages all user profile operations:
@@ -25,12 +24,12 @@ public class ProfileController {
 
     // ----------------- Entrant Operations -----------------
 
-    public void getEntrant(String entrantId, OnSuccessListener<Entrant> onSuccess, OnFailureListener onFailure) {
+    public void getEntrant(String entrantId, OnSuccessListener<User> onSuccess, OnFailureListener onFailure) {
         firebaseManager.getDocument(ENTRANT_COLLECTION, entrantId,
                 document -> {
                     if (document.exists()) {
-                        Entrant entrant = document.toObject(Entrant.class);
-                        onSuccess.onSuccess(entrant);
+                        User user = document.toObject(User.class);
+                        onSuccess.onSuccess(user);
                     } else {
                         onFailure.onFailure(new Exception("Entrant not found"));
                     }
@@ -38,8 +37,8 @@ public class ProfileController {
                 onFailure);
     }
 
-    public void updateEntrant(String entrantId, Entrant entrant, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
-        firebaseManager.setDocument(ENTRANT_COLLECTION, entrantId, entrant, onSuccess, onFailure);
+    public void updateEntrant(String entrantId, User user, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+        firebaseManager.setDocument(ENTRANT_COLLECTION, entrantId, user, onSuccess, onFailure);
     }
 
     public void deleteEntrant(String entrantId, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {

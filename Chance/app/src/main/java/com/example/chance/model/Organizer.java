@@ -1,5 +1,6 @@
 package com.example.chance.model;
 
+import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 import java.util.List;
 
@@ -8,11 +9,14 @@ import java.util.List;
  * Organizers can create, edit, and manage events.
  */
 @IgnoreExtraProperties
-public class Organizer extends Entrant {
+public class Organizer extends User {
 
+    @DocumentId
     private List<String> createdEvents;   // IDs of events created by this organizer
     private String organizationName;      // optional company or host name
     private String bio;                   // short description or tagline
+
+    private Event event;
 
     // Required empty constructor for Firestore
     public Organizer() {
@@ -20,7 +24,7 @@ public class Organizer extends Entrant {
     }
 
     public Organizer(String name, String email, String deviceId, String organizationName) {
-        super(name, email, deviceId);
+        super(name);
         this.organizationName = organizationName;
     }
 
@@ -36,6 +40,6 @@ public class Organizer extends Entrant {
 
     @Override
     public String toString() {
-        return getName() + " (" + organizationName + ")";
+        return getUsername() + " (" + organizationName + ")";
     }
 }

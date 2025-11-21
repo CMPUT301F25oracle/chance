@@ -1,0 +1,31 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools">
+<data>
+    <variable name="hint" type="java.lang.String" />
+    <variable name="icon" type="java.lang.Integer" />
+</data>
+    <com.google.android.flexbox.FlexboxLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/chance_text_input_background"
+        app:alignItems="center">
+        <ImageView
+            android:layout_margin="10dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="fitCenter"
+            android:src="@{icon}"
+            tool:src="@drawable/navbar_profile"
+            app:layout_flexShrink="0"/>
+        <EditText
+            android:id="@+id/inputField"
+            android:textColor="@color/black"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:hint="@{hint}"
+            tool:hint="Type here"
+            android:backgroundTint="@color/white"/>
+    </com.google.android.flexbox.FlexboxLayout>
+
+</layout>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.flexbox.FlexboxLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey"
+    app:alignItems="baseline"
+    app:flexDirection="column"
+    app:justifyContent="flex_start"
+    android:padding="@dimen/chance_margin">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        app:layout_flexShrink="0">
+        <com.example.chance.customviews.ChanceTextInput
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:icon="@drawable/search_icon"
+            app:hint="Find an event..."
+            app:iconDimensions="30"/>
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/filter_icon"
+            app:layout_flexShrink="0"
+            android:layout_marginHorizontal="10dp"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/box_rounded_corners"
+        android:backgroundTint="@color/white">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/events_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:backgroundTint="@color/white">
+        </androidx.recyclerview.widget.RecyclerView>
+            <!--        <com.google.android.flexbox.FlexboxLayout-->
+            <!--            android:id="@+id/events_container"-->
+            <!--            android:layout_width="match_parent"-->
+            <!--            android:layout_height="match_parent"-->
+            <!--            android:background="@drawable/box_rounded_corners"-->
+            <!--            android:backgroundTint="@color/white"-->
+            <!--            app:flexDirection="column">-->
+            <!--            <include layout="@layout/multi_purpose_event_search_screen_event_pill"/>-->
+
+            <!--        </com.google.android.flexbox.FlexboxLayout>-->
+    </LinearLayout>
+</com.google.android.flexbox.FlexboxLayout>

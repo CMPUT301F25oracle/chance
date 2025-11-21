@@ -1,133 +1,205 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.flexbox.FlexboxLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.flexbox.FlexboxLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/grey"
     app:alignItems="baseline"
     app:flexDirection="column"
-    app:justifyContent="space_between"
-    android:background="@color/grey">
+    app:justifyContent="flex_start"
+    android:paddingHorizontal="@dimen/chance_margin">
 
-    <include layout="@layout/_title_bar" />
-    <com.google.android.flexbox.FlexboxLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:alignItems="flex_start"
-        app:flexDirection="column"
-        app:justifyContent="flex_start"
-        android:orientation="vertical"
-        android:background="@color/grey"
-        >
+        android:layout_height="wrap_content"
+        android:fillViewport="false">
+
         <com.google.android.flexbox.FlexboxLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:alignItems="center"
+            android:background="@color/grey"
+            android:orientation="vertical"
+            app:alignItems="flex_start"
             app:flexDirection="column"
-            app:justifyContent="center"
-            android:orientation="horizontal"
-            android:layout_marginTop="20dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Hello, {{user}}!"
-                android:textSize="@dimen/title_text_size"
-                android:textColor="@color/black"
-                />
-
-            <Button
-                android:id="@+id/administrator"
-                android:layout_marginTop="10dp"
-                android:layout_width="350dp"
-                android:layout_height="35dp"
-                android:backgroundTint="@color/orange"
-                android:text="Adminstration Tools"
-                android:textColor="@color/black"
-                />
+            app:justifyContent="flex_start">
 
             <com.google.android.flexbox.FlexboxLayout
+                android:id="@+id/home_event_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:alignItems="center"
-                app:flexDirection="row"
-                app:justifyContent="space_evenly"
+                android:layout_marginTop="@dimen/chance_margin"
                 android:orientation="horizontal"
-                >
+                app:alignItems="center"
+                app:flexDirection="column"
+                app:justifyContent="center">
 
-                <!-- Button text size need to readjust -->
-                <Button
-                    android:layout_width="120dp"
-                    android:layout_height="70dp"
-                    android:text="Registered"
-                    android:textSize="10dp"
+                <TextView
+                    android:id="@+id/home_system_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/chance_margin"
+                    android:text="Hello, {{user}}!"
                     android:textColor="@color/black"
-                    android:backgroundTint="@color/white"
-                    />
-
-                <Button
-                    android:layout_width="126dp"
-                    android:layout_height="70dp"
-                    android:text="Created Events"
-                    android:textSize="10dp"
-                    android:textColor="@color/black"
-                    android:backgroundTint="@color/white"
-                    />
+                    android:textSize="@dimen/title_text_size" />
 
                 <Button
-                    android:layout_width="120dp"
-                    android:layout_height="70dp"
-                    android:text="Create Event"
-                    android:textSize="10dp"
-                    android:textColor="@color/black"
-                    android:backgroundTint="@color/white"
-                    />
+                    android:id="@+id/admin_button"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginVertical="@dimen/chance_margin"
+                    android:background="@drawable/box_rounded_corners"
+                    android:backgroundTint="@color/orange"
+                    android:text="Adminstration Tools"
+                    android:textColor="@color/black" />
+
+                <com.google.android.flexbox.FlexboxLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:alignItems="center"
+                    app:flexDirection="row"
+                    app:justifyContent="space_evenly">
+
+                    <LinearLayout
+                        android:id="@+id/button_registered"
+                        android:layout_width="wrap_content"
+                        android:layout_height="60dp"
+                        android:background="@drawable/box_rounded_corners"
+                        android:backgroundTint="@color/white"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="10dp"
+                        app:layout_flexGrow="1">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Registered"
+                            android:textColor="@color/black" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/star_icon" />
+                    </LinearLayout>
+                    <Space
+                        android:layout_width="@dimen/chance_margin"
+                        android:layout_height="1dp"
+                        app:layout_flexShrink="0"/>
+                    <LinearLayout
+                        android:id="@+id/button_event_created"
+                        android:layout_width="wrap_content"
+                        android:layout_height="60dp"
+                        android:background="@drawable/box_rounded_corners"
+                        android:backgroundTint="@color/white"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="10dp"
+                        app:layout_flexGrow="1">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Created Events"
+                            android:textColor="@color/black" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/created_events_icon" />
+
+                    </LinearLayout>
+                    <Space
+                        android:layout_width="@dimen/chance_margin"
+                        android:layout_height="1dp"
+                        app:layout_flexShrink="0"/>
+                    <LinearLayout
+                        android:id="@+id/button_create_event"
+                        android:layout_width="wrap_content"
+                        android:layout_height="60dp"
+                        android:background="@drawable/box_rounded_corners"
+                        android:backgroundTint="@color/white"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="10dp"
+                        app:layout_flexGrow="1">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Create Event"
+                            android:textColor="@color/black" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/create_events_icon" />
+
+                    </LinearLayout>
+
+                </com.google.android.flexbox.FlexboxLayout>
+                <com.google.android.flexbox.FlexboxLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:flexDirection="row"
+                    android:layout_marginVertical="@dimen/chance_margin"
+                    app:alignItems="center">
+                    <com.example.chance.customviews.ChanceTextInput
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:icon="@drawable/search_icon"
+                        app:hint="Find an event..."
+                        app:iconDimensions="30"/>
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/filter_icon"
+                        app:layout_flexShrink="0"
+                        android:layout_marginHorizontal="10dp"
+                        />
+                </com.google.android.flexbox.FlexboxLayout>
 
             </com.google.android.flexbox.FlexboxLayout>
-
             <com.google.android.flexbox.FlexboxLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:flexDirection="row"
-                app:alignContent="flex_start"
-                android:orientation="horizontal">
-                <!-- This is the search bar -->
-                <EditText
-                    android:layout_marginTop="5dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_width="330dp"
-                    android:layout_height="40dp"
-                    android:hint="Find an event..."
-                    android:background="@color/white"
-                    />
+                android:layout_height="match_parent"
+                app:flexDirection="row">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/events_container_left"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_flexShrink="1">
+                </androidx.recyclerview.widget.RecyclerView>
+                <Space
+                    android:layout_width="@dimen/chance_margin"
+                    android:layout_height="0dp"
+                    app:layout_flexShrink="0"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/events_container_right"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_flexShrink="1">
+                </androidx.recyclerview.widget.RecyclerView>
+
             </com.google.android.flexbox.FlexboxLayout>
-
-
-            <com.google.android.flexbox.FlexboxLayout
+            <Space
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:flexWrap="wrap"
-                app:flexDirection="row"
-                app:justifyContent="space_evenly"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
-
-                <View
-                    android:layout_width="200dp"
-                    android:layout_height="250dp"
-                    android:background="@color/black"
-                    />
-
-                <View
-                    android:layout_width="200dp"
-                    android:layout_height="300dp"
-                    android:background="@color/black"
-                    />
-            </com.google.android.flexbox.FlexboxLayout>
-
+                android:layout_height="7.5dp"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/chance_margin"/>
         </com.google.android.flexbox.FlexboxLayout>
-    </com.google.android.flexbox.FlexboxLayout>
+    </ScrollView>
 
 
-    <include layout="@layout/_nav_bar" />
+
+
 </com.google.android.flexbox.FlexboxLayout>
