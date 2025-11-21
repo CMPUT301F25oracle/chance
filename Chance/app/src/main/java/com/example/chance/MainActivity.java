@@ -12,7 +12,6 @@ import android.view.View;
 
 import com.example.chance.controller.DataStoreManager;
 import com.example.chance.model.Event;
-import com.example.chance.model.User;
 import com.example.chance.util.Tuple3;
 import com.example.chance.views.Home;
 import com.example.chance.views.Profile;
@@ -29,6 +28,7 @@ import com.example.chance.views.SplashScreen;
 import com.example.chance.views.ViewEvent;
 import com.example.chance.views.base.ChanceFragment;
 import com.example.chance.views.base.ChancePopup;
+import com.example.chance.views.NotificationPopup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
         chanceViewModel.getNewFragment().observe(this, this::getNewFragmentCallback);
         chanceViewModel.getNewPopup().observe(this, this::getNewPopupCallback);
+        chanceViewModel.setNewPopup(NotificationPopup.class, null);
 
         OnBackPressedCallback backCallback = new OnBackPressedCallback(true) {
             @Override
