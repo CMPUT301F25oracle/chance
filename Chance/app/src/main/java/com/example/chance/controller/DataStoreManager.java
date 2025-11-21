@@ -448,6 +448,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.example.chance.model.Event;
 import com.example.chance.model.EventImage;
@@ -463,14 +464,20 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
+
+import io.reactivex.rxjava3.core.Observable;
 
 
 public class DataStoreManager {
@@ -598,6 +605,31 @@ public class DataStoreManager {
                 })
                 .addOnFailureListener(onFailure);
     }
+
+    public Observable<Event> observeEventsCollection() {
+        return Observable.create(emitter -> {
+            fStore.collection(EVENT_COLLECTION)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
+                        if (error != null) {
+                            return;
+                        }
+                        for (DocumentChange documentChange : snapshots.getDocumentChanges()) {
+                            if (documentChange.getType() == DocumentChange.Type.ADDED) {
+                                DocumentSnapshot document = documentChange.getDocument();
+                                Event event = document.toObject(Event.class);
+                                emitter.onNext(event);
+                            }
+                        }
+
+                    }
+
+                });
+        });
+    }
+
 
     public void getEventBannerFromID(String ID, OnSuccessListener<Bitmap> onSuccess, OnFailureListener onFailure) {
         fStore.collection(EVENT_IMAGE_COLLECTION)
