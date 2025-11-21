@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         chanceViewModel.setNewFragment(SplashScreen.class, null, "none");
 
         View navbar = binding.getRoot().findViewById(R.id.nav_bar);
+        View titleBar = binding.getRoot().findViewById(R.id.title_bar);
         navbar.findViewById(R.id.navbar_home_button).setOnClickListener((v) -> {
             chanceViewModel.setNewFragment(Home.class, null, "fade");
         });
@@ -80,7 +81,10 @@ public class MainActivity extends AppCompatActivity {
 
         chanceViewModel.getNewFragment().observe(this, this::getNewFragmentCallback);
         chanceViewModel.getNewPopup().observe(this, this::getNewPopupCallback);
-        chanceViewModel.setNewPopup(NotificationPopup.class, null);
+
+        titleBar.findViewById(R.id.notification_button).setOnClickListener(v -> {
+            chanceViewModel.setNewPopup(NotificationPopup.class, null);
+        });
 
         OnBackPressedCallback backCallback = new OnBackPressedCallback(true) {
             @Override
