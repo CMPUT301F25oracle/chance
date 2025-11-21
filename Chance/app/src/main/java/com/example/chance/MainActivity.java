@@ -36,6 +36,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private ChanceViewModel chanceViewModel;
+    private DataStoreManager dataStoreManager;
     private final List<BackstackFragment> backstackHistory = new ArrayList<>();
 
 
@@ -44,10 +45,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         chanceViewModel = new ViewModelProvider(this).get(ChanceViewModel.class);
+        dataStoreManager = DataStoreManager.getInstance();
         setContentView(binding.getRoot());
 
         initializeUI();
         initializeChanceModelObservers();
+        initializeDatabasePolling();
     }
 
     private void initializeUI() {
@@ -132,6 +135,14 @@ public class MainActivity extends AppCompatActivity {
             chanceViewModel.setNewFragment(ViewEvent.class, bundle, "fade");
         });
 
+    }
+
+    private void initializeDatabasePolling() {
+        dataStoreManager.observeEventsCollection()
+            .observeOn(io.reactivex.rxjava3.android.schedulers.AndroidSchedulers.mainThread())
+            .subscribe(event -> {
+
+            });
     }
 
     private void getNewFragmentCallback(Tuple3<Class<? extends ChanceFragment>, Bundle, String> fragmentData) {

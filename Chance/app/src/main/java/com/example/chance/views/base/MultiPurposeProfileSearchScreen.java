@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import io.reactivex.rxjava3.disposables.Disposable;
 
-public class MultiPurposeProfileSearchScreen extends ChanceFragment {
+abstract public class MultiPurposeProfileSearchScreen extends ChanceFragment {
     private MultiPurposeProfileSearchScreenBinding binding;
     List<User> profileList = new ArrayList<>();
     private MultiPurposeProfileSearchScreenListAdapter profileAdapter;

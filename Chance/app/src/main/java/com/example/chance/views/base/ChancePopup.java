@@ -1,5 +1,5 @@
 package com.example.chance.views.base;
 
-public class ChancePopup extends ChanceFragment {
+abstract public class ChancePopup extends ChanceFragment {
 
 }
