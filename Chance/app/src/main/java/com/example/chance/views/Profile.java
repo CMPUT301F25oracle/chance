@@ -7,6 +7,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,7 +41,6 @@ public class Profile extends ChanceFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // now we load the users information from chance state
-        //DataStoreManager dsm = DataStoreManager.getInstance();
         cvm.getCurrentUser().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
                 binding.usernameInput.setText(user.getUsername());
@@ -48,92 +48,35 @@ public class Profile extends ChanceFragment {
                 binding.emailInput.setText(user.getEmail());
                 binding.phoneInput.setText(user.getPhoneNumber());
 
-
                 binding.logoutButton.setOnClickListener(v -> {
                     logoutUser();
-
                 });
-                // now we setup our listeners
+
+                binding.saveInformationButton.setOnClickListener(v -> {
+                    String fullName = binding.fullnameInput.getText().toString();
+                    String email = binding.emailInput.getText().toString();
+                    String phoneNumber = binding.phoneInput.getText().toString();
+
+                    if (!fullName.trim().isEmpty() && !email.trim().isEmpty() && !phoneNumber.trim().isEmpty()) {
+                        user.setFullName(fullName);
+                        user.setEmail(email);
+                        user.setPhoneNumber(phoneNumber);
+                        dsm.updateUser(user, (na)->{
+                            Toast.makeText(getContext(), "Information saved successfully", Toast.LENGTH_SHORT).show();
+                        });
+                    }
+                    else {
+                        Toast.makeText(getContext(), "Please fill out all fields", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
                 binding.deleteAccountButton.setOnClickListener(v -> {
                     // we redefine to make sure the newest instance is obtained
                     dsm.deleteUser(user.getUsername(), (na)->{});
                     logoutUser();
                 });
-
-                //binding.profileImage.setImageURI(pfp_uri);
-                binding.usernameInput.setText(user.getUsername());
-                binding.fullnameInput.setText(user.getFullName());
-                binding.emailInput.setText(user.getEmail());
-                binding.phoneInput.setText(user.getPhoneNumber());
-                //region: callback actions
-                binding.fullnameInput.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        // nothing needed here for now
-                    }
-
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                        // nothing needed here for now
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        // grab the full new name
-                        String new_full_name = binding.fullnameInput.getText().toString();
-                        user.setFullName(new_full_name);
-                        dsm.updateUser(user, (v) -> {});
-                    }
-                });
-                binding.emailInput.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        // nothing needed here for now
-                    }
-
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                        // nothing needed here for now
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        // grab the full new name
-                        String new_email = binding.emailInput.getText().toString();
-                        user.setEmail(new_email);
-                        dsm.updateUser(user, (v) -> {});
-                    }
-                });
-                binding.phoneInput.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        // nothing needed here for now
-                    }
-
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                        // nothing needed here for now
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        String new_phone_number = binding.phoneInput.getText().toString();
-                        user.setPhoneNumber(new_phone_number);
-                        dsm.updateUser(user, (v) -> {});
-                    }
-                });
-
-                binding.deleteAccountButton.setOnClickListener(v -> {
-                    // we redefine to make sure the newest instance is obtained
-                    dsm.deleteUser(user.getUsername(), (na)->{});
-                    cvm.setNewFragment(Authentication.class, null, "");
-                });
-
-                //endregion: callback actions
             }
         });
-
-
     }
 
     public void logoutUser() {
