@@ -34,10 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private User user;
     private ActivityMainBinding binding;
     private ChanceViewModel chanceViewModel;
-
     private final List<BackstackFragment> backstackHistory = new ArrayList<>();
 
 
@@ -48,43 +46,57 @@ public class MainActivity extends AppCompatActivity {
         chanceViewModel = new ViewModelProvider(this).get(ChanceViewModel.class);
         setContentView(binding.getRoot());
 
-        binding.popupContainer.setVisibility(GONE);
-        binding.popupContainer.setOnClickListener(v -> {
-            binding.popupContainer.setVisibility(GONE);
-        });
+        initializeUI();
+        initializeChanceModelObservers();
+    }
 
+    private void initializeUI() {
         // hides the default action bar
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
 
-        // we initially hide the title and navigation bars
-        // in case we're going to login screen
-        chanceViewModel.setLoadMainUI(false);
-
-
-        // Load the splash screen fragment into the content_view container
-        if (savedInstanceState == null) {
-            chanceViewModel.setNewFragment(SplashScreen.class, null, "none");
-        }
-
-        // Set up bottom navigation
-        setupNavBar();
-
-
-        //region: viewmodel callbacks
-        chanceViewModel.getAuthenticationSuccess().observe(this, user -> {
-            this.user = user;
-            chanceViewModel.setCurrentUser(user);
-            // now we load the list of events from firestore
-            List<Event> emptyList = new ArrayList<>();
-            chanceViewModel.setEvents(emptyList);
-            DataStoreManager.getInstance().getAllEvents((events) -> {
-                chanceViewModel.setEvents(events);
-            });
+        binding.popupContainer.setVisibility(GONE);
+        binding.popupContainer.setOnClickListener(v -> {
+            binding.popupContainer.setVisibility(GONE);
         });
+
+        chanceViewModel.setLoadMainUI(false);
+        chanceViewModel.setNewFragment(SplashScreen.class, null, "none");
+
+        View navbar = binding.getRoot().findViewById(R.id.nav_bar);
+        navbar.findViewById(R.id.navbar_home_button).setOnClickListener((v) -> {
+            chanceViewModel.setNewFragment(Home.class, null, "fade");
+        });
+        navbar.findViewById(R.id.navbar_qr_button).setOnClickListener(v -> {
+            chanceViewModel.setNewFragment(QrcodeScanner.class, null, "circular:300");
+        });
+        navbar.findViewById(R.id.navbar_profile_button).setOnClickListener((v) -> {
+            chanceViewModel.setNewFragment(Profile.class, null, "fade");
+        });
+
         chanceViewModel.getNewFragment().observe(this, this::getNewFragmentCallback);
         chanceViewModel.getNewPopup().observe(this, this::getNewPopupCallback);
+
+        OnBackPressedCallback backCallback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                int fragmentHistorySize = backstackHistory.size();
+                if (fragmentHistorySize > 0) {
+                    BackstackFragment nextBackstackFragment = backstackHistory.removeLast();
+                    Class<? extends ChanceFragment> fragmentClass = nextBackstackFragment.fragmentClass;
+                    Bundle metaBundle = nextBackstackFragment.metaBundle;
+                    metaBundle.putBoolean("addToBackStack", false);
+                    chanceViewModel.setNewFragment(fragmentClass, metaBundle, "fade");
+                } else {
+                    finish();
+                }
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, backCallback);
+    }
+
+    private void initializeChanceModelObservers() {
         chanceViewModel.getLoadMainUI().observe(this, shouldLoad -> {
             backstackHistory.clear();
             // first we add some styling to the main content view
@@ -103,50 +115,24 @@ public class MainActivity extends AppCompatActivity {
             binding.getRoot().findViewById(R.id.title_bar).setVisibility(visibility);
             binding.getRoot().findViewById(R.id.nav_bar).setVisibility(visibility);
         });
+        //--
+        chanceViewModel.getAuthenticationSuccess().observe(this, user -> {
+            chanceViewModel.setCurrentUser(user);
+            // now we load the list of events from firestore
+            List<Event> emptyList = new ArrayList<>();
+            chanceViewModel.setEvents(emptyList);
+            DataStoreManager.getInstance().getAllEvents((events) -> {
+                chanceViewModel.setEvents(events);
+            });
+        });
+        //--
         chanceViewModel.getEventToOpen().observe(this, eventId -> {
             Bundle bundle = new Bundle();
             bundle.putString("eventID", eventId);
-            chanceViewModel.setNewFragment(ViewEvent.class, bundle, "");
-        });
-        //endregion
-
-        //region: back button handler
-        OnBackPressedCallback backCallback = new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                int fragmentHistorySize = backstackHistory.size();
-                if (fragmentHistorySize > 0) {
-                    BackstackFragment nextBackstackFragment = backstackHistory.removeLast();
-                    Class<? extends ChanceFragment> fragmentClass = nextBackstackFragment.fragmentClass;
-                    Bundle metaBundle = nextBackstackFragment.metaBundle;
-                    metaBundle.putBoolean("addToBackStack", false);
-                    chanceViewModel.setNewFragment(fragmentClass, metaBundle, "fade");
-                } else {
-                    finish();
-                }
-            }
-        };
-
-        getOnBackPressedDispatcher().addCallback(this, backCallback);
-        //endregion
-    }
-
-
-
-    private void setupNavBar() {
-        View navbar = binding.getRoot().findViewById(R.id.nav_bar);
-        navbar.findViewById(R.id.navbar_home_button).setOnClickListener((v) -> {
-            chanceViewModel.setNewFragment(Home.class, null, "fade");
-        });
-        navbar.findViewById(R.id.navbar_qr_button).setOnClickListener(v -> {
-            chanceViewModel.setNewFragment(QrcodeScanner.class, null, "circular:300");
-        });
-        navbar.findViewById(R.id.navbar_profile_button).setOnClickListener((v) -> {
-            chanceViewModel.setNewFragment(Profile.class, null, "fade");
+            chanceViewModel.setNewFragment(ViewEvent.class, bundle, "fade");
         });
 
     }
-
 
     private void getNewFragmentCallback(Tuple3<Class<? extends ChanceFragment>, Bundle, String> fragmentData) {
         Class<? extends ChanceFragment> fragmentClass = fragmentData.x;
@@ -218,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
             case "fade": {
                 transaction.setCustomAnimations(
                     android.R.anim.fade_in,
-                    android.R.anim.fade_out
+                    0
                 );
                 transaction.replace(R.id.content_view, newFragment);
                 newFragment.chanceEnterTransitionComplete();
