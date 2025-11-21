@@ -123,6 +123,10 @@ public class Home extends ChanceFragment {
         AtomicInteger leftIdx = new AtomicInteger();
         AtomicInteger rightIdx = new AtomicInteger();
         cvm.getEvents().observe(getViewLifecycleOwner(), events -> {
+            leftEventList.clear();
+            rightEventList.clear();
+            leftIdx.set(0);
+            rightIdx.set(0);
             eventsDisposable = io.reactivex.rxjava3.core.Observable
                     .fromIterable(events)
                     .concatMap(ev ->

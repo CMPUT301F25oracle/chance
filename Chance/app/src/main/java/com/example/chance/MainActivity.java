@@ -6,6 +6,7 @@ import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
 import android.animation.Animator;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -29,6 +30,7 @@ import com.example.chance.views.SplashScreen;
 import com.example.chance.views.ViewEvent;
 import com.example.chance.views.base.ChanceFragment;
 import com.example.chance.views.base.ChancePopup;
+import com.google.firebase.firestore.DocumentChange;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -137,12 +139,29 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @SuppressLint("CheckResult")
     private void initializeDatabasePolling() {
+        // note we don't need to dispose of this subscriber since its runs
+        // throughout the apps lifetime
         dataStoreManager.observeEventsCollection()
             .observeOn(io.reactivex.rxjava3.android.schedulers.AndroidSchedulers.mainThread())
-            .subscribe(event -> {
+            .subscribe(eventChangeTuple -> {
+                Event event = eventChangeTuple.x;
+                DocumentChange.Type changeType = eventChangeTuple.y;
 
-            });
+                switch (changeType) {
+                    case ADDED: {
+                        chanceViewModel.addEvent(event);
+                        break;
+                    }
+                    case REMOVED: {
+                        chanceViewModel.removeEvent(event);
+                        break;
+                    }
+
+                }
+                Log.d("Event", "Event: " + event.toString());
+            }, e -> {throw new RuntimeException(e);});
     }
 
     private void getNewFragmentCallback(Tuple3<Class<? extends ChanceFragment>, Bundle, String> fragmentData) {

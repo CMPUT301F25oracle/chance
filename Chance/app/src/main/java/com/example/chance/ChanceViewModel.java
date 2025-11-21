@@ -15,6 +15,7 @@ import com.example.chance.util.Tuple3;
 import com.example.chance.views.base.ChanceFragment;
 import com.example.chance.views.base.ChancePopup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -25,7 +26,7 @@ public class ChanceViewModel extends ViewModel {
     private final MutableLiveData<Tuple3<Class<? extends ChanceFragment>, Bundle, String>> newFragment = new MutableLiveData<>();
     private final MutableLiveData<Tuple3<Class<? extends ChancePopup>, Bundle, Void>> newPopup = new MutableLiveData<>();
     private final MutableLiveData<String> requestedEventID = new MutableLiveData<>();
-    private final MutableLiveData<List<Event>> events = new MutableLiveData<>();
+    private final MutableLiveData<List<Event>> events = new MutableLiveData<>(new ArrayList<>());
 
 
     /**
@@ -91,6 +92,16 @@ public class ChanceViewModel extends ViewModel {
      */
     public void setEvents(List<Event> events) {
         this.events.postValue(events);
+    }
+
+    public void addEvent(Event event) {
+        events.getValue().add(event);
+        events.postValue(events.getValue());
+    }
+
+    public void removeEvent(Event event) {
+        events.getValue().remove(event);
+        events.postValue(events.getValue());
     }
 
     public void requestOpenEvent(String eventID) {

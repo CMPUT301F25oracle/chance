@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 
 import com.example.chance.R;
 import com.example.chance.controller.EventController;
@@ -29,6 +30,7 @@ import com.google.zxing.WriterException;
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -56,23 +58,29 @@ public class ViewEvent extends ChanceFragment {
 
         super.onViewCreated(view, savedInstanceState);
         Bundle bundle = getArguments();
+
         cvm.getCurrentUser().observe(getViewLifecycleOwner(), user -> {
             String eventID = meta.getString("eventID");
             if (eventID == null) {
                 throw new RuntimeException("Event ID cannot be null");
             }
-            cvm.getEvents().observe(getViewLifecycleOwner(), events -> {
-                Event event = events.stream().filter(ev -> Objects.equals(ev.getID(), eventID)).findFirst().orElse(null);
-                if (event == null) {
-                    dsm.getEvent(eventID, retrieved_event -> {
-                        // NOTE: Keeping the organizerButtons visibility check here for existing logic
-                        if (retrieved_event.getOrganizerUID().equals(user.getID())) {
-                            binding.organizerButtons.setVisibility(VISIBLE);
-                        }
-                        loadEventInformation(retrieved_event, user);
-                    });
-                } else {
-                    loadEventInformation(event, user);
+            cvm.getEvents().observe(getViewLifecycleOwner(), new Observer<List<Event>>() {
+                @Override
+                public void onChanged(List<Event> events) {
+                    Event event = events.stream().filter(ev -> Objects.equals(ev.getID(), eventID)).findFirst().orElse(null);
+                    if (event == null) {
+                        dsm.getEvent(eventID, retrieved_event -> {
+                            // NOTE: Keeping the organizerButtons visibility check here for existing logic
+                            if (retrieved_event.getOrganizerUID().equals(user.getID())) {
+                                binding.organizerButtons.setVisibility(VISIBLE);
+                            }
+                            loadEventInformation(retrieved_event, user);
+
+                        });
+                    } else {
+                        loadEventInformation(event, user);
+                    }
+                    cvm.getEvents().removeObserver(this);
                 }
             });
         });

@@ -453,6 +453,7 @@ import androidx.annotation.Nullable;
 import com.example.chance.model.Event;
 import com.example.chance.model.EventImage;
 import com.example.chance.model.User;
+import com.example.chance.util.Tuple3;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -606,7 +607,7 @@ public class DataStoreManager {
                 .addOnFailureListener(onFailure);
     }
 
-    public Observable<Event> observeEventsCollection() {
+    public Observable<Tuple3<Event, DocumentChange.Type, Void>> observeEventsCollection() {
         return Observable.create(emitter -> {
             fStore.collection(EVENT_COLLECTION)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -617,11 +618,9 @@ public class DataStoreManager {
                             return;
                         }
                         for (DocumentChange documentChange : snapshots.getDocumentChanges()) {
-                            if (documentChange.getType() == DocumentChange.Type.ADDED) {
-                                DocumentSnapshot document = documentChange.getDocument();
-                                Event event = document.toObject(Event.class);
-                                emitter.onNext(event);
-                            }
+                            DocumentSnapshot document = documentChange.getDocument();
+                            Event event = document.toObject(Event.class);
+                            emitter.onNext(new Tuple3(event, documentChange.getType(), null));
                         }
 
                     }
