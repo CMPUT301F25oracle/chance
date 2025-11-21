@@ -116,6 +116,15 @@
                     android:orientation="vertical"
                     >
                     <Button
+                        android:id="@+id/draw_entrants_button"
+                        android:layout_marginLeft="27dp"
+                        android:layout_width="350dp"
+                        android:layout_height="40dp"
+                        android:backgroundTint="@color/black"
+                        android:text="Draw Entrants"
+                        android:textColor="@color/white"
+                        />
+                    <Button
                         android:id="@+id/remove_banner_button"
                         android:layout_marginLeft="27dp"
                         android:layout_width="350dp"

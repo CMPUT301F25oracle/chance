@@ -63,7 +63,6 @@
                 android:layout_marginTop="5dp"
                 android:layout_width="350dp"
                 android:layout_height="30dp"
-                android:hint="Your Username"
                 android:editable="false"
                 android:background="@color/white"/>
 
@@ -82,8 +81,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_width="350dp"
                 android:layout_height="30dp"
-                android:background="@color/white"
-                android:hint="Lorem lpsum"/>
+                android:background="@color/white" />
 
             <TextView
                 android:layout_marginTop="5dp"
@@ -100,7 +98,6 @@
                 android:layout_marginTop="5dp"
                 android:layout_width="350dp"
                 android:layout_height="30dp"
-                android:hint="username@email.com"
                 android:background="@color/white"/>
 
             <TextView
@@ -118,7 +115,6 @@
                 android:layout_marginTop="5dp"
                 android:layout_width="350dp"
                 android:layout_height="30dp"
-                android:hint="123-456-7890"
                 android:background="@color/white"/>
 
         </com.google.android.flexbox.FlexboxLayout>
