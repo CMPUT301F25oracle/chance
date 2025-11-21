@@ -7,7 +7,6 @@ import static android.view.View.VISIBLE;
 import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,24 +16,17 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.chance.ChanceViewModel;
 import com.example.chance.R;
-import com.example.chance.controller.DataStoreManager;
 import com.example.chance.controller.EventController;
 import com.example.chance.controller.QRCodeHandler;
 import com.example.chance.databinding.ViewEventBinding;
 import com.example.chance.model.Event;
 import com.example.chance.model.User;
 import com.example.chance.views.base.ChanceFragment;
-import com.google.rpc.context.AttributeContext;
 import com.google.zxing.WriterException;
-import com.google.zxing.qrcode.encoder.QRCode;
 
-import java.net.URI;
+import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -43,6 +35,7 @@ import java.util.Objects;
 
 public class ViewEvent extends ChanceFragment {
     private ViewEventBinding binding;
+    Bitmap unique_qrcode;
 
     private Drawable buttonBackground;
     private EventController eventController;
@@ -105,8 +98,6 @@ public class ViewEvent extends ChanceFragment {
                 String.format("The event is now available. You can sign up for the event and wait for a poll for %d candidates until %s.",
                         event.getMaxInvited(), formattedEndDate));
 
-        // now we load the events unique QRCode
-        Bitmap unique_qrcode;
         try {
             unique_qrcode = QRCodeHandler.generateQRCode(event.getID());
         } catch (WriterException e) {
@@ -122,6 +113,15 @@ public class ViewEvent extends ChanceFragment {
         }, __ -> {
             // Setup removal when banner fails to load (does not exist)
             setupBannerRemoval(event, user, false);
+        });
+
+        binding.qrcodeButton.setOnClickListener(__ -> {
+            Bundle bundle = new Bundle();
+            ByteArrayOutputStream qrcodeByteStream = new ByteArrayOutputStream();
+            unique_qrcode.compress(Bitmap.CompressFormat.PNG, 100, qrcodeByteStream);
+            byte[] qrcodeByteArray = qrcodeByteStream.toByteArray();
+            bundle.putByteArray("qrcode_bytes", qrcodeByteArray);
+            cvm.setNewPopup(QRCodePopup.class, bundle);
         });
 
         binding.enterLotteryButton.setOnClickListener(__ -> {

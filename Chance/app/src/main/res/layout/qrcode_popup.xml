@@ -7,7 +7,7 @@
     app:justifyContent="center"
     app:flexDirection="column">
     <ImageButton
-        android:id="@+id/qrcode_button"
+        android:id="@+id/qrcode"
         android:layout_width="250dp"
         android:layout_height="250dp"
         android:background="@drawable/template_qrcode"

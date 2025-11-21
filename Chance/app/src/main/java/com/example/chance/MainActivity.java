@@ -185,8 +185,11 @@ public class MainActivity extends AppCompatActivity {
         try {
             ChancePopup popup = popupClass.newInstance();
             popup.meta = bundle;
-            transaction.replace(R.id.content_view, popup);
-            popup.chanceEnterTransitionComplete();
+            transaction.replace(R.id.popup_view, popup);
+            transaction.commit();
+            transaction.runOnCommit(() -> {
+                popup.chanceEnterTransitionComplete();
+            });
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
