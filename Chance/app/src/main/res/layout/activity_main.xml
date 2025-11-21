@@ -21,14 +21,20 @@
             android:layout_height="match_parent"
             android:clipToOutline="true"/>
         <FrameLayout
-            android:id="@+id/popup_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/box_rounded_corners"
-            android:backgroundTint="#bbd2f8"
-            android:elevation="20dp"
-            android:outlineProvider="bounds"/>
+            android:id="@+id/popup_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#5F000000">
+            <FrameLayout
+                android:id="@+id/popup_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/box_rounded_corners"
+                android:backgroundTint="#bbd2f8"
+                android:elevation="20dp"
+                android:outlineProvider="bounds"/>
+        </FrameLayout>
     </FrameLayout>
 
 

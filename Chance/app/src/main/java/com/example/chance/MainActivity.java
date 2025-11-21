@@ -48,7 +48,10 @@ public class MainActivity extends AppCompatActivity {
         chanceViewModel = new ViewModelProvider(this).get(ChanceViewModel.class);
         setContentView(binding.getRoot());
 
-        binding.popupView.setVisibility(GONE);
+        binding.popupContainer.setVisibility(GONE);
+        binding.popupContainer.setOnClickListener(v -> {
+            binding.popupContainer.setVisibility(GONE);
+        });
 
         // hides the default action bar
         if (getSupportActionBar() != null) {
@@ -193,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        binding.popupView.setVisibility(VISIBLE);
+        binding.popupContainer.setVisibility(VISIBLE);
     }
 
     /**
