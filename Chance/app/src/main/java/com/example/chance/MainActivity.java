@@ -1,6 +1,7 @@
 
 package com.example.chance;
 
+import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
@@ -27,6 +28,7 @@ import com.example.chance.views.QrcodeScanner;
 import com.example.chance.views.SplashScreen;
 import com.example.chance.views.ViewEvent;
 import com.example.chance.views.base.ChanceFragment;
+import com.example.chance.views.base.ChancePopup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         chanceViewModel = new ViewModelProvider(this).get(ChanceViewModel.class);
         setContentView(binding.getRoot());
+
+        binding.popupView.setVisibility(GONE);
 
         // hides the default action bar
         if (getSupportActionBar() != null) {
@@ -77,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
             });
         });
         chanceViewModel.getNewFragment().observe(this, this::getNewFragmentCallback);
+        chanceViewModel.getNewPopup().observe(this, this::getNewPopupCallback);
         chanceViewModel.getLoadMainUI().observe(this, shouldLoad -> {
             backstackHistory.clear();
             // first we add some styling to the main content view
@@ -88,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 visibility = VISIBLE;
                 backgroundResource = R.drawable.reusable_view_rounding;
             } else {
-                visibility = View.GONE;
+                visibility = GONE;
                 backgroundResource = 0;
             }
             binding.contentView.setBackgroundResource(backgroundResource);
@@ -164,13 +169,28 @@ public class MainActivity extends AppCompatActivity {
             ChanceFragment fragment = fragmentClass.newInstance();
             fragment.meta = bundle;
 
-            fragment.setArguments(bundle);
             animateFragmentTransition(transaction, fragment, transitionType);
             // commit MUST always occur here for consistency
             transaction.commit();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void getNewPopupCallback(Tuple3<Class<? extends ChancePopup>, Bundle, Void> popupData) {
+        Class<? extends ChancePopup> popupClass = popupData.x;
+        Bundle bundle = popupData.y;
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        try {
+            ChancePopup popup = popupClass.newInstance();
+            popup.meta = bundle;
+            transaction.replace(R.id.content_view, popup);
+            popup.chanceEnterTransitionComplete();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        binding.popupView.setVisibility(VISIBLE);
     }
 
     /**

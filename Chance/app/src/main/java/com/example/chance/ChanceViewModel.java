@@ -13,6 +13,7 @@ import com.example.chance.model.Event;
 import com.example.chance.model.User;
 import com.example.chance.util.Tuple3;
 import com.example.chance.views.base.ChanceFragment;
+import com.example.chance.views.base.ChancePopup;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class ChanceViewModel extends ViewModel {
     private final MutableLiveData<User> authenticationSuccess = new MutableLiveData<>();
     private final MutableLiveData<Boolean> navBarVisible = new MutableLiveData<>();
     private final MutableLiveData<Tuple3<Class<? extends ChanceFragment>, Bundle, String>> newFragment = new MutableLiveData<>();
+    private final MutableLiveData<Tuple3<Class<? extends ChancePopup>, Bundle, Void>> newPopup = new MutableLiveData<>();
     private final MutableLiveData<String> requestedEventID = new MutableLiveData<>();
     private final MutableLiveData<List<Event>> events = new MutableLiveData<>();
 
@@ -114,5 +116,13 @@ public class ChanceViewModel extends ViewModel {
      */
     public void setAuthenticationSuccess(User user) {
         authenticationSuccess.postValue(user);
+    }
+
+    public MutableLiveData<Tuple3<Class<? extends ChancePopup>, Bundle, Void>> getNewPopup() {
+        return newPopup;
+    }
+
+    public void setNewPopup(Class<? extends ChancePopup> popup, Bundle bundle) {
+        newPopup.postValue(new Tuple3<>(popup, bundle, null));
     }
 }
