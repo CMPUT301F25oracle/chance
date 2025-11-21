@@ -134,7 +134,9 @@ public class ViewEvent extends ChanceFragment {
         binding.removeEventButton.setOnClickListener(__ -> {
             dsm.removeEvent(event, success -> {
                 Toast.makeText(requireContext(), "Event removed successfully.", Toast.LENGTH_SHORT).show();
-                NavHostFragment.findNavController(this).navigate(R.id.navigation_home);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("addToBackStack", false);
+                cvm.setNewFragment(Home.class, bundle, "fade");
             }, failure -> {
                 Toast.makeText(requireContext(), "Failed to remove event.", Toast.LENGTH_SHORT).show();
             });
@@ -184,23 +186,26 @@ public class ViewEvent extends ChanceFragment {
     }
     // END: BANNER REMOVAL FEATURE
 
-    private void setupEventRemoval(Event event, User user) {
-        binding.removeEventButton.setOnClickListener(v -> {
-            new AlertDialog.Builder(requireContext())
-                    .setTitle("Remove Event")
-                    .setMessage("Are you sure you want to permanently remove the event? This action is irreversible.")
-                    .setPositiveButton("Remove", (dialog, which) -> {
-                        dsm.removeEvent(event, success -> {
-                            Toast.makeText(requireContext(), "Event removed successfully.", Toast.LENGTH_SHORT).show();
-                            NavHostFragment.findNavController(this).navigate(R.id.navigation_home);
-                        }, failure -> {
-                            Toast.makeText(requireContext(), "Failed to remove event.", Toast.LENGTH_SHORT).show();
-                        });
-                    })
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .show();
-        });
-    }
+//    private void setupEventRemoval(Event event, User user) {
+//        binding.removeEventButton.setOnClickListener(v -> {
+//            new AlertDialog.Builder(requireContext())
+//                    .setTitle("Remove Event")
+//                    .setMessage("Are you sure you want to permanently remove the event? This action is irreversible.")
+//                    .setPositiveButton("Remove", (dialog, which) -> {
+//                        dsm.removeEvent(event, success -> {
+//                            Toast.makeText(requireContext(), "Event removed successfully.", Toast.LENGTH_SHORT).show();
+//                            Bundle bundle = new Bundle();
+//                            bundle.putBoolean("addToBackStack", false);
+//                            cvm.setNewFragment(Home.class, bundle, "circular:300");
+//                            //NavHostFragment.findNavController(this).navigate(R.id.navigation_home);
+//                        }, failure -> {
+//                            Toast.makeText(requireContext(), "Failed to remove event.", Toast.LENGTH_SHORT).show();
+//                        });
+//                    })
+//                    .setNegativeButton(android.R.string.cancel, null)
+//                    .show();
+//        });
+//    }
 
     private String formatDate(Date date) {
         if (date == null) {
