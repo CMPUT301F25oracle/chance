@@ -13,7 +13,6 @@ import android.view.View;
 
 import com.example.chance.controller.DataStoreManager;
 import com.example.chance.model.Event;
-import com.example.chance.model.User;
 import com.example.chance.util.Tuple3;
 import com.example.chance.views.Home;
 import com.example.chance.views.Profile;
@@ -31,6 +30,7 @@ import com.example.chance.views.ViewEvent;
 import com.example.chance.views.base.ChanceFragment;
 import com.example.chance.views.base.ChancePopup;
 import com.google.firebase.firestore.DocumentChange;
+import com.example.chance.views.NotificationPopup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         chanceViewModel.setNewFragment(SplashScreen.class, null, "none");
 
         View navbar = binding.getRoot().findViewById(R.id.nav_bar);
+        View titleBar = binding.getRoot().findViewById(R.id.title_bar);
         navbar.findViewById(R.id.navbar_home_button).setOnClickListener((v) -> {
             chanceViewModel.setNewFragment(Home.class, null, "fade");
         });
@@ -82,6 +83,10 @@ public class MainActivity extends AppCompatActivity {
 
         chanceViewModel.getNewFragment().observe(this, this::getNewFragmentCallback);
         chanceViewModel.getNewPopup().observe(this, this::getNewPopupCallback);
+
+        titleBar.findViewById(R.id.notification_button).setOnClickListener(v -> {
+            chanceViewModel.setNewPopup(NotificationPopup.class, null);
+        });
 
         OnBackPressedCallback backCallback = new OnBackPressedCallback(true) {
             @Override
