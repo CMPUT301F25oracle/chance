@@ -6,6 +6,8 @@ import com.google.firebase.firestore.IgnoreExtraProperties;
 
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -136,7 +138,7 @@ public class Event {
     public List<String> getInvitationList() {
         return invitationList;
     }
-    public void setInvitationList(ArrayList<String> invitationList) {
+    public void setInvitationList(List<String> invitationList) {
         this.invitationList = invitationList;
     }
 
@@ -165,11 +167,10 @@ public class Event {
     public void pollForInvitation() {
         int i = 0;
         List<String> waitingList = this.getWaitingList();
+        Collections.shuffle(waitingList);
         while (i < this.getMaxInvited() && i < this.getCapacity() && !waitingList.isEmpty()) {
-            Random rand = new Random();
-            int j = rand.nextInt(waitingList.size());
-            invitationList.add(waitingList.get(j));
-            waitingList.remove(j);
+            invitationList.add(waitingList.get(i));
+            waitingList.remove(i);
             i++;
         }
     }
