@@ -30,12 +30,19 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import io.reactivex.rxjava3.disposables.Disposable;
 
+/**
+ * Fragment representing the main Home dashboard.
+ * Displays a staggered feed of events and provides navigation to core features.
+ */
 public class Home extends ChanceFragment {
 
     private HomeBinding binding;
     // defined here to later clean up the observer
     private Disposable eventsDisposable;
 
+    /**
+     * Inflates the Home layout using ViewBinding.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -45,6 +52,9 @@ public class Home extends ChanceFragment {
         return binding.getRoot();
     }
 
+    /**
+     * Initializes the UI, sets up Flexbox layouts for the event feed, and handles data observation.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -71,6 +81,7 @@ public class Home extends ChanceFragment {
 
         });
 
+        // Setup navigation listeners
         binding.buttonRegistered.setOnClickListener(__ -> {
             cvm.setNewFragment(RegisteredEvents.class, null, "fade");
         });
@@ -80,7 +91,7 @@ public class Home extends ChanceFragment {
         binding.buttonCreateEvent.setOnClickListener(__ -> {
             cvm.setNewFragment(CreateEvent.class, null, "fade");
         });
-        
+
         // now we set up our event adapter
         RecyclerView eventsContainerLeft = binding.eventsContainerLeft;
         RecyclerView eventsContainerRight = binding.eventsContainerRight;
@@ -122,6 +133,8 @@ public class Home extends ChanceFragment {
 
         AtomicInteger leftIdx = new AtomicInteger();
         AtomicInteger rightIdx = new AtomicInteger();
+
+        // RxJava stream to populate the left and right columns with a stagger effect
         cvm.getEvents().observe(getViewLifecycleOwner(), events -> {
             leftEventList.clear();
             rightEventList.clear();
@@ -163,6 +176,7 @@ public class Home extends ChanceFragment {
 //            }
 //        });
 
+        // Touch listener for the left column to handle event clicks
         eventsContainerLeft.addOnItemTouchListener(new androidx.recyclerview.widget.RecyclerView.SimpleOnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(@NonNull RecyclerView viewManager, @NonNull MotionEvent touchEvent) {
@@ -180,6 +194,7 @@ public class Home extends ChanceFragment {
             }
         });
 
+        // Touch listener for the right column to handle event clicks
         eventsContainerRight.addOnItemTouchListener(new androidx.recyclerview.widget.RecyclerView.SimpleOnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(@NonNull RecyclerView viewManager, @NonNull MotionEvent touchEvent) {
@@ -198,6 +213,9 @@ public class Home extends ChanceFragment {
         });
     }
 
+    /**
+     * Cleans up RxJava disposables and view bindings when view is destroyed.
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
