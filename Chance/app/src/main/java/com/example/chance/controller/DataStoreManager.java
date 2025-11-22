@@ -920,12 +920,12 @@ public class DataStoreManager {
             event.leaveWaitingList(user.getID());
         }
 
-        public void drawEntrants() {
-            fStore.collection(EVENT_COLLECTION)
-                    .document(event.getID())
-                    .update("invitationList", true);
-            event.pollForInvitation();
-        }
+//        public void drawEntrants() {
+//            fStore.collection(EVENT_COLLECTION)
+//                    .document(event.getID())
+//                    .update("invitationList", FieldValue.arrayUnion(event.getInvitationList()));
+//            event.pollForInvitation();
+//        }
     }
 
     public __eventImage eventImage(EventImage target_event_image) {
