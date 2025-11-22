@@ -165,8 +165,9 @@ public class Event {
     public void pollForInvitation() {
         int i = 0;
         List<String> waitingList = this.getWaitingList();
-        while (i < invitationList.size()) {
-            int j = (int)Math.random()*(invitationList.size() - 1);
+        while (i < this.getMaxInvited() && i < this.getCapacity() && !waitingList.isEmpty()) {
+            Random rand = new Random();
+            int j = rand.nextInt(waitingList.size());
             invitationList.add(waitingList.get(j));
             waitingList.remove(j);
             i++;
@@ -180,6 +181,5 @@ public class Event {
     public void setMaxInvited(int maxInvited) {
         this.maxInvited = maxInvited;
     }
-
 
 }

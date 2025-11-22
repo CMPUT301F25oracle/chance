@@ -145,6 +145,10 @@ public class ViewEvent extends ChanceFragment {
                 Toast.makeText(requireContext(), "Failed to remove event.", Toast.LENGTH_SHORT).show();
             });
         });
+
+        binding.drawEntrantsButton.setOnClickListener(__ -> {
+            dsm.event(event).drawEntrants();
+        });
     }
 
 
