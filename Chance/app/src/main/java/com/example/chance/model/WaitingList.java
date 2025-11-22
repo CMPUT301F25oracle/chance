@@ -1,7 +1,7 @@
 package com.example.chance.model;
 
 import com.google.firebase.firestore.DocumentId;
-import com.google.firebase.firestore.IgnoreExtraProperties;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +9,7 @@ import java.util.List;
  * Represents a waiting list for an event after the lottery draw.
  * Entrants here are next in line if winners withdraw or capacity increases.
  */
-@IgnoreExtraProperties
+
 public class WaitingList {
 
     @DocumentId

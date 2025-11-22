@@ -3,8 +3,13 @@ package com.example.chance.model;
 import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.IgnoreExtraProperties;
+
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 /**
  * Represents an event in the Event Lottery System.
@@ -15,30 +20,50 @@ import java.util.Objects;
 public class Event {
 
     @DocumentId
-    private String id;          // Firestore document ID
+    private String ID;          // Firestore document ID
 
     private String name;        // Event name
     private String location;    // Venue or online link
     private int capacity;       // Max entrants
     private double price;       // Entry fee (0 for free events)
     private String description; // Event details
-    private Date date;          // Event date
+    private Date startDate;    // Event start date
+    private Date endDate;     // Event end date
+    private String organizerUID;
+    private int maxInvited;   // Max entrants that can be invited
+
+
+    private List<String> waitingList;
+
+    private List<String> invitationList;
+
 
     // Required empty constructor for Firestore
     public Event() {}
 
-    public Event(String name, String location, int capacity, double price, String description, Date date) {
+    public Event(String name, String location, int capacity, double price, String description, Date startDate, Date endDate, String organizerUID, int maxInvited) {
         this.name = name;
         this.location = location;
         this.capacity = capacity;
         this.price = price;
         this.description = description;
-        this.date = date;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.organizerUID = organizerUID;
+        this.maxInvited = maxInvited;
+        this.waitingList = new ArrayList<>();
+        this.invitationList = new ArrayList<>();
+    }
+
+    @Override
+    public String toString() {
+
+        return name + " (" + location + ") on ?";
     }
 
     // --- Getters and Setters ---
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public String getID() { return ID; }
+    public void setID(String eventId) { this.ID = eventId; }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
@@ -55,9 +80,6 @@ public class Event {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public Date getDate() { return date; }
-    public void setDate(Date date) { this.date = date; }
-
     // --- Utility Methods ---
     @Exclude
     public boolean isFull() {
@@ -69,14 +91,95 @@ public class Event {
         if (this == o) return true;
         if (!(o instanceof Event)) return false;
         Event event = (Event) o;
-        return Objects.equals(id, event.id);
+        return Objects.equals(ID, event.ID);
     }
 
     @Override
-    public int hashCode() { return Objects.hash(id); }
+    public int hashCode() { return Objects.hash(ID); }
 
-    @Override
-    public String toString() {
-        return name + " (" + location + ") on " + date;
+    public String getOrganizerUID() {
+        return organizerUID;
     }
+
+    public void setOrganizerUID(String organizerUID) {
+        this.organizerUID = organizerUID;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public List<String> getWaitingList() {
+        return waitingList;
+    }
+
+    public void setWaitingList(ArrayList<String> waitingList) {
+        this.waitingList = waitingList;
+    }
+
+    public void leaveWaitingList(String userId) {
+        waitingList.remove(userId);
+    }
+
+    public List<String> getInvitationList() {
+        return invitationList;
+    }
+    public void setInvitationList(ArrayList<String> invitationList) {
+        this.invitationList = invitationList;
+    }
+
+    public void addToWaitingList(String userId) {
+        if (!waitingList.contains(userId)) {
+            waitingList.add(userId);
+        }
+    }
+
+    public void acceptInvitation(String userId) {
+        invitationList.add(userId);
+    }
+
+    public void rejectInvitation(String userId) {
+        waitingList.remove(userId);
+    }
+
+    public List<String> viewWaitingListEntrants() {
+        return this.getWaitingList();
+    }
+
+    public int viewWaitingListEntrantsCount() {
+        return this.getWaitingList().size();
+    }
+
+    public void pollForInvitation() {
+        int i = 0;
+        List<String> waitingList = this.getWaitingList();
+        while (i < invitationList.size()) {
+            int j = (int)Math.random()*(invitationList.size() - 1);
+            invitationList.add(waitingList.get(j));
+            waitingList.remove(j);
+            i++;
+        }
+    }
+
+    public int getMaxInvited() {
+        return maxInvited;
+    }
+
+    public void setMaxInvited(int maxInvited) {
+        this.maxInvited = maxInvited;
+    }
+
+
 }

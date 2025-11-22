@@ -1,37 +1,323 @@
+
 package com.example.chance;
 
+import static android.view.View.GONE;
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+
+import android.animation.Animator;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.example.chance.controller.DataStoreManager;
+import com.example.chance.model.Event;
+import com.example.chance.util.Tuple3;
+import com.example.chance.views.Home;
+import com.example.chance.views.Profile;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.chance.databinding.ActivityMainBinding;
+import com.example.chance.views.QrcodeScanner;
+import com.example.chance.views.SplashScreen;
+import com.example.chance.views.ViewEvent;
+import com.example.chance.views.base.ChanceFragment;
+import com.example.chance.views.base.ChancePopup;
+import com.google.firebase.firestore.DocumentChange;
+import com.example.chance.views.NotificationPopup;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
     private ActivityMainBinding binding;
+    private ChanceViewModel chanceViewModel;
+    private DataStoreManager dataStoreManager;
+    private final List<BackstackFragment> backstackHistory = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        chanceViewModel = new ViewModelProvider(this).get(ChanceViewModel.class);
+        dataStoreManager = DataStoreManager.getInstance();
+        setContentView(binding.getRoot());
 
-//        binding = ActivityMainBinding.inflate(getLayoutInflater());
-//        setContentView(binding.getRoot());
-//
-//        BottomNavigationView navView = findViewById(R.id.nav_view);
-//        // Passing each menu ID as a set of Ids because each
-//        // menu should be considered as top level destinations.
-//        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-//                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
-//                .build();
-//        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-//        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-//        NavigationUI.setupWithNavController(binding.navView, navController);
+        initializeUI();
+        initializeChanceModelObservers();
+        initializeDatabasePolling();
     }
 
+    private void initializeUI() {
+        // hides the default action bar
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
+        binding.popupContainer.setVisibility(GONE);
+        binding.popupContainer.setOnClickListener(v -> {
+            binding.popupContainer.setVisibility(GONE);
+        });
+
+        chanceViewModel.setLoadMainUI(false);
+        chanceViewModel.setNewFragment(SplashScreen.class, null, "none");
+
+        View navbar = binding.getRoot().findViewById(R.id.nav_bar);
+        View titleBar = binding.getRoot().findViewById(R.id.title_bar);
+        navbar.findViewById(R.id.navbar_home_button).setOnClickListener((v) -> {
+            chanceViewModel.setNewFragment(Home.class, null, "fade");
+        });
+        navbar.findViewById(R.id.navbar_qr_button).setOnClickListener(v -> {
+            chanceViewModel.setNewFragment(QrcodeScanner.class, null, "circular:300");
+        });
+        navbar.findViewById(R.id.navbar_profile_button).setOnClickListener((v) -> {
+            chanceViewModel.setNewFragment(Profile.class, null, "fade");
+        });
+
+        chanceViewModel.getNewFragment().observe(this, this::getNewFragmentCallback);
+        chanceViewModel.getNewPopup().observe(this, this::getNewPopupCallback);
+
+        titleBar.findViewById(R.id.notification_button).setOnClickListener(v -> {
+            chanceViewModel.setNewPopup(NotificationPopup.class, null);
+        });
+
+        OnBackPressedCallback backCallback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                int fragmentHistorySize = backstackHistory.size();
+                if (fragmentHistorySize > 0) {
+                    BackstackFragment nextBackstackFragment = backstackHistory.removeLast();
+                    Class<? extends ChanceFragment> fragmentClass = nextBackstackFragment.fragmentClass;
+                    Bundle metaBundle = nextBackstackFragment.metaBundle;
+                    metaBundle.putBoolean("addToBackStack", false);
+                    chanceViewModel.setNewFragment(fragmentClass, metaBundle, "fade");
+                } else {
+                    finish();
+                }
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, backCallback);
+    }
+
+    private void initializeChanceModelObservers() {
+        chanceViewModel.getLoadMainUI().observe(this, shouldLoad -> {
+            backstackHistory.clear();
+            // first we add some styling to the main content view
+            int visibility;
+            int backgroundResource;
+            // used to make sure we don't overlap the android status bar
+            //int titleBarOffset = insets.getInsetsIgnoringVisibility(WindowInsets.Type.statusBars()).top;
+            if (shouldLoad) {
+                visibility = VISIBLE;
+                backgroundResource = R.drawable.reusable_view_rounding;
+            } else {
+                visibility = GONE;
+                backgroundResource = 0;
+            }
+            binding.contentView.setBackgroundResource(backgroundResource);
+            binding.getRoot().findViewById(R.id.title_bar).setVisibility(visibility);
+            binding.getRoot().findViewById(R.id.nav_bar).setVisibility(visibility);
+        });
+        //--
+        chanceViewModel.getAuthenticationSuccess().observe(this, user -> {
+            chanceViewModel.setCurrentUser(user);
+            // now we load the list of events from firestore
+            List<Event> emptyList = new ArrayList<>();
+            chanceViewModel.setEvents(emptyList);
+            DataStoreManager.getInstance().getAllEvents((events) -> {
+                chanceViewModel.setEvents(events);
+            });
+        });
+        //--
+        chanceViewModel.getEventToOpen().observe(this, eventId -> {
+            Bundle bundle = new Bundle();
+            bundle.putString("eventID", eventId);
+            chanceViewModel.setNewFragment(ViewEvent.class, bundle, "fade");
+        });
+
+    }
+
+    @SuppressLint("CheckResult")
+    private void initializeDatabasePolling() {
+        // note we don't need to dispose of this subscriber since its runs
+        // throughout the apps lifetime
+        dataStoreManager.observeEventsCollection()
+            .observeOn(io.reactivex.rxjava3.android.schedulers.AndroidSchedulers.mainThread())
+            .subscribe(eventChangeTuple -> {
+                Event event = eventChangeTuple.x;
+                DocumentChange.Type changeType = eventChangeTuple.y;
+
+                switch (changeType) {
+                    case ADDED: {
+                        chanceViewModel.addEvent(event);
+                        break;
+                    }
+                    case REMOVED: {
+                        chanceViewModel.removeEvent(event);
+                        break;
+                    }
+
+                }
+                Log.d("Event", "Event: " + event.toString());
+            }, e -> {throw new RuntimeException(e);});
+    }
+
+    private void getNewFragmentCallback(Tuple3<Class<? extends ChanceFragment>, Bundle, String> fragmentData) {
+        Class<? extends ChanceFragment> fragmentClass = fragmentData.x;
+        Bundle bundle = fragmentData.y;
+        String transitionType = fragmentData.z;
+
+        //region: !!!TEMPORARY FIX!!!
+        if (bundle == null) {
+            bundle = new Bundle();
+        }
+        //endregion
+
+        boolean addToBackStack = bundle.getBoolean("addToBackStack", true);
+
+        ChanceFragment currentFragment = (ChanceFragment) getSupportFragmentManager().findFragmentById(R.id.content_view);
+        if (currentFragment != null && addToBackStack) {
+            Class<? extends ChanceFragment> currentFragmentClass = currentFragment.getClass();
+            backstackHistory.addLast(new BackstackFragment(currentFragmentClass, currentFragment.meta));
+        }
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        try {
+            ChanceFragment fragment = fragmentClass.newInstance();
+            fragment.meta = bundle;
+
+            animateFragmentTransition(transaction, fragment, transitionType);
+            // commit MUST always occur here for consistency
+            transaction.commit();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void getNewPopupCallback(Tuple3<Class<? extends ChancePopup>, Bundle, Void> popupData) {
+        Class<? extends ChancePopup> popupClass = popupData.x;
+        Bundle bundle = popupData.y;
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        try {
+            ChancePopup popup = popupClass.newInstance();
+            popup.meta = bundle;
+            transaction.replace(R.id.popup_view, popup);
+            transaction.commit();
+            transaction.runOnCommit(() -> {
+                popup.chanceEnterTransitionComplete();
+            });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        binding.popupContainer.setVisibility(VISIBLE);
+    }
+
+    /**
+     * Set of custom animations for fragment transitions
+     * @param transaction
+     * @param newFragment
+     * @param transitionType
+     */
+    private void animateFragmentTransition(FragmentTransaction transaction, ChanceFragment newFragment, String transitionType) {
+        // we need to parse transitionType in case it mentions time in milliseconds
+        String[] transitionTypeComponents = transitionType.split(":");
+        String transition = transitionTypeComponents[0];
+        int duration = 500;
+        if (transitionTypeComponents.length > 1) {
+            duration = Integer.parseInt(transitionTypeComponents[1]);
+        }
+
+        switch (transition) {
+            case "fade": {
+                transaction.setCustomAnimations(
+                    android.R.anim.fade_in,
+                    0
+                );
+                transaction.replace(R.id.content_view, newFragment);
+                newFragment.chanceEnterTransitionComplete();
+                break;
+            }
+            case "circular": {
+                Log.d("Circular", "We're alive");
+                circularRevealAnimation(transaction, newFragment, duration);
+                break;
+            }
+            default: {
+                transaction.replace(R.id.content_view, newFragment);
+                newFragment.chanceEnterTransitionComplete();
+                break;
+            }
+        }
+        // make sure any waiting fragment code is executed now
+
+    }
+
+    private void circularRevealAnimation(FragmentTransaction transaction, ChanceFragment newFragment, int duration) {
+        ChanceFragment currentFragment = (ChanceFragment) getSupportFragmentManager().findFragmentById(R.id.content_view);
+        transaction.add(R.id.content_view, newFragment);
+
+        View mainView = findViewById(R.id.content_view);
+        int viewCenterX = mainView.getWidth() / 2;
+        int viewCenterY = mainView.getHeight() / 2;
+        float finalRadius = (float) Math.hypot(viewCenterX, viewCenterY);
+
+        transaction.runOnCommit(() -> {
+            View newFragmentView = newFragment.getView();
+            newFragmentView.setVisibility(INVISIBLE);
+            mainView.post(() -> {
+                android.animation.Animator circularReveal = android.view.ViewAnimationUtils.createCircularReveal(
+                        newFragment.getView()
+                        ,viewCenterX
+                        ,viewCenterY
+                        ,0
+                        ,finalRadius
+                );
+                circularReveal.setDuration(duration);
+                circularReveal.addListener(new android.animation.Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationCancel(@NonNull Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(@NonNull Animator animation) {
+                        getSupportFragmentManager().beginTransaction().remove(currentFragment).commit();
+                        newFragment.chanceEnterTransitionComplete();
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(@NonNull Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationStart(@NonNull Animator animation) {
+                    }
+                });
+                circularReveal.start();
+                newFragmentView.setVisibility(VISIBLE);
+            });
+
+        });
+
+    }
+
+
+    private static class BackstackFragment {
+        public Class<? extends ChanceFragment> fragmentClass;
+        public Bundle metaBundle;
+
+        BackstackFragment(Class<? extends ChanceFragment> fragmentClass, Bundle metaBundle) {
+            this.fragmentClass = fragmentClass;
+            this.metaBundle = metaBundle;
+        }
+    }
 }

@@ -1,0 +1,171 @@
+<com.google.android.flexbox.FlexboxLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:alignItems="flex_start"
+    app:flexDirection="column"
+    android:orientation="vertical"
+    android:background="@color/grey">
+
+    <!--region: event information input-->
+    <com.google.android.flexbox.FlexboxLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:alignItems="flex_start"
+        app:flexDirection="column"
+        app:layout_flexGrow="1"
+        android:padding="30px">
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sub_title_text_size"
+            android:textColor="@color/black"
+            android:text="Please fill in your event information below."/>
+
+        <!-- Event Name -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Event Name"
+            android:textSize="@dimen/sub_sub_title_text_size"/>
+        <EditText
+            android:id="@+id/event_name_input"
+            android:layout_marginTop="5dp"
+            android:layout_width="350dp"
+            android:layout_height="30dp"
+            android:hint="Your event name..."
+            android:background="@color/white"
+            android:padding="5dp"/>
+
+        <!-- Event Address -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Event Address"
+            android:textSize="@dimen/sub_sub_title_text_size"/>
+        <EditText
+            android:id="@+id/event_address_input"
+            android:layout_marginTop="5dp"
+            android:layout_width="350dp"
+            android:layout_height="30dp"
+            android:hint="Your address..."
+            android:background="@color/white"
+            android:padding="5dp"/>
+
+        <!-- Registration Start Date -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Registration Start Date"
+            android:textSize="@dimen/sub_sub_title_text_size"/>
+        <DatePicker
+            android:id="@+id/registration_start_input"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:calendarViewShown="false"
+            android:datePickerMode="spinner"/>
+
+        <!-- Registration End Date -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Registration End Date"
+            android:textSize="@dimen/sub_sub_title_text_size"/>
+        <DatePicker
+            android:id="@+id/registration_end_input"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:calendarViewShown="false"
+            android:datePickerMode="spinner"/>
+
+        <!-- Number of Event Candidates -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Number of Event Candidates"
+            android:textSize="@dimen/sub_sub_title_text_size"/>
+        <EditText
+            android:id="@+id/candidate_maximum_input"
+            android:layout_marginTop="5dp"
+            android:layout_width="350dp"
+            android:layout_height="30dp"
+            android:inputType="number"
+            android:background="@color/white"
+            android:hint="Number of candidates..."
+            android:padding="5dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Event Description"
+            android:textSize="@dimen/sub_sub_title_text_size"/>
+        <EditText
+            android:id="@+id/description_input"
+            android:layout_marginTop="5dp"
+            android:layout_width="350dp"
+            android:layout_height="30dp"
+            android:background="@color/white"
+            android:hint="Your description..."
+            android:padding="5dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cost for Attendance ($)"
+            android:textSize="@dimen/sub_sub_title_text_size"/>
+        <EditText
+            android:id="@+id/price_input"
+            android:layout_marginTop="5dp"
+            android:layout_width="350dp"
+            android:layout_height="30dp"
+            android:background="@color/white"
+            android:inputType="numberDecimal"
+            android:hint="Your price..."
+            android:padding="5dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Limit number of entrants in the waiting list (optional)"
+            android:textSize="@dimen/sub_sub_title_text_size"/>
+
+        <EditText
+            android:id="@+id/waitinglist_restriction"
+            android:layout_marginTop="5dp"
+            android:layout_width="350dp"
+            android:layout_height="30dp"
+            android:background="@color/white"
+            android:inputType="numberDecimal"
+            android:hint="Size of waitinglist..."
+            android:padding="5dp"/>
+
+
+        <Button
+            android:id="@+id/add_banner_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Event Banner"/>
+    </com.google.android.flexbox.FlexboxLayout>
+    <!--endregion: event information-->
+    <com.google.android.flexbox.FlexboxLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:alignContent="flex_end"
+        app:alignItems="flex_end"
+        app:flexDirection="column"
+        android:paddingHorizontal="25px"
+        app:layout_flexShrink="0">
+        <Button
+            android:id="@+id/submit_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/button_blue"
+            android:textColor="@color/white"
+            android:background="@drawable/box_rounded_corners"
+            android:text="Create Event" />
+    </com.google.android.flexbox.FlexboxLayout>
+
+
+</com.google.android.flexbox.FlexboxLayout>

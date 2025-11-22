@@ -10,8 +10,6 @@
     android:orientation="vertical"
     android:background="@color/grey">
 
-    <include layout="@layout/_title_bar" />
-
     <com.google.android.flexbox.FlexboxLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -65,7 +63,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_width="350dp"
                 android:layout_height="30dp"
-                android:hint="Your Username"
+                android:editable="false"
                 android:background="@color/white"/>
 
             <TextView
@@ -83,8 +81,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_width="350dp"
                 android:layout_height="30dp"
-                android:background="@color/white"
-                android:hint="Lorem lpsum"/>
+                android:background="@color/white" />
 
             <TextView
                 android:layout_marginTop="5dp"
@@ -101,7 +98,6 @@
                 android:layout_marginTop="5dp"
                 android:layout_width="350dp"
                 android:layout_height="30dp"
-                android:hint="username@email.com"
                 android:background="@color/white"/>
 
             <TextView
@@ -119,7 +115,6 @@
                 android:layout_marginTop="5dp"
                 android:layout_width="350dp"
                 android:layout_height="30dp"
-                android:hint="123-456-7890"
                 android:background="@color/white"/>
 
         </com.google.android.flexbox.FlexboxLayout>
@@ -131,6 +126,16 @@
         app:justifyContent="center"
         android:orientation="horizontal"
         android:layout_marginTop="10dp">
+
+        <Button
+            android:id="@+id/save_information_button"
+            android:layout_marginLeft="27dp"
+            android:layout_width="350dp"
+            android:layout_height="40dp"
+            android:backgroundTint="@color/black"
+            android:text="Save Account Information"
+            android:textColor="@color/white"
+            />
 
         <Button
             android:layout_marginLeft="27dp"
@@ -160,16 +165,26 @@
             />
 
         <Button
+            android:id="@+id/logout_button"
             android:layout_marginLeft="27dp"
             android:layout_width="350dp"
             android:layout_height="40dp"
-            android:backgroundTint="@color/button_blue"
-            android:text="Disable Notification"
+            android:backgroundTint="@color/black"
+            android:text="Logout"
+            android:textColor="@color/white"
+            />
+
+        <Button
+            android:id="@+id/delete_account_button"
+            android:layout_marginLeft="27dp"
+            android:layout_width="350dp"
+            android:layout_height="40dp"
+            android:backgroundTint="@color/button_red"
+            android:text="Delete Account"
             android:textColor="@color/white"
             />
 
     </com.google.android.flexbox.FlexboxLayout>
-    <include layout="@layout/_nav_bar" />
 
 </com.google.android.flexbox.FlexboxLayout>
 
