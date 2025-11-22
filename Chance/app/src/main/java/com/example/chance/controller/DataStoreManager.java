@@ -892,8 +892,9 @@ public class DataStoreManager {
 
         public Observable<Tuple3<Notification, DocumentChange.Type, Void>> observeNotifications() {
             return Observable.create(emitter -> {
-                fStore.collection(NOTIFICATION_COLLECTION)
-                    .collection(user.getID())
+                fStore.collection(USER_COLLECTION)
+                    .document(user.getID())
+                    .collection(NOTIFICATION_COLLECTION)
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
@@ -911,8 +912,9 @@ public class DataStoreManager {
         }
 
         public void postNotification(Notification notification, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
-            fStore.collection(NOTIFICATION_COLLECTION)
-                .collection(user.getID())
+            fStore.collection(USER_COLLECTION)
+                .document(user.getID())
+                .collection(NOTIFICATION_COLLECTION)
                     .add(notification)
                     .addOnSuccessListener(document -> {
                         notification.setID(document.getId());
