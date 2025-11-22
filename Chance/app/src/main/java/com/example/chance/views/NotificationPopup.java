@@ -11,10 +11,16 @@ import androidx.annotation.Nullable;
 import com.example.chance.databinding.NotificationPopupBinding;
 import com.example.chance.views.base.ChancePopup;
 
+/**
+ * Popup fragment for displaying user notifications.
+ */
 public class NotificationPopup extends ChancePopup {
 
     private NotificationPopupBinding binding;
 
+    /**
+     * Inflates the notification popup layout using ViewBinding.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -22,6 +28,9 @@ public class NotificationPopup extends ChancePopup {
         return binding.getRoot();
     }
 
+    /**
+     * Initializes the popup view components.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
