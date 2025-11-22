@@ -68,18 +68,11 @@ public class ViewEvent extends ChanceFragment {
                 @Override
                 public void onChanged(List<Event> events) {
                     Event event = events.stream().filter(ev -> Objects.equals(ev.getID(), eventID)).findFirst().orElse(null);
-                    if (event == null) {
-                        dsm.getEvent(eventID, retrieved_event -> {
-                            // NOTE: Keeping the organizerButtons visibility check here for existing logic
-                            if (retrieved_event.getOrganizerUID().equals(user.getID())) {
-                                binding.organizerButtons.setVisibility(VISIBLE);
-                            }
-                            loadEventInformation(retrieved_event, user);
-
-                        });
-                    } else {
-                        loadEventInformation(event, user);
+                    loadEventInformation(event, user);
+                    if (event.getOrganizerUID().equals(user.getID())) {
+                        binding.organizerButtons.setVisibility(VISIBLE);
                     }
+
                     cvm.getEvents().removeObserver(this);
                 }
             });
