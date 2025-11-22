@@ -24,6 +24,7 @@ import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexWrap;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
+import com.google.firebase.firestore.Blob;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -70,9 +71,11 @@ public class Home extends ChanceFragment {
             }
             // Update UI once we have a user
             binding.homeSystemMessage.setText("Hello, " + user.getUsername());
-            dsm.user(user).postNotification(new Notification("asdda", 1, "adaads", new Date(), new byte[0]), v -> {
+            dsm.user(user).postNotification(new Notification("asdda", 1, "adaads", new Date(), Blob.fromBytes(new byte[0])),v -> {
                 Log.d("Notification", "Notification posted successfully.");
-            },e -> {});
+            },e -> {
+                throw new RuntimeException(e);
+            });
 
             //region: admin tools
 

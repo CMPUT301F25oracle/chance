@@ -1,5 +1,7 @@
 package com.example.chance.model;
 
+import com.google.common.primitives.Bytes;
+import com.google.firebase.firestore.Blob;
 import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
@@ -11,9 +13,9 @@ public class Notification {
     private String ID;
     private int type;
     private Date postedAt;
-    private byte[] meta;
+    private Blob meta;
 
-    public Notification(String ID, int type, String message, Date postedAt, byte[] meta) {
+    public Notification(String ID, int type, String message, Date postedAt, Blob meta) {
         this.ID = ID;
         this.type = type;
         this.postedAt = postedAt;
@@ -44,11 +46,11 @@ public class Notification {
         this.postedAt = postedAt;
     }
 
-    public byte[] getMeta() {
+    public Blob getMeta() {
         return meta;
     }
 
-    public void setMeta(byte[] meta) {
+    public void setMeta(Blob meta) {
         this.meta = meta;
     }
 }

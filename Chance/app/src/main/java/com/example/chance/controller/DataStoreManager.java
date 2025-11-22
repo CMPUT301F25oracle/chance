@@ -917,7 +917,7 @@ public class DataStoreManager {
                 .collection(NOTIFICATION_COLLECTION)
                     .add(notification)
                     .addOnSuccessListener(document -> {
-                        notification.setID(document.getId());
+                        //notification.setID(document.getId());
                         onSuccess.onSuccess(null);
                     })
                     .addOnFailureListener(onFailure);
