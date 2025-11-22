@@ -104,17 +104,12 @@ public class CreateEvent extends ChanceFragment {
 
                 Event new_event = new Event(event_name, event_address, maximum_candidates, attendance_price, event_description, event_start_calendar, event_end_calendar, user.getID(), maximum_waitinglist);
                 dsm.createNewEvent(new_event, (event) -> {
-                    // now we add the new event to our internal list of events
-                    List<Event> events = cvm.getEvents().getValue();
-                    events.add(event);
                     if (selectedEventBanner != null) {
                         selectedEventBanner.setID(event.getID());
                         dsm.eventImage(selectedEventBanner).save((__)->{
-                            cvm.setEvents(events);
                             cvm.setNewFragment(Home.class, null, "");
                         }, (__)->{});
                     } else {
-                        cvm.setEvents(events);
                         cvm.setNewFragment(Home.class, null, "");
                     }
                     }, (__)->{});

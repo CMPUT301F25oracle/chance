@@ -127,6 +127,8 @@ public class Home extends ChanceFragment {
             rightEventList.clear();
             leftIdx.set(0);
             rightIdx.set(0);
+            eventsAdapterLeft.notifyDataSetChanged();
+            eventsAdapterRight.notifyDataSetChanged();
             eventsDisposable = io.reactivex.rxjava3.core.Observable
                     .fromIterable(events)
                     .concatMap(ev ->
