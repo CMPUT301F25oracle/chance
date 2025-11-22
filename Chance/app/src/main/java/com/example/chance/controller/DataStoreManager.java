@@ -919,6 +919,13 @@ public class DataStoreManager {
                     .update("waitingList", FieldValue.arrayRemove(user.getID()));
             event.leaveWaitingList(user.getID());
         }
+
+        public void drawEntrants() {
+            fStore.collection(EVENT_COLLECTION)
+                    .document(event.getID())
+                    .update("invitationList", true);
+            event.pollForInvitation();
+        }
     }
 
     public __eventImage eventImage(EventImage target_event_image) {
