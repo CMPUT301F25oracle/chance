@@ -13,9 +13,15 @@ import androidx.annotation.Nullable;
 import com.example.chance.databinding.QrcodePopupBinding;
 import com.example.chance.views.base.ChancePopup;
 
+/**
+ * Popup fragment for displaying generated QR codes.
+ */
 public class QRCodePopup extends ChancePopup {
     private QrcodePopupBinding binding;
 
+    /**
+     * Inflates the QR code popup layout using ViewBinding.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -23,6 +29,9 @@ public class QRCodePopup extends ChancePopup {
         return binding.getRoot();
     }
 
+    /**
+     * Retrieves the QR code byte array from metadata and displays the bitmap.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

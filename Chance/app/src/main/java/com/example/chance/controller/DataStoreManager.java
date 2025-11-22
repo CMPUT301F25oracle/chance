@@ -967,12 +967,20 @@ public class DataStoreManager {
             event.leaveWaitingList(user.getID());
         }
 
-//        public void drawEntrants() {
-//            fStore.collection(EVENT_COLLECTION)
-//                    .document(event.getID())
-//                    .update("invitationList", FieldValue.arrayUnion(event.getInvitationList()));
-//            event.pollForInvitation();
-//        }
+        public void drawEntrants() {
+            event.pollForInvitation();
+            for (String invitation : event.getInvitationList()) {
+                fStore.collection(EVENT_COLLECTION)
+                        .document(event.getID())
+                        .update("invitationList", FieldValue.arrayUnion(invitation));
+            }
+
+            for (String invitation : event.getInvitationList()) {
+                fStore.collection(EVENT_COLLECTION)
+                        .document(event.getID())
+                        .update("waitingList", FieldValue.arrayRemove(invitation));
+            }
+        }
     }
 
     public __eventImage eventImage(EventImage target_event_image) {
