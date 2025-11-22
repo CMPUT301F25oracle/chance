@@ -1,4 +1,5 @@
 package com.example.chance.adapters;
+
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,15 +19,20 @@ import com.example.chance.model.Event;
 
 import java.util.Date;
 
-
 /**
  * Adapter for displaying Event cards in RecyclerView.
- * Used in activity_event_list.xml and event_card.xml layout.
+ * Manages the list of events shown in the search screen.
  */
 public class EventSearchScreenListAdapter extends ListAdapter<Event, EventSearchScreenListAdapter.EventViewHolder> {
 
+    /**
+     * DiffUtil callback to calculate updates between old and new lists efficiently.
+     */
     public static final DiffUtil.ItemCallback<Event> DIFF_CALLBACK =
             new DiffUtil.ItemCallback<Event>() {
+                /**
+                 * Checks if two items represent the same object based on ID.
+                 */
                 @Override
                 public boolean areItemsTheSame(@NonNull Event oldItem, @NonNull Event newItem) {
                     // Compare unique IDs if available
@@ -36,6 +42,9 @@ public class EventSearchScreenListAdapter extends ListAdapter<Event, EventSearch
                     return oldItem == newItem;
                 }
 
+                /**
+                 * Checks if the content of two items is exactly the same for UI updates.
+                 */
                 @Override
                 public boolean areContentsTheSame(@NonNull Event oldItem, @NonNull Event newItem) {
                     // Compare relevant fields for UI. Adjust as your model evolves.
@@ -46,10 +55,16 @@ public class EventSearchScreenListAdapter extends ListAdapter<Event, EventSearch
                 }
             };
 
+    /**
+     * Constructor initializes the adapter with the DiffUtil callback.
+     */
     public EventSearchScreenListAdapter() {
         super(DIFF_CALLBACK);
     }
 
+    /**
+     * Inflates the event search layout and creates a new ViewHolder.
+     */
     @NonNull
     @Override
     public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -59,6 +74,9 @@ public class EventSearchScreenListAdapter extends ListAdapter<Event, EventSearch
         return new EventViewHolder(eventPillView);
     }
 
+    /**
+     * Binds data from the Event object to the views in the ViewHolder.
+     */
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         Event event = getItem(position);
@@ -73,10 +91,16 @@ public class EventSearchScreenListAdapter extends ListAdapter<Event, EventSearch
         }, __ -> {});
     }
 
+    /**
+     * ViewHolder class to hold references to the UI views for a single list item.
+     */
     public static class EventViewHolder extends RecyclerView.ViewHolder {
         TextView title, description;
         ImageView banner;
 
+        /**
+         * Initializes the UI components from the provided view.
+         */
         public EventViewHolder(@NonNull View eventPillView) {
             super(eventPillView);
             title = eventPillView.findViewById(R.id.event_title);
