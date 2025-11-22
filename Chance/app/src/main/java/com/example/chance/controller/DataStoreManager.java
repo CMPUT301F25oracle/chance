@@ -927,6 +927,12 @@ public class DataStoreManager {
                         .document(event.getID())
                         .update("invitationList", FieldValue.arrayUnion(invitation));
             }
+
+            for (String invitation : event.getInvitationList()) {
+                fStore.collection(EVENT_COLLECTION)
+                        .document(event.getID())
+                        .update("waitingList", FieldValue.arrayRemove(invitation));
+            }
         }
     }
 
