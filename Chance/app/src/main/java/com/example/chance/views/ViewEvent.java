@@ -147,7 +147,7 @@ public class ViewEvent extends ChanceFragment {
         });
 
         binding.drawEntrantsButton.setOnClickListener(__ -> {
-            //dsm.event(event).drawEntrants();
+            dsm.event(event).drawEntrants();
         });
     }
 

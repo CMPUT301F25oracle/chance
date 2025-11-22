@@ -166,11 +166,9 @@ public class Event {
 
     public void pollForInvitation() {
         int i = 0;
-        List<String> waitingList = this.getWaitingList();
         Collections.shuffle(waitingList);
         while (i < this.getMaxInvited() && i < this.getCapacity() && !waitingList.isEmpty()) {
-            invitationList.add(waitingList.get(i));
-            waitingList.remove(i);
+            invitationList.add(waitingList.removeLast());
             i++;
         }
     }
