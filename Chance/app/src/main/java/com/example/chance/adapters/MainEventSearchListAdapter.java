@@ -16,15 +16,20 @@ import com.example.chance.controller.DataStoreManager;
 import com.example.chance.model.Event;
 
 
-
 /**
- * Adapter for displaying Event cards in RecyclerView.
- * Used in activity_event_list.xml and event_card.xml layout.
+ * Adapter for displaying Event cards in the main search RecyclerView.
+ * Uses _r_event_pill layout for individual items.
  */
 public class MainEventSearchListAdapter extends ListAdapter<Event, MainEventSearchListAdapter.EventViewHolder> {
 
+    /**
+     * DiffUtil callback to efficiently determine updates between list versions.
+     */
     public static final DiffUtil.ItemCallback<Event> DIFF_CALLBACK =
             new DiffUtil.ItemCallback<Event>() {
+                /**
+                 * Checks if two items are the same entity based on ID.
+                 */
                 @Override
                 public boolean areItemsTheSame(@NonNull Event oldItem, @NonNull Event newItem) {
                     // Compare unique IDs if available
@@ -34,6 +39,9 @@ public class MainEventSearchListAdapter extends ListAdapter<Event, MainEventSear
                     return oldItem == newItem;
                 }
 
+                /**
+                 * Checks if the visual content of two items matches.
+                 */
                 @Override
                 public boolean areContentsTheSame(@NonNull Event oldItem, @NonNull Event newItem) {
                     // Compare relevant fields for UI. Adjust as your model evolves.
@@ -44,10 +52,16 @@ public class MainEventSearchListAdapter extends ListAdapter<Event, MainEventSear
                 }
             };
 
+    /**
+     * Constructor initializing the adapter with the Diff callback.
+     */
     public MainEventSearchListAdapter() {
         super(DIFF_CALLBACK);
     }
 
+    /**
+     * Inflates the item layout and returns a new ViewHolder.
+     */
     @NonNull
     @Override
     public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -57,6 +71,9 @@ public class MainEventSearchListAdapter extends ListAdapter<Event, MainEventSear
         return new EventViewHolder(eventPillView);
     }
 
+    /**
+     * Binds the event data to the view elements for the specific position.
+     */
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         Event event = getItem(position);
@@ -70,11 +87,17 @@ public class MainEventSearchListAdapter extends ListAdapter<Event, MainEventSear
         }, __ -> {});
         holder.itemView.setTag(event.getID());
     }
-    
+
+    /**
+     * ViewHolder class to cache view references.
+     */
     public static class EventViewHolder extends RecyclerView.ViewHolder {
         TextView title, description;
         ImageView banner;
 
+        /**
+         * Constructor to find and assign UI components.
+         */
         public EventViewHolder(@NonNull View eventPillView) {
             super(eventPillView);
             title = eventPillView.findViewById(R.id.event_title);

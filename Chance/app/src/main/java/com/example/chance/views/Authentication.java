@@ -23,10 +23,16 @@ import com.example.chance.views.base.ChanceFragment;
 
 import java.util.Objects;
 
+/**
+ * Fragment managing user login and sign-up processes.
+ */
 public class Authentication extends ChanceFragment {
 
     private AuthenticationBinding binding;
 
+    /**
+     * Inflates the authentication screen layout.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -36,6 +42,9 @@ public class Authentication extends ChanceFragment {
         return binding.getRoot();
     }
 
+    /**
+     * Sets up click listeners for sign-up and login buttons to handle user credentials.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -49,17 +58,20 @@ public class Authentication extends ChanceFragment {
             });
         });
 
-         binding.loginButton.setOnClickListener(v -> {
-             // first we grab the credentials
-             String username = binding.username.getText();
-             String password = binding.password.getText();
-             dsm.authenticateUser(username, password, this::userAuthenticated,(e)->{
-                 binding.errorMessage.setVisibility(VISIBLE);
-                 binding.errorMessage.setText("There was a problem loggin in");
-             });
-         });
+        binding.loginButton.setOnClickListener(v -> {
+            // first we grab the credentials
+            String username = binding.username.getText();
+            String password = binding.password.getText();
+            dsm.authenticateUser(username, password, this::userAuthenticated,(e)->{
+                binding.errorMessage.setVisibility(VISIBLE);
+                binding.errorMessage.setText("There was a problem loggin in");
+            });
+        });
     }
 
+    /**
+     * Handles successful authentication by updating state and navigating to the Home screen.
+     */
     private void userAuthenticated(User user) {
         Bundle bundle = new Bundle();
         bundle.putBoolean("addToBackStack", false);
@@ -68,6 +80,9 @@ public class Authentication extends ChanceFragment {
         cvm.setLoadMainUI(true);
     }
 
+    /**
+     * Cleans up binding references when the view is destroyed.
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
