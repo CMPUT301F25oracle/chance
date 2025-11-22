@@ -39,12 +39,19 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Fragment that handles the creation of new events.
+ * Manages user input, image selection, and data submission.
+ */
 public class CreateEvent extends ChanceFragment {
 
     private CreateEventBinding binding;
     private ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
     private EventImage selectedEventBanner;
 
+    /**
+     * Inflates the layout and initializes the media picker result launcher.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -75,6 +82,9 @@ public class CreateEvent extends ChanceFragment {
         return binding.getRoot();
     }
 
+    /**
+     * Sets up UI listeners to capture event details and submit the new event.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -112,11 +122,14 @@ public class CreateEvent extends ChanceFragment {
                     } else {
                         cvm.setNewFragment(Home.class, null, "");
                     }
-                    }, (__)->{});
+                }, (__)->{});
             });
         });
     }
 
+    /**
+     * Launches the system photo picker for the user to select an event banner.
+     */
     public void promptImageFromUser() {
         String mimeType = "image/gif";
         pickMedia.launch(new PickVisualMediaRequest.Builder()
@@ -124,6 +137,9 @@ public class CreateEvent extends ChanceFragment {
                 .build());
     }
 
+    /**
+     * Utility method to convert an InputStream into a PNG byte array.
+     */
     public byte[] inputStreamToPNGByteArray(InputStream inputStream) throws IOException {
         Bitmap imageBitmap = BitmapFactory.decodeStream(inputStream);
         ByteArrayOutputStream pngImageStream = new ByteArrayOutputStream();
@@ -131,6 +147,9 @@ public class CreateEvent extends ChanceFragment {
         return pngImageStream.toByteArray();
     }
 
+    /**
+     * Cleans up view binding when the fragment is destroyed.
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
