@@ -452,6 +452,7 @@ import androidx.annotation.Nullable;
 
 import com.example.chance.model.Event;
 import com.example.chance.model.EventImage;
+import com.example.chance.model.Notification;
 import com.example.chance.model.User;
 import com.example.chance.util.Tuple3;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -492,6 +493,7 @@ public class DataStoreManager {
 
     private final String PSEUDO_EMAIL = "@authentication.chance";
     private final String USER_COLLECTION = "users";
+    private final String NOTIFICATION_COLLECTION = "notifications";
     private final String EVENT_COLLECTION = "events";
     private final String EVENT_IMAGE_COLLECTION = "event_image";
 
@@ -873,12 +875,55 @@ public class DataStoreManager {
         }, (e)->{});
     }
 
-    public __event event(Event target_event) {
-        return new __event(target_event);
-    }
-
     public void removeEvent(Event event, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
         db.deleteDocument("events", event.getID(), onSuccess, onFailure);
+    }
+
+    public __user user(User target_user) {
+        return new __user(target_user);
+    }
+
+
+    public class __user {
+        User user;
+        __user(User user) {
+            this.user = user;
+        }
+
+        public Observable<Tuple3<Notification, DocumentChange.Type, Void>> observeNotifications() {
+            return Observable.create(emitter -> {
+                fStore.collection(NOTIFICATION_COLLECTION)
+                    .collection(user.getID())
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
+                            if (error != null) {
+                                return;
+                            }
+                            for (DocumentChange documentChange : snapshots.getDocumentChanges()) {
+                                DocumentSnapshot document = documentChange.getDocument();
+                                Notification notification = document.toObject(Notification.class);
+                                emitter.onNext(new Tuple3(notification, documentChange.getType(), null));
+                            }
+                        }
+                    });
+            });
+        }
+
+        public void postNotification(Notification notification, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+            fStore.collection(NOTIFICATION_COLLECTION)
+                .collection(user.getID())
+                    .add(notification)
+                    .addOnSuccessListener(document -> {
+                        notification.setID(document.getId());
+                        onSuccess.onSuccess(null);
+                    })
+                    .addOnFailureListener(onFailure);
+        }
+    }
+
+    public __event event(Event target_event) {
+        return new __event(target_event);
     }
 
     public class __event {

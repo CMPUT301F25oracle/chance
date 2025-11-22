@@ -3,6 +3,7 @@ package com.example.chance.views;
 import static android.view.View.VISIBLE;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.chance.adapters.MainEventSearchListAdapter;
 import com.example.chance.databinding.HomeBinding;
 import com.example.chance.model.Event;
+import com.example.chance.model.Notification;
 import com.example.chance.views.admin.Admin;
 import com.example.chance.views.base.ChanceFragment;
 import com.google.android.flexbox.AlignItems;
@@ -24,6 +26,7 @@ import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -57,6 +60,9 @@ public class Home extends ChanceFragment {
             }
             // Update UI once we have a user
             binding.homeSystemMessage.setText("Hello, " + user.getUsername());
+            dsm.user(user).postNotification(new Notification("asdda", 1, "adaads", new Date(), new byte[0]), v -> {
+                Log.d("Notification", "Notification posted successfully.");
+            },e -> {});
 
             //region: admin tools
 
@@ -136,8 +142,6 @@ public class Home extends ChanceFragment {
                                     .just(ev)
                                     .delay(50, java.util.concurrent.TimeUnit.MILLISECONDS)
                     )
-
-                    //.subscribeOn(io.reactivex.rxjava3.schedulers.Schedulers.computation())
                     .observeOn(io.reactivex.rxjava3.android.schedulers.AndroidSchedulers.mainThread())
                     .subscribe(event -> {
                         if ((leftIdx.get() + rightIdx.get()) % 2 == 0) {
