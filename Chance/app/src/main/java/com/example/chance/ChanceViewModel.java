@@ -24,7 +24,7 @@ public class ChanceViewModel extends ViewModel {
     private final MutableLiveData<User> authenticationSuccess = new MutableLiveData<>();
     private final MutableLiveData<Boolean> navBarVisible = new MutableLiveData<>();
     private final MutableLiveData<Tuple3<Class<? extends ChanceFragment>, Bundle, String>> newFragment = new MutableLiveData<>();
-    private final MutableLiveData<Tuple3<Class<? extends ChancePopup>, Bundle, Void>> newPopup = new MutableLiveData<>();
+    private final MutableLiveData<Tuple3<Class<? extends ChanceFragment>, Bundle, Void>> newPopup = new MutableLiveData<>();
     private final MutableLiveData<String> newBannerMessage = new MutableLiveData<>();
     private final MutableLiveData<String> requestedEventID = new MutableLiveData<>();
     private final MutableLiveData<List<Event>> events = new MutableLiveData<>(new ArrayList<>());
@@ -130,11 +130,11 @@ public class ChanceViewModel extends ViewModel {
         authenticationSuccess.postValue(user);
     }
 
-    public MutableLiveData<Tuple3<Class<? extends ChancePopup>, Bundle, Void>> getNewPopup() {
+    public MutableLiveData<Tuple3<Class<? extends ChanceFragment>, Bundle, Void>> getNewPopup() {
         return newPopup;
     }
 
-    public void setNewPopup(Class<? extends ChancePopup> popup, Bundle bundle) {
+    public void setNewPopup(Class<? extends ChanceFragment> popup, Bundle bundle) {
         newPopup.postValue(new Tuple3<>(popup, bundle, null));
     }
 

@@ -71,11 +71,11 @@ public class Home extends ChanceFragment {
             }
             // Update UI once we have a user
             binding.homeSystemMessage.setText("Hello, " + user.getUsername());
-            dsm.user(user).postNotification(new Notification("asdda", 1, "adaads", new Date(), Blob.fromBytes(new byte[0])),v -> {
-                Log.d("Notification", "Notification posted successfully.");
-            },e -> {
-                throw new RuntimeException(e);
-            });
+//            dsm.user(user).postNotification(new Notification("asdda", 1, "adaads", new Date(), Blob.fromBytes(new byte[0])),v -> {
+//                Log.d("Notification", "Notification posted successfully.");
+//            },e -> {
+//                throw new RuntimeException(e);
+//            });
 
             //region: admin tools
 
