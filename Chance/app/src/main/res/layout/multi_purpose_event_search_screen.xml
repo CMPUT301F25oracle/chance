@@ -34,22 +34,12 @@
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
         android:background="@drawable/box_rounded_corners"
-        android:backgroundTint="@color/white">
+        android:backgroundTint="@color/white"
+        android:clipChildren="true"
+        android:clipToOutline="true">
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/events_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:backgroundTint="@color/white">
-        </androidx.recyclerview.widget.RecyclerView>
-            <!--        <com.google.android.flexbox.FlexboxLayout-->
-            <!--            android:id="@+id/events_container"-->
-            <!--            android:layout_width="match_parent"-->
-            <!--            android:layout_height="match_parent"-->
-            <!--            android:background="@drawable/box_rounded_corners"-->
-            <!--            android:backgroundTint="@color/white"-->
-            <!--            app:flexDirection="column">-->
-            <!--            <include layout="@layout/multi_purpose_event_search_screen_event_pill"/>-->
-
-            <!--        </com.google.android.flexbox.FlexboxLayout>-->
+            android:layout_height="match_parent"/>
     </LinearLayout>
 </com.google.android.flexbox.FlexboxLayout>

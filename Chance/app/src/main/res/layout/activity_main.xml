@@ -35,6 +35,21 @@
                 android:elevation="20dp"
                 android:outlineProvider="bounds"/>
         </FrameLayout>
+        <FrameLayout
+            android:id="@+id/banner_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/box_rounded_corners"
+            android:backgroundTint="@color/white"
+            android:layout_marginTop="5dp"
+            android:paddingHorizontal="5dp">
+            <TextView
+                android:id="@+id/banner_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Some text here"/>
+        </FrameLayout>
     </FrameLayout>
 
 

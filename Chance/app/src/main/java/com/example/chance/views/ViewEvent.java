@@ -141,6 +141,7 @@ public class ViewEvent extends ChanceFragment {
                 Bundle bundle = new Bundle();
                 bundle.putBoolean("addToBackStack", false);
                 cvm.setNewFragment(Home.class, bundle, "fade");
+                cvm.setBannerMessage("Event removed successfully.");
             }, failure -> {
                 Toast.makeText(requireContext(), "Failed to remove event.", Toast.LENGTH_SHORT).show();
             });

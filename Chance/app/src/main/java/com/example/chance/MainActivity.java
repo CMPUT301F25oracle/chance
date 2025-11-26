@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         binding.popupContainer.setVisibility(GONE);
+        binding.bannerContainer.setVisibility(GONE);
         binding.popupContainer.setOnClickListener(v -> {
             binding.popupContainer.setVisibility(GONE);
         });
@@ -83,6 +84,17 @@ public class MainActivity extends AppCompatActivity {
 
         chanceViewModel.getNewFragment().observe(this, this::getNewFragmentCallback);
         chanceViewModel.getNewPopup().observe(this, this::getNewPopupCallback);
+        chanceViewModel.getBannerMessage().observe(this, message -> {
+            binding.bannerMessage.setText(message);
+            binding.bannerContainer.setVisibility(VISIBLE);
+            Runnable hideBannerRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    binding.bannerContainer.setVisibility(GONE);
+                }
+            };
+            binding.getRoot().postDelayed(hideBannerRunnable, 3000);
+        });
 
         titleBar.findViewById(R.id.notification_button).setOnClickListener(v -> {
             chanceViewModel.setNewPopup(NotificationPopup.class, null);
