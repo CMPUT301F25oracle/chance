@@ -1,4 +1,3 @@
-
 package com.example.chance;
 
 import static android.view.View.GONE;
