@@ -1,4 +1,4 @@
-package com.example.chance.views;
+package com.example.chance.views.viewevent;
 
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
@@ -24,11 +24,15 @@ import com.example.chance.controller.QRCodeHandler;
 import com.example.chance.databinding.ViewEventBinding;
 import com.example.chance.model.Event;
 import com.example.chance.model.User;
+import com.example.chance.views.Home;
+import com.example.chance.views.QRCodePopup;
 import com.example.chance.views.base.ChanceFragment;
+import com.example.chance.views.base.MultiPurposeProfileSearchScreen;
 import com.google.zxing.WriterException;
 
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -149,6 +153,13 @@ public class ViewEvent extends ChanceFragment {
 
         binding.drawEntrantsButton.setOnClickListener(__ -> {
             dsm.event(event).drawEntrants();
+        });
+
+        binding.viewFinalEntrantsButton.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            ArrayList<String> waitingUsersArrayList = new ArrayList<String>(event.getWaitingList());
+            bundle.putStringArrayList("users", waitingUsersArrayList);
+            cvm.setNewPopup(MultiPurposeProfileSearchScreen.class, bundle);
         });
     }
 

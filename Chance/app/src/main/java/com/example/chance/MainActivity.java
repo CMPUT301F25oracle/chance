@@ -25,7 +25,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.chance.databinding.ActivityMainBinding;
 import com.example.chance.views.QrcodeScanner;
 import com.example.chance.views.SplashScreen;
-import com.example.chance.views.ViewEvent;
+import com.example.chance.views.viewevent.ViewEvent;
 import com.example.chance.views.base.ChanceFragment;
 import com.example.chance.views.base.ChancePopup;
 import com.google.firebase.firestore.DocumentChange;
@@ -212,13 +212,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void getNewPopupCallback(Tuple3<Class<? extends ChancePopup>, Bundle, Void> popupData) {
-        Class<? extends ChancePopup> popupClass = popupData.x;
+    public void getNewPopupCallback(Tuple3<Class<? extends ChanceFragment>, Bundle, Void> popupData) {
+        Class<? extends ChanceFragment> popupClass = popupData.x;
         Bundle bundle = popupData.y;
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         try {
-            ChancePopup popup = popupClass.newInstance();
+            ChanceFragment popup = popupClass.newInstance();
             popup.meta = bundle;
             transaction.replace(R.id.popup_view, popup);
             transaction.commit();

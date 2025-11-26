@@ -143,6 +143,7 @@
                         android:textColor="@color/white"
                         />
                     <Button
+                        android:id="@+id/view_final_entrants_button"
                         android:layout_marginLeft="27dp"
                         android:layout_width="350dp"
                         android:layout_height="40dp"

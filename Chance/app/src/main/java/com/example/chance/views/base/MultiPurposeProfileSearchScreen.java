@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import io.reactivex.rxjava3.disposables.Disposable;
 
-abstract public class MultiPurposeProfileSearchScreen extends ChanceFragment {
+public class MultiPurposeProfileSearchScreen extends ChanceFragment {
     private MultiPurposeProfileSearchScreenBinding binding;
     List<User> profileList = new ArrayList<>();
     private MultiPurposeProfileSearchScreenListAdapter profileAdapter;
@@ -82,6 +82,15 @@ abstract public class MultiPurposeProfileSearchScreen extends ChanceFragment {
                 return false;
             }
         });
+
+        List<String> userIDS = meta.getStringArrayList("users");
+        if (userIDS != null) {
+            dsm.getAllUsers(users -> {
+                List<User> filteredUsers =  users.stream().filter(user->userIDS.contains(user.getID())).toList();
+                submitList(filteredUsers);
+            }, e->{});
+        }
+
     }
 
     public void submitList(List<User> users) {
