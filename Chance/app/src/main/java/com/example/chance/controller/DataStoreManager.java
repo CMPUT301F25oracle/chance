@@ -981,6 +981,10 @@ public class DataStoreManager {
                         .update("waitingList", FieldValue.arrayRemove(invitation));
             }
         }
+
+        public void removeUnregisteredEntrants() {
+
+        }
     }
 
     public __eventImage eventImage(EventImage target_event_image) {

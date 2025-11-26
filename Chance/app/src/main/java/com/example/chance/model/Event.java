@@ -143,8 +143,11 @@ public class Event {
     }
 
     public void addToWaitingList(String userId) {
-        if (!waitingList.contains(userId)) {
+        if (!waitingList.contains(userId) && waitingList.size() < maxInvited) {
             waitingList.add(userId);
+        }
+        else {
+            System.out.println("Max capacity reached for this event");
         }
     }
 

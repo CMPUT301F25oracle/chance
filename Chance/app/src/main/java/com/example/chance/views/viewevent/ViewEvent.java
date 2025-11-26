@@ -182,6 +182,10 @@ public class ViewEvent extends ChanceFragment {
             dsm.event(event).drawEntrants();
         });
 
+        binding.drawReplacementButton.setOnClickListener(__ -> {
+            dsm.event(event).drawEntrants();
+        });
+
         binding.viewFinalEntrantsButton.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
             ArrayList<String> waitingUsersArrayList = new ArrayList<String>(event.getWaitingList());
@@ -205,6 +209,11 @@ public class ViewEvent extends ChanceFragment {
                 Toast.makeText(getContext(), "Failed to get user data for export.", Toast.LENGTH_SHORT).show();
                 Log.e("ViewEvent", "Failed to fetch all users for CSV export.", e);
             });
+        });
+
+        // We will implement this method after accept/reject button is implemented
+        binding.removeUnregisteredEntrantsButton.setOnClickListener(v -> {
+
         });
     }
 
