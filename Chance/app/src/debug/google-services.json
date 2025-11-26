@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "770515606751",
+    "project_id": "chance-new",
+    "storage_bucket": "chance-new.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:770515606751:android:49f4b9b56bf6b60df4dd6a",
+        "android_client_info": {
+          "package_name": "com.example.chance"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQDbS9xTPpX9K7XherA1FljmqwQX1u-_s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
