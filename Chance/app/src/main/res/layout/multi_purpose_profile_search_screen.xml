@@ -14,7 +14,7 @@
         android:gravity="center_vertical"
         app:layout_flexShrink="0">
         <com.example.chance.customviews.ChanceTextInput
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             app:icon="@drawable/search_icon"
@@ -34,30 +34,12 @@
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
         android:background="@drawable/box_rounded_corners"
-        android:backgroundTint="@color/white">
+        android:backgroundTint="@color/white"
+        android:clipChildren="true"
+        android:clipToOutline="true">
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/profiles_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:backgroundTint="@color/white">
-        </androidx.recyclerview.widget.RecyclerView>
+            android:layout_height="match_parent"/>
     </LinearLayout>
-
-<!--    <ScrollView-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:layout_marginTop="@dimen/chance_margin"-->
-<!--        android:background="@drawable/box_rounded_corners"-->
-<!--        android:backgroundTint="@color/white"-->
-<!--        android:fillViewport="false">-->
-<!--        <com.google.android.flexbox.FlexboxLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:background="@drawable/box_rounded_corners"-->
-<!--            android:backgroundTint="@color/white"-->
-<!--            app:flexDirection="column">-->
-<!--            <include layout="@layout/multi_purpose_profile_search_screen_profile_pill"/>-->
-
-<!--        </com.google.android.flexbox.FlexboxLayout>-->
-<!--    </ScrollView>-->
 </com.google.android.flexbox.FlexboxLayout>

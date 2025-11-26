@@ -15,6 +15,7 @@ import com.example.chance.util.Tuple3;
 import com.example.chance.views.base.ChanceFragment;
 import com.example.chance.views.base.ChancePopup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -23,13 +24,15 @@ public class ChanceViewModel extends ViewModel {
     private final MutableLiveData<User> authenticationSuccess = new MutableLiveData<>();
     private final MutableLiveData<Boolean> navBarVisible = new MutableLiveData<>();
     private final MutableLiveData<Tuple3<Class<? extends ChanceFragment>, Bundle, String>> newFragment = new MutableLiveData<>();
-    private final MutableLiveData<Tuple3<Class<? extends ChancePopup>, Bundle, Void>> newPopup = new MutableLiveData<>();
+    private final MutableLiveData<Tuple3<Class<? extends ChanceFragment>, Bundle, Void>> newPopup = new MutableLiveData<>();
+    private final MutableLiveData<String> newBannerMessage = new MutableLiveData<>();
     private final MutableLiveData<String> requestedEventID = new MutableLiveData<>();
-    private final MutableLiveData<List<Event>> events = new MutableLiveData<>();
+    private final MutableLiveData<List<Event>> events = new MutableLiveData<>(new ArrayList<>());
 
 
     /**
      * gets the current user
+     *
      * @return current user
      */
     public LiveData<User> getCurrentUser() {
@@ -38,6 +41,7 @@ public class ChanceViewModel extends ViewModel {
 
     /**
      * sets the current user
+     *
      * @param user
      */
     public void setCurrentUser(User user) {
@@ -46,6 +50,7 @@ public class ChanceViewModel extends ViewModel {
 
     /**
      * gets if the main UI should be loaded
+     *
      * @return
      */
     public LiveData<Boolean> getLoadMainUI() {
@@ -54,6 +59,7 @@ public class ChanceViewModel extends ViewModel {
 
     /**
      * sets if the main UI should be loaded
+     *
      * @param visible
      */
     public void setLoadMainUI(boolean visible) {
@@ -62,6 +68,7 @@ public class ChanceViewModel extends ViewModel {
 
     /**
      * gets the new fragment to be loaded
+     *
      * @return
      */
     public MutableLiveData<Tuple3<Class<? extends ChanceFragment>, Bundle, String>> getNewFragment() {
@@ -70,6 +77,7 @@ public class ChanceViewModel extends ViewModel {
 
     /**
      * sets the new fragment to be loaded
+     *
      * @param fragment
      * @param bundle
      */
@@ -79,6 +87,7 @@ public class ChanceViewModel extends ViewModel {
 
     /**
      * gets the list of all events
+     *
      * @return list of events
      */
     public LiveData<List<Event>> getEvents() {
@@ -87,10 +96,21 @@ public class ChanceViewModel extends ViewModel {
 
     /**
      * sets the list of all events
+     *
      * @param events
      */
     public void setEvents(List<Event> events) {
         this.events.postValue(events);
+    }
+
+    public void addEvent(Event event) {
+        events.getValue().add(event);
+        events.postValue(events.getValue());
+    }
+
+    public void removeEvent(Event event) {
+        events.getValue().remove(event);
+        events.postValue(events.getValue());
     }
 
     public void requestOpenEvent(String eventID) {
@@ -104,6 +124,7 @@ public class ChanceViewModel extends ViewModel {
 
     /**
      * gets if the user authentication was successful
+     *
      * @return
      */
     public LiveData<User> getAuthenticationSuccess() {
@@ -112,17 +133,26 @@ public class ChanceViewModel extends ViewModel {
 
     /**
      * sets if the user authentication was successful
+     *
      * @param user
      */
     public void setAuthenticationSuccess(User user) {
         authenticationSuccess.postValue(user);
     }
 
-    public MutableLiveData<Tuple3<Class<? extends ChancePopup>, Bundle, Void>> getNewPopup() {
+    public MutableLiveData<Tuple3<Class<? extends ChanceFragment>, Bundle, Void>> getNewPopup() {
         return newPopup;
     }
 
-    public void setNewPopup(Class<? extends ChancePopup> popup, Bundle bundle) {
+    public void setNewPopup(Class<? extends ChanceFragment> popup, Bundle bundle) {
         newPopup.postValue(new Tuple3<>(popup, bundle, null));
+    }
+
+    public MutableLiveData<String> getBannerMessage() {
+        return newBannerMessage;
+    }
+
+    public void setBannerMessage(String message) {
+        newBannerMessage.postValue(message);
     }
 }

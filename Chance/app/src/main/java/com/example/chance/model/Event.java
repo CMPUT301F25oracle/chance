@@ -6,6 +6,8 @@ import com.google.firebase.firestore.IgnoreExtraProperties;
 
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -136,13 +138,16 @@ public class Event {
     public List<String> getInvitationList() {
         return invitationList;
     }
-    public void setInvitationList(ArrayList<String> invitationList) {
+    public void setInvitationList(List<String> invitationList) {
         this.invitationList = invitationList;
     }
 
     public void addToWaitingList(String userId) {
-        if (!waitingList.contains(userId)) {
+        if (!waitingList.contains(userId) && waitingList.size() < maxInvited) {
             waitingList.add(userId);
+        }
+        else {
+            System.out.println("Max capacity reached for this event");
         }
     }
 
@@ -164,11 +169,9 @@ public class Event {
 
     public void pollForInvitation() {
         int i = 0;
-        List<String> waitingList = this.getWaitingList();
-        while (i < invitationList.size()) {
-            int j = (int)Math.random()*(invitationList.size() - 1);
-            invitationList.add(waitingList.get(j));
-            waitingList.remove(j);
+        Collections.shuffle(waitingList);
+        while (i < this.getMaxInvited() && i < this.getCapacity() && !waitingList.isEmpty()) {
+            invitationList.add(waitingList.removeLast());
             i++;
         }
     }
@@ -180,6 +183,5 @@ public class Event {
     public void setMaxInvited(int maxInvited) {
         this.maxInvited = maxInvited;
     }
-
 
 }

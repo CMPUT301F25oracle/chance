@@ -48,6 +48,10 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
     implementation("com.google.firebase:firebase-auth")
     //endregion
+
+    // Add this line for location services
+    implementation("com.google.android.gms:play-services-location:21.3.0")
+
     //region: ui dependencies
     implementation("com.google.android.flexbox:flexbox:3.0.0")
     //endregion
@@ -79,6 +83,7 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:5.0.5")
     implementation("io.reactivex.rxjava3:rxandroid:3.0.2")
     implementation("io.reactivex.rxjava3:rxjava:3.1.5")
+
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)
@@ -94,6 +99,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    androidTestImplementation("androidx.test.uiautomator:uiautomator:2.4.0-alpha05")
 }
 
 tasks.withType<JavaCompile> {

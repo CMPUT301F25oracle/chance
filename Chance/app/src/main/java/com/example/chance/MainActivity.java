@@ -1,4 +1,3 @@
-
 package com.example.chance;
 
 import static android.view.View.GONE;
@@ -6,6 +5,7 @@ import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
 import android.animation.Animator;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -25,9 +25,10 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.chance.databinding.ActivityMainBinding;
 import com.example.chance.views.QrcodeScanner;
 import com.example.chance.views.SplashScreen;
-import com.example.chance.views.ViewEvent;
+import com.example.chance.views.viewevent.ViewEvent;
 import com.example.chance.views.base.ChanceFragment;
 import com.example.chance.views.base.ChancePopup;
+import com.google.firebase.firestore.DocumentChange;
 import com.example.chance.views.NotificationPopup;
 
 import java.util.ArrayList;
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         binding.popupContainer.setVisibility(GONE);
+        binding.bannerContainer.setVisibility(GONE);
         binding.popupContainer.setOnClickListener(v -> {
             binding.popupContainer.setVisibility(GONE);
         });
@@ -68,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         chanceViewModel.setNewFragment(SplashScreen.class, null, "none");
 
         View navbar = binding.getRoot().findViewById(R.id.nav_bar);
+        View titleBar = binding.getRoot().findViewById(R.id.title_bar);
         navbar.findViewById(R.id.navbar_home_button).setOnClickListener((v) -> {
             chanceViewModel.setNewFragment(Home.class, null, "fade");
         });
@@ -80,7 +83,21 @@ public class MainActivity extends AppCompatActivity {
 
         chanceViewModel.getNewFragment().observe(this, this::getNewFragmentCallback);
         chanceViewModel.getNewPopup().observe(this, this::getNewPopupCallback);
-        chanceViewModel.setNewPopup(NotificationPopup.class, null);
+        chanceViewModel.getBannerMessage().observe(this, message -> {
+            binding.bannerMessage.setText(message);
+            binding.bannerContainer.setVisibility(VISIBLE);
+            Runnable hideBannerRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    binding.bannerContainer.setVisibility(GONE);
+                }
+            };
+            binding.getRoot().postDelayed(hideBannerRunnable, 3000);
+        });
+
+        titleBar.findViewById(R.id.notification_button).setOnClickListener(v -> {
+            chanceViewModel.setNewPopup(NotificationPopup.class, null);
+        });
 
         OnBackPressedCallback backCallback = new OnBackPressedCallback(true) {
             @Override
@@ -138,12 +155,29 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @SuppressLint("CheckResult")
     private void initializeDatabasePolling() {
+        // note we don't need to dispose of this subscriber since its runs
+        // throughout the apps lifetime
         dataStoreManager.observeEventsCollection()
             .observeOn(io.reactivex.rxjava3.android.schedulers.AndroidSchedulers.mainThread())
-            .subscribe(event -> {
+            .subscribe(eventChangeTuple -> {
+                Event event = eventChangeTuple.x;
+                DocumentChange.Type changeType = eventChangeTuple.y;
 
-            });
+                switch (changeType) {
+                    case ADDED: {
+                        chanceViewModel.addEvent(event);
+                        break;
+                    }
+                    case REMOVED: {
+                        chanceViewModel.removeEvent(event);
+                        break;
+                    }
+
+                }
+                Log.d("Event", "Event: " + event.toString());
+            }, e -> {throw new RuntimeException(e);});
     }
 
     private void getNewFragmentCallback(Tuple3<Class<? extends ChanceFragment>, Bundle, String> fragmentData) {
@@ -178,13 +212,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void getNewPopupCallback(Tuple3<Class<? extends ChancePopup>, Bundle, Void> popupData) {
-        Class<? extends ChancePopup> popupClass = popupData.x;
+    public void getNewPopupCallback(Tuple3<Class<? extends ChanceFragment>, Bundle, Void> popupData) {
+        Class<? extends ChanceFragment> popupClass = popupData.x;
         Bundle bundle = popupData.y;
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         try {
-            ChancePopup popup = popupClass.newInstance();
+            ChanceFragment popup = popupClass.newInstance();
             popup.meta = bundle;
             transaction.replace(R.id.popup_view, popup);
             transaction.commit();

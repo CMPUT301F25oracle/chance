@@ -18,9 +18,16 @@ import com.example.chance.databinding.SplashScreenBinding;
 import com.example.chance.model.User;
 import com.example.chance.views.base.ChanceFragment;
 
+/**
+ * Initial entry point fragment.
+ * Routes the user to Home or Authentication based on login status.
+ */
 public class SplashScreen extends ChanceFragment {
     private SplashScreenBinding binding;
 
+    /**
+     * Inflates the splash screen layout using ViewBinding.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -30,6 +37,9 @@ public class SplashScreen extends ChanceFragment {
         return binding.getRoot();
     }
 
+    /**
+     * Checks authentication status and navigates to Home or Authentication accordingly.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -49,6 +59,9 @@ public class SplashScreen extends ChanceFragment {
         }
     }
 
+    /**
+     * Cleans up view binding when the fragment is destroyed.
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();

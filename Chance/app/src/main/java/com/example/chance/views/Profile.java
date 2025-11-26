@@ -25,9 +25,16 @@ import com.example.chance.views.Authentication;
 import java.util.Objects;
 
 
+/**
+ * Fragment for managing user profile details.
+ * Handles viewing, updating, and deleting account information.
+ */
 public class Profile extends ChanceFragment {
     private ProfileBinding binding;
 
+    /**
+     * Inflates the profile layout using ViewBinding.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -37,6 +44,9 @@ public class Profile extends ChanceFragment {
         return binding.getRoot();
     }
 
+    /**
+     * Initializes UI with current user data and sets up listeners for saving, logging out, and deleting the account.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -79,6 +89,9 @@ public class Profile extends ChanceFragment {
         });
     }
 
+    /**
+     * Logs the user out, clears session state, and navigates back to the authentication screen.
+     */
     public void logoutUser() {
         Bundle bundle = new Bundle();
         bundle.putBoolean("addToBackStack", false);
@@ -87,6 +100,9 @@ public class Profile extends ChanceFragment {
         cvm.setNewFragment(Authentication.class, bundle, "circular:300");
     }
 
+    /**
+     * Cleans up view binding references when the fragment is destroyed.
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();

@@ -3,6 +3,7 @@ package com.example.chance.views;
 import static android.view.View.VISIBLE;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.chance.adapters.MainEventSearchListAdapter;
 import com.example.chance.databinding.HomeBinding;
 import com.example.chance.model.Event;
+import com.example.chance.model.Notification;
 import com.example.chance.views.admin.Admin;
 import com.example.chance.views.base.ChanceFragment;
 import com.google.android.flexbox.AlignItems;
@@ -22,20 +24,29 @@ import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexWrap;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
+import com.google.firebase.firestore.Blob;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.reactivex.rxjava3.disposables.Disposable;
 
+/**
+ * Fragment representing the main Home dashboard.
+ * Displays a staggered feed of events and provides navigation to core features.
+ */
 public class Home extends ChanceFragment {
 
     private HomeBinding binding;
     // defined here to later clean up the observer
     private Disposable eventsDisposable;
 
+    /**
+     * Inflates the Home layout using ViewBinding.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -45,6 +56,9 @@ public class Home extends ChanceFragment {
         return binding.getRoot();
     }
 
+    /**
+     * Initializes the UI, sets up Flexbox layouts for the event feed, and handles data observation.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -57,6 +71,11 @@ public class Home extends ChanceFragment {
             }
             // Update UI once we have a user
             binding.homeSystemMessage.setText("Hello, " + user.getUsername());
+//            dsm.user(user).postNotification(new Notification("asdda", 1, "adaads", new Date(), Blob.fromBytes(new byte[0])),v -> {
+//                Log.d("Notification", "Notification posted successfully.");
+//            },e -> {
+//                throw new RuntimeException(e);
+//            });
 
             //region: admin tools
 
@@ -71,6 +90,7 @@ public class Home extends ChanceFragment {
 
         });
 
+        // Setup navigation listeners
         binding.buttonRegistered.setOnClickListener(__ -> {
             cvm.setNewFragment(RegisteredEvents.class, null, "fade");
         });
@@ -80,7 +100,7 @@ public class Home extends ChanceFragment {
         binding.buttonCreateEvent.setOnClickListener(__ -> {
             cvm.setNewFragment(CreateEvent.class, null, "fade");
         });
-        
+
         // now we set up our event adapter
         RecyclerView eventsContainerLeft = binding.eventsContainerLeft;
         RecyclerView eventsContainerRight = binding.eventsContainerRight;
@@ -122,7 +142,15 @@ public class Home extends ChanceFragment {
 
         AtomicInteger leftIdx = new AtomicInteger();
         AtomicInteger rightIdx = new AtomicInteger();
+
+        // RxJava stream to populate the left and right columns with a stagger effect
         cvm.getEvents().observe(getViewLifecycleOwner(), events -> {
+            leftEventList.clear();
+            rightEventList.clear();
+            leftIdx.set(0);
+            rightIdx.set(0);
+            eventsAdapterLeft.notifyDataSetChanged();
+            eventsAdapterRight.notifyDataSetChanged();
             eventsDisposable = io.reactivex.rxjava3.core.Observable
                     .fromIterable(events)
                     .concatMap(ev ->
@@ -130,8 +158,6 @@ public class Home extends ChanceFragment {
                                     .just(ev)
                                     .delay(50, java.util.concurrent.TimeUnit.MILLISECONDS)
                     )
-
-                    //.subscribeOn(io.reactivex.rxjava3.schedulers.Schedulers.computation())
                     .observeOn(io.reactivex.rxjava3.android.schedulers.AndroidSchedulers.mainThread())
                     .subscribe(event -> {
                         if ((leftIdx.get() + rightIdx.get()) % 2 == 0) {
@@ -157,6 +183,7 @@ public class Home extends ChanceFragment {
 //            }
 //        });
 
+        // Touch listener for the left column to handle event clicks
         eventsContainerLeft.addOnItemTouchListener(new androidx.recyclerview.widget.RecyclerView.SimpleOnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(@NonNull RecyclerView viewManager, @NonNull MotionEvent touchEvent) {
@@ -174,6 +201,7 @@ public class Home extends ChanceFragment {
             }
         });
 
+        // Touch listener for the right column to handle event clicks
         eventsContainerRight.addOnItemTouchListener(new androidx.recyclerview.widget.RecyclerView.SimpleOnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(@NonNull RecyclerView viewManager, @NonNull MotionEvent touchEvent) {
@@ -192,6 +220,9 @@ public class Home extends ChanceFragment {
         });
     }
 
+    /**
+     * Cleans up RxJava disposables and view bindings when view is destroyed.
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
