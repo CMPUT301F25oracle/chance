@@ -32,6 +32,7 @@ public class ChanceViewModel extends ViewModel {
 
     /**
      * gets the current user
+     *
      * @return current user
      */
     public LiveData<User> getCurrentUser() {
@@ -40,6 +41,7 @@ public class ChanceViewModel extends ViewModel {
 
     /**
      * sets the current user
+     *
      * @param user
      */
     public void setCurrentUser(User user) {
@@ -48,6 +50,7 @@ public class ChanceViewModel extends ViewModel {
 
     /**
      * gets if the main UI should be loaded
+     *
      * @return
      */
     public LiveData<Boolean> getLoadMainUI() {
@@ -56,6 +59,7 @@ public class ChanceViewModel extends ViewModel {
 
     /**
      * sets if the main UI should be loaded
+     *
      * @param visible
      */
     public void setLoadMainUI(boolean visible) {
@@ -64,6 +68,7 @@ public class ChanceViewModel extends ViewModel {
 
     /**
      * gets the new fragment to be loaded
+     *
      * @return
      */
     public MutableLiveData<Tuple3<Class<? extends ChanceFragment>, Bundle, String>> getNewFragment() {
@@ -72,6 +77,7 @@ public class ChanceViewModel extends ViewModel {
 
     /**
      * sets the new fragment to be loaded
+     *
      * @param fragment
      * @param bundle
      */
@@ -81,6 +87,7 @@ public class ChanceViewModel extends ViewModel {
 
     /**
      * gets the list of all events
+     *
      * @return list of events
      */
     public LiveData<List<Event>> getEvents() {
@@ -89,6 +96,7 @@ public class ChanceViewModel extends ViewModel {
 
     /**
      * sets the list of all events
+     *
      * @param events
      */
     public void setEvents(List<Event> events) {
@@ -116,6 +124,7 @@ public class ChanceViewModel extends ViewModel {
 
     /**
      * gets if the user authentication was successful
+     *
      * @return
      */
     public LiveData<User> getAuthenticationSuccess() {
@@ -124,6 +133,7 @@ public class ChanceViewModel extends ViewModel {
 
     /**
      * sets if the user authentication was successful
+     *
      * @param user
      */
     public void setAuthenticationSuccess(User user) {
