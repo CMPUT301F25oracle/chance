@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.chance.adapters.MultiPurposeEventSearchScreenListAdapter;
 import com.example.chance.databinding.MultiPurposeEventSearchScreenBinding;
 import com.example.chance.model.Event;
+import com.example.chance.model.User;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
 
@@ -23,7 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import io.reactivex.rxjava3.disposables.Disposable;
 
-abstract public class MultiPurposeEventSearchScreen extends ChanceFragment {
+public class MultiPurposeEventSearchScreen extends ChanceFragment {
     private MultiPurposeEventSearchScreenBinding binding;
     List<Event> eventList = new ArrayList<>();
     private MultiPurposeEventSearchScreenListAdapter eventsAdapter;
@@ -82,6 +83,14 @@ abstract public class MultiPurposeEventSearchScreen extends ChanceFragment {
                 return false;
             }
         });
+
+        List<String> eventIDS = meta.getStringArrayList("events");
+        if (eventIDS != null) {
+            dsm.getEvents(events -> {
+                List<Event> filteredEvents = events.stream().filter(event->eventIDS.contains(event.getID())).toList();
+                submitList(filteredEvents);
+            }, e->{});
+        }
     }
 
     public void submitList(List<Event> events) {

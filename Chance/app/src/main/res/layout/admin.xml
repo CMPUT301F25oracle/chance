@@ -36,6 +36,7 @@
             />
 
         <Button
+            android:id="@+id/browse_events_button"
             android:layout_width="380dp"
             android:layout_height="55dp"
             android:text="Browse Events/ Banners"

@@ -9,7 +9,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.chance.databinding.AdminBinding;
+import com.example.chance.model.Event;
 import com.example.chance.views.base.ChanceFragment;
+import com.example.chance.views.base.MultiPurposeEventSearchScreen;
+
+import java.util.ArrayList;
 
 /**
  * Fragment representing the main Admin dashboard.
@@ -40,5 +44,16 @@ public class Admin extends ChanceFragment {
             cvm.setNewFragment(AdminViewUsers.class, null, "fade");
         });
 
+        binding.browseEventsButton.setOnClickListener(v -> {
+            cvm.getEvents().observe(getViewLifecycleOwner(), events -> {
+                Bundle bundle = new Bundle();
+                ArrayList<String> eventIDSArrayList = new ArrayList<>();
+                for (Event event : events) {
+                    eventIDSArrayList.add(event.getID());
+                }
+                bundle.putStringArrayList("events", eventIDSArrayList);
+                cvm.setNewFragment(MultiPurposeEventSearchScreen.class, bundle, "fade");
+            });
+        });
     }
 }
