@@ -28,7 +28,9 @@ import com.google.firebase.firestore.Blob;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -69,7 +71,18 @@ public class Home extends ChanceFragment {
                 binding.homeSystemMessage.setText("Hello, ...");
                 return;
             }
-            dsm.user(user).postNotification(new Notification("{\"title\": \"New alert!\", \"description\": \"OH NO\"}"), __->{}, __->{});
+
+            //region: TEST DATA
+
+
+            Map<String, String> testMeta = new HashMap<>();
+            testMeta.put("title", "Test title");
+            testMeta.put("description", "Test description");
+            dsm.user(user).postNotification(new Notification(0, new Date(), testMeta), __->{}, __->{});
+
+
+            //endregion
+
             // Update UI once we have a user
             binding.homeSystemMessage.setText("Hello, " + user.getUsername());
 //            dsm.user(user).postNotification(new Notification("asdda", 1, "adaads", new Date(), Blob.fromBytes(new byte[0])),v -> {
