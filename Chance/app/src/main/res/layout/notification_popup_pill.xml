@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="70dp"
     android:background="@drawable/box_rounded_corners"
-    android:backgroundTint="#bbd2f8"
+    android:backgroundTint="@color/white"
     android:padding="5dp"
     android:layout_marginBottom="2.5dp"
     app:flexDirection="column"

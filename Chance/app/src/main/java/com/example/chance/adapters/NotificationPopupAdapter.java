@@ -93,7 +93,7 @@ public class NotificationPopupAdapter extends ListAdapter<Notification, Notifica
          */
         public NotificationViewHolder(@NonNull View notificationPillView) {
             super(notificationPillView);
-            title = notificationPillView.findViewById(R.id.username);
+            title = notificationPillView.findViewById(R.id.title);
             description = notificationPillView.findViewById(R.id.description);
         }
     }

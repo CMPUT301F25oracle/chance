@@ -890,6 +890,18 @@ public class DataStoreManager {
             this.user = user;
         }
 
+        public void getNotifications(OnSuccessListener<List<Notification>> onSuccess, OnFailureListener onFailure) {
+            fStore.collection(USER_COLLECTION)
+                .document(user.getID())
+                .collection(NOTIFICATION_COLLECTION)
+                .get()
+                .addOnSuccessListener((snapshot) -> {
+                    List<Notification> notifications = snapshot.toObjects(Notification.class);
+                    onSuccess.onSuccess(notifications);
+                })
+                .addOnFailureListener(onFailure);
+        }
+
         public Observable<Tuple3<Notification, DocumentChange.Type, Void>> observeNotifications() {
             return Observable.create(emitter -> {
                 fStore.collection(USER_COLLECTION)

@@ -16,6 +16,8 @@ public class Notification {
     private int type;
     private Map<String, String> meta;
 
+    public Notification() {}
+
     public Notification(int type, Date creationDate, Map<String, String> meta) {
         this.creationDate = creationDate;
         this.type = type;
