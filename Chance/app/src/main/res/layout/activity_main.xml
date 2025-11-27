@@ -27,14 +27,13 @@
             android:background="#5F000000">
             <FrameLayout
                 android:id="@+id/popup_view"
-                android:layout_width="350dp"
-                android:layout_height="350dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="5dp"
                 android:layout_gravity="center"
                 android:background="@drawable/box_rounded_corners"
                 android:backgroundTint="#bbd2f8"
                 android:elevation="20dp"
-                android:padding="10dp"
                 android:outlineProvider="bounds"/>
         </FrameLayout>
         <FrameLayout
