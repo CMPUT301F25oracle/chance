@@ -1,12 +1,9 @@
 package com.example.chance.adapters;
 
-import android.os.Bundle;
-import android.os.Parcel;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,10 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chance.R;
 import com.example.chance.model.Notification;
-import com.example.chance.model.User;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.Map;
 
 
 /**
@@ -82,14 +77,9 @@ public class NotificationPopupAdapter extends ListAdapter<Notification, Notifica
     public void onBindViewHolder(@NonNull NotificationViewHolder holder, int position) {
         Notification notification = getItem(position);
         if (notification == null) return;
-        JSONObject jsonMeta;
-        try {
-            jsonMeta = notification.getJsonMeta();
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-        holder.title.setText(jsonMeta.optString("title", "No title provided."));
-        holder.description.setText(jsonMeta.optString("description", "None provided."));
+        Map<String, String> metaData = notification.getMeta();
+        holder.title.setText(metaData.getOrDefault("title", "No title provided."));
+        holder.description.setText(metaData.getOrDefault("description", "None provided."));
     }
 
     /**

@@ -1,25 +1,25 @@
 package com.example.chance.model;
 
-import com.google.common.primitives.Bytes;
-import com.google.firebase.firestore.Blob;
 import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.Date;
+import java.util.Map;
 
 @IgnoreExtraProperties
 public class Notification {
     @DocumentId
+    @Exclude
     private String ID;
+    private Date creationDate;
+    private int type;
+    private Map<String, String> meta;
 
-    private String stringJsonMeta;
-
-    public Notification(String stringJsonMeta) {
-        this.stringJsonMeta = stringJsonMeta;
+    public Notification(int type, Date creationDate, Map<String, String> meta) {
+        this.creationDate = creationDate;
+        this.type = type;
+        this.meta = meta;
     }
 
     public String getID() {
@@ -30,21 +30,27 @@ public class Notification {
         this.ID = ID;
     }
 
-    public String getStringJsonMeta() {
-        return stringJsonMeta;
+    public int getType() {
+        return type;
     }
 
-    public void setStringJsonMeta(String stringJsonMeta) {
-        this.stringJsonMeta = stringJsonMeta;
+    public void setType(int type) {
+        this.type = type;
     }
 
-    @Exclude
-    public JSONObject getJsonMeta() throws JSONException {
-        return new JSONObject(this.stringJsonMeta);
+    public Map<String, String> getMeta() {
+        return meta;
     }
 
-    @Exclude
-    public void setJsonMeta(JSONObject jsonMeta) {
-        this.stringJsonMeta = jsonMeta.toString();
+    public void setMeta(Map<String, String> meta) {
+        this.meta = meta;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 }
