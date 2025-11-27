@@ -153,6 +153,7 @@
                         />
 
                     <Button
+                        android:id="@+id/export_final_entrants_button"
                         android:layout_marginLeft="27dp"
                         android:layout_width="350dp"
                         android:layout_height="40dp"
@@ -162,6 +163,7 @@
                         />
 
                     <Button
+                        android:id="@+id/remove_unregistered_entrants_button"
                         android:layout_marginLeft="27dp"
                         android:layout_width="350dp"
                         android:layout_height="40dp"
@@ -171,6 +173,7 @@
                         />
 
                     <Button
+                        android:id="@+id/view_cancelled_list_button"
                         android:layout_marginLeft="27dp"
                         android:layout_width="350dp"
                         android:layout_height="40dp"
@@ -180,6 +183,7 @@
                         />
 
                     <Button
+                        android:id="@+id/view_chosen_list_button"
                         android:layout_marginLeft="27dp"
                         android:layout_width="350dp"
                         android:layout_height="40dp"
@@ -189,6 +193,7 @@
                         />
 
                     <Button
+                        android:id="@+id/draw_replacement_button"
                         android:layout_marginLeft="27dp"
                         android:layout_width="350dp"
                         android:layout_height="40dp"

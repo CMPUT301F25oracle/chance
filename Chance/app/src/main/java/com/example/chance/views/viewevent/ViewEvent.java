@@ -4,9 +4,12 @@ import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
@@ -31,12 +36,15 @@ import com.example.chance.views.base.MultiPurposeProfileSearchScreen;
 import com.google.zxing.WriterException;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 public class ViewEvent extends ChanceFragment {
@@ -45,6 +53,25 @@ public class ViewEvent extends ChanceFragment {
 
     private Drawable buttonBackground;
     private EventController eventController;
+    private String csvContentToSave;
+
+    private final ActivityResultLauncher<Intent> createFileLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    Uri uri = result.getData().getData();
+                    if (uri != null) {
+                        try (OutputStream outputStream = requireContext().getContentResolver().openOutputStream(uri)) {
+                            if (outputStream != null && csvContentToSave != null) {
+                                outputStream.write(csvContentToSave.getBytes());
+                                Toast.makeText(getContext(), "Entrants exported successfully.", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (IOException e) {
+                            Toast.makeText(getContext(), "Failed to export entrants.", Toast.LENGTH_SHORT).show();
+                            Log.e("ViewEvent", "Failed to write CSV file.", e);
+                        }
+                    }
+                }
+            });
 
     @Nullable
     @Override
@@ -155,11 +182,38 @@ public class ViewEvent extends ChanceFragment {
             dsm.event(event).drawEntrants();
         });
 
+        binding.drawReplacementButton.setOnClickListener(__ -> {
+            dsm.event(event).drawEntrants();
+        });
+
         binding.viewFinalEntrantsButton.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
             ArrayList<String> waitingUsersArrayList = new ArrayList<String>(event.getWaitingList());
             bundle.putStringArrayList("users", waitingUsersArrayList);
             cvm.setNewPopup(MultiPurposeProfileSearchScreen.class, bundle);
+        });
+
+        binding.exportFinalEntrantsButton.setOnClickListener(v -> {
+            List<String> waitingListIds = event.getWaitingList();
+            if (waitingListIds == null || waitingListIds.isEmpty()) {
+                Toast.makeText(getContext(), "Waiting list is empty.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            dsm.getAllUsers(allUsers -> {
+                List<User> entrants = allUsers.stream()
+                        .filter(u -> waitingListIds.contains(u.getID()))
+                        .collect(Collectors.toList());
+                exportUsersToCsv(entrants, event.getName());
+            }, e -> {
+                Toast.makeText(getContext(), "Failed to get user data for export.", Toast.LENGTH_SHORT).show();
+                Log.e("ViewEvent", "Failed to fetch all users for CSV export.", e);
+            });
+        });
+
+        // We will implement this method after accept/reject button is implemented
+        binding.removeUnregisteredEntrantsButton.setOnClickListener(v -> {
+
         });
     }
 
@@ -206,26 +260,36 @@ public class ViewEvent extends ChanceFragment {
     }
     // END: BANNER REMOVAL FEATURE
 
-//    private void setupEventRemoval(Event event, User user) {
-//        binding.removeEventButton.setOnClickListener(v -> {
-//            new AlertDialog.Builder(requireContext())
-//                    .setTitle("Remove Event")
-//                    .setMessage("Are you sure you want to permanently remove the event? This action is irreversible.")
-//                    .setPositiveButton("Remove", (dialog, which) -> {
-//                        dsm.removeEvent(event, success -> {
-//                            Toast.makeText(requireContext(), "Event removed successfully.", Toast.LENGTH_SHORT).show();
-//                            Bundle bundle = new Bundle();
-//                            bundle.putBoolean("addToBackStack", false);
-//                            cvm.setNewFragment(Home.class, bundle, "circular:300");
-//                            //NavHostFragment.findNavController(this).navigate(R.id.navigation_home);
-//                        }, failure -> {
-//                            Toast.makeText(requireContext(), "Failed to remove event.", Toast.LENGTH_SHORT).show();
-//                        });
-//                    })
-//                    .setNegativeButton(android.R.string.cancel, null)
-//                    .show();
-//        });
-//    }
+    private void exportUsersToCsv(List<User> users, String eventName) {
+        StringBuilder csvBuilder = new StringBuilder();
+        csvBuilder.append("Username,Full Name,Email,Phone Number\n");
+
+        for (User user : users) {
+            csvBuilder.append(escapeCsvValue(user.getUsername())).append(",");
+            csvBuilder.append(escapeCsvValue(user.getFullName())).append(",");
+            csvBuilder.append(escapeCsvValue(user.getEmail())).append(",");
+            csvBuilder.append(escapeCsvValue(user.getPhoneNumber())).append("\n");
+        }
+
+        csvContentToSave = csvBuilder.toString();
+
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("text/csv");
+        intent.putExtra(Intent.EXTRA_TITLE, "entrants-" + eventName.replaceAll("[^a-zA-Z0-9.-]", "_") + ".csv");
+        createFileLauncher.launch(intent);
+    }
+
+    private String escapeCsvValue(String value) {
+        if (value == null) {
+            return "";
+        }
+        String escaped = value.replace("\"", "\"\"");
+        if (escaped.contains(",") || escaped.contains("\"") || escaped.contains("\n")) {
+            return "\"" + escaped + "\"";
+        }
+        return escaped;
+    }
 
     private String formatDate(Date date) {
         if (date == null) {
