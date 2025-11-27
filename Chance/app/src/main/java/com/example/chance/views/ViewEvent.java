@@ -1,4 +1,4 @@
-package com.example.chance.views.viewevent;
+package com.example.chance.views;
 
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
@@ -29,8 +29,6 @@ import com.example.chance.controller.QRCodeHandler;
 import com.example.chance.databinding.ViewEventBinding;
 import com.example.chance.model.Event;
 import com.example.chance.model.User;
-import com.example.chance.views.Home;
-import com.example.chance.views.QRCodePopup;
 import com.example.chance.views.base.ChanceFragment;
 import com.example.chance.views.base.MultiPurposeProfileSearchScreen;
 import com.google.zxing.WriterException;

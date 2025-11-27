@@ -25,7 +25,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.chance.databinding.ActivityMainBinding;
 import com.example.chance.views.QrcodeScanner;
 import com.example.chance.views.SplashScreen;
-import com.example.chance.views.viewevent.ViewEvent;
+import com.example.chance.views.ViewEvent;
 import com.example.chance.views.base.ChanceFragment;
 import com.google.firebase.firestore.DocumentChange;
 import com.example.chance.views.NotificationPopup;
