@@ -12,9 +12,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.chance.adapters.MultiPurposeEventSearchScreenListAdapter;
 import com.example.chance.adapters.NotificationPopupAdapter;
 import com.example.chance.databinding.NotificationPopupBinding;
+import com.example.chance.model.Notification;
 import com.example.chance.views.base.ChancePopup;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
+
+import java.util.Comparator;
 
 /**
  * Popup fragment for displaying user notifications.
@@ -51,6 +54,12 @@ public class NotificationPopup extends ChancePopup {
 
         cvm.getCurrentUser().observe(getViewLifecycleOwner(), user -> {
             dsm.user(user).getNotifications(notificationList->{
+                notificationList.sort(new Comparator<Notification>() {
+                    @Override
+                    public int compare(Notification n1, Notification n2) {
+                        return Math.toIntExact(n2.getCreationDate().getTime() - n1.getCreationDate().getTime());
+                    }
+                });
                 notificationsAdapter.submitList(notificationList);
             }, __ -> {});
         });
