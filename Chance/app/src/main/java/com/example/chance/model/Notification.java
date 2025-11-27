@@ -3,7 +3,11 @@ package com.example.chance.model;
 import com.google.common.primitives.Bytes;
 import com.google.firebase.firestore.Blob;
 import com.google.firebase.firestore.DocumentId;
+import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.IgnoreExtraProperties;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Date;
 
@@ -11,15 +15,11 @@ import java.util.Date;
 public class Notification {
     @DocumentId
     private String ID;
-    private int type;
-    private Date postedAt;
-    private Blob meta;
 
-    public Notification(String ID, int type, String message, Date postedAt, Blob meta) {
-        this.ID = ID;
-        this.type = type;
-        this.postedAt = postedAt;
-        this.meta = meta;
+    private String stringJsonMeta;
+
+    public Notification(String stringJsonMeta) {
+        this.stringJsonMeta = stringJsonMeta;
     }
 
     public String getID() {
@@ -30,27 +30,21 @@ public class Notification {
         this.ID = ID;
     }
 
-    public int getType() {
-        return type;
+    public String getStringJsonMeta() {
+        return stringJsonMeta;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setStringJsonMeta(String stringJsonMeta) {
+        this.stringJsonMeta = stringJsonMeta;
     }
 
-    public Date getPostedAt() {
-        return postedAt;
+    @Exclude
+    public JSONObject getJsonMeta() throws JSONException {
+        return new JSONObject(this.stringJsonMeta);
     }
 
-    public void setPostedAt(Date postedAt) {
-        this.postedAt = postedAt;
-    }
-
-    public Blob getMeta() {
-        return meta;
-    }
-
-    public void setMeta(Blob meta) {
-        this.meta = meta;
+    @Exclude
+    public void setJsonMeta(JSONObject jsonMeta) {
+        this.stringJsonMeta = jsonMeta.toString();
     }
 }

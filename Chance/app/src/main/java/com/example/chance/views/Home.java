@@ -69,6 +69,7 @@ public class Home extends ChanceFragment {
                 binding.homeSystemMessage.setText("Hello, ...");
                 return;
             }
+            dsm.user(user).postNotification(new Notification("{\"title\": \"New alert!\", \"description\": \"OH NO\"}"), __->{}, __->{});
             // Update UI once we have a user
             binding.homeSystemMessage.setText("Hello, " + user.getUsername());
 //            dsm.user(user).postNotification(new Notification("asdda", 1, "adaads", new Date(), Blob.fromBytes(new byte[0])),v -> {
