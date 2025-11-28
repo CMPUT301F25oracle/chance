@@ -476,12 +476,15 @@ import com.google.firebase.firestore.QuerySnapshot;
 import org.checkerframework.checker.units.qual.N;
 
 import java.util.Base64;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
+import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.core.Observable;
 
@@ -564,8 +567,8 @@ public class DataStoreManager {
                             User user = new User(username);
                             // now that the user is in firestore, we create their db entry
                             assert firestoreUser != null;
-                            fStore.collection(USER_COLLECTION)
-                                    .document(firestoreUser.getUid())
+                            DocumentReference userCollectionRef = fStore.collection(USER_COLLECTION).document(firestoreUser.getUid());
+                            userCollectionRef
                                     .set(user)
                                     .addOnSuccessListener((__) -> {
                                         onSuccess.onSuccess(user);
@@ -573,6 +576,9 @@ public class DataStoreManager {
                                     .addOnFailureListener((e) -> {
                                         onFailure.onFailure(e);
                                     });
+                            userCollectionRef
+                                .collection(NOTIFICATION_COLLECTION)
+                                .add(new Notification(-1, null, null));
                         } else {
                             onFailure.onFailure(task.getException());
                         }
@@ -900,7 +906,10 @@ public class DataStoreManager {
                 .collection(NOTIFICATION_COLLECTION)
                 .get()
                 .addOnSuccessListener((snapshot) -> {
-                    List<Notification> notifications = snapshot.toObjects(Notification.class);
+                    List<Notification> notifications = snapshot.toObjects(Notification.class)
+                        .stream()
+                        .filter(notification -> notification.getType() != -1)
+                        .collect(Collectors.toList());
                     onSuccess.onSuccess(notifications);
                 })
                 .addOnFailureListener(onFailure);

@@ -24,7 +24,9 @@
             android:id="@+id/popup_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#5F000000">
+            android:background="@drawable/box_rounded_corners"
+            android:backgroundTint="#5F000000"
+            android:outlineProvider="bounds">
             <FrameLayout
                 android:id="@+id/popup_view"
                 android:layout_width="wrap_content"
@@ -34,7 +36,8 @@
                 android:background="@drawable/box_rounded_corners"
                 android:backgroundTint="#bbd2f8"
                 android:elevation="20dp"
-                android:outlineProvider="bounds"/>
+                android:clipChildren="true"
+                android:clipToOutline="true"/>
         </FrameLayout>
         <FrameLayout
             android:id="@+id/banner_container"
