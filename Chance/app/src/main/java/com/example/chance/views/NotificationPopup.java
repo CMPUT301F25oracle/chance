@@ -91,7 +91,7 @@ public class NotificationPopup extends ChancePopup {
                                 break;
                             }
                         }
-                        cvm.requestOpenEvent(eventId);
+                        //cvm.requestOpenEvent(eventId);
                         return true;
                     }
                     return false;
