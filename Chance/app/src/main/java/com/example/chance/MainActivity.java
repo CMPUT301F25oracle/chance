@@ -9,6 +9,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.example.chance.controller.DataStoreManager;
 import com.example.chance.model.Event;
@@ -19,6 +20,9 @@ import com.example.chance.views.Profile;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -47,6 +51,35 @@ public class MainActivity extends AppCompatActivity {
         cvm = new ViewModelProvider(this).get(ChanceViewModel.class);
         dsm = DataStoreManager.getInstance();
         setContentView(binding.getRoot());
+
+        // Draw behind system bars, we’ll handle insets manually
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+
+        View titleBar = binding.getRoot().findViewById(R.id.title_bar);
+        ViewCompat.setOnApplyWindowInsetsListener(titleBar, (v, insets) -> {
+            int topInset = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top;
+
+            // Use LayoutParams to set margin
+            ViewGroup.LayoutParams params = v.getLayoutParams();
+            if (params instanceof ViewGroup.MarginLayoutParams) {
+                ViewGroup.MarginLayoutParams marginParams = (ViewGroup.MarginLayoutParams) params;
+
+                // If you want to preserve any existing margins:
+                int baseLeft   = marginParams.leftMargin;
+                int baseRight  = marginParams.rightMargin;
+                int baseBottom = marginParams.bottomMargin;
+
+                marginParams.setMargins(
+                        baseLeft,
+                        topInset,   // apply status bar height as top margin
+                        baseRight,
+                        baseBottom
+                );
+                v.setLayoutParams(marginParams);
+            }
+
+            return insets;
+        });
 
         initializeUI();
         initializeChanceModelObservers();
