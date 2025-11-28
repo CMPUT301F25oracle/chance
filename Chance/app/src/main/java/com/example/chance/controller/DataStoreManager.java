@@ -1018,9 +1018,7 @@ public class DataStoreManager {
             }
         }
 
-        public void removeUnregisteredEntrants() {
 
-        }
     }
 
     public __eventImage eventImage(EventImage target_event_image) {
