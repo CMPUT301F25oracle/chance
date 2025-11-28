@@ -153,6 +153,7 @@
                     android:layout_marginVertical="@dimen/chance_margin"
                     app:alignItems="center">
                     <com.example.chance.customviews.ChanceTextInput
+                        android:id="@+id/search_bar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
