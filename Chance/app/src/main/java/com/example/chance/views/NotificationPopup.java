@@ -1,5 +1,8 @@
 package com.example.chance.views;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -56,13 +59,18 @@ public class NotificationPopup extends ChancePopup {
 
         cvm.getCurrentUser().observe(getViewLifecycleOwner(), user -> {
             dsm.user(user).getNotifications(notificationList->{
-                notificationList.sort(new Comparator<Notification>() {
-                    @Override
-                    public int compare(Notification n1, Notification n2) {
-                        return Math.toIntExact(n2.getCreationDate().getTime() - n1.getCreationDate().getTime());
-                    }
-                });
-                notificationsAdapter.submitList(notificationList);
+                if (notificationList.size() > 0) {
+                    binding.noNotificationsOverlay.setVisibility(GONE);
+                    notificationList.sort(new Comparator<Notification>() {
+                        @Override
+                        public int compare(Notification n1, Notification n2) {
+                            return Math.toIntExact(n2.getCreationDate().getTime() - n1.getCreationDate().getTime());
+                        }
+                    });
+                    notificationsAdapter.submitList(notificationList);
+                } else {
+                    binding.noNotificationsOverlay.setVisibility(VISIBLE);
+                }
             }, __ -> {});
         });
 
