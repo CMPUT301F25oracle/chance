@@ -3,6 +3,7 @@ package com.example.chance.customviews;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.ViewGroup;
@@ -82,5 +83,9 @@ public class ChanceTextInput extends FlexboxLayout {
 
     public String getText() {
         return textInput.getText().toString();
+    }
+
+    public void addTextChangedListener(TextWatcher textWatcher) {
+        textInput.addTextChangedListener(textWatcher);
     }
 }

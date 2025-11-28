@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.disposables.Disposable;
 
@@ -148,6 +149,60 @@ public class Home extends ChanceFragment {
 
         // RxJava stream to populate the left and right columns with a stagger effect
         cvm.getEvents().observe(getViewLifecycleOwner(), events -> {
+
+            binding.searchBar.addTextChangedListener(new android.text.TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    // Not needed for this functionality
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    // Not needed for this functionality
+                }
+
+                @Override
+                public void afterTextChanged(android.text.Editable s) {
+                    if (eventsDisposable != null) {
+                        eventsDisposable.dispose();
+                    }
+
+                    String searchText = s.toString().toLowerCase();
+                    List<Event> filteredEvents = events.stream()
+                            .filter(event -> event.getName().toLowerCase().contains(searchText))
+                            .collect(Collectors.toList());
+
+                    leftEventList.clear();
+                    rightEventList.clear();
+                    leftIdx.set(0);
+                    rightIdx.set(0);
+                    eventsAdapterLeft.notifyDataSetChanged();
+                    eventsAdapterRight.notifyDataSetChanged();
+
+                    eventsDisposable = io.reactivex.rxjava3.core.Observable
+                            .fromIterable(filteredEvents)
+                            .concatMap(ev ->
+                                    io.reactivex.rxjava3.core.Observable
+                                            .just(ev)
+                                            .delay(50, java.util.concurrent.TimeUnit.MILLISECONDS)
+                            )
+                            .observeOn(io.reactivex.rxjava3.android.schedulers.AndroidSchedulers.mainThread())
+                            .subscribe(event -> {
+                                if ((leftIdx.get() + rightIdx.get()) % 2 == 0) {
+                                    leftEventList.add(event);
+                                    eventsAdapterLeft.notifyItemInserted(leftEventList.size() - 1);
+                                    leftIdx.getAndIncrement();
+                                } else {
+                                    rightEventList.add(event);
+                                    eventsAdapterRight.notifyItemInserted(rightEventList.size() - 1);
+                                    rightIdx.getAndIncrement();
+                                }
+                            }, throwable -> {
+                                throwable.printStackTrace();
+                            });
+                }
+            });
+
             leftEventList.clear();
             rightEventList.clear();
             leftIdx.set(0);
