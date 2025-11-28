@@ -69,8 +69,8 @@ public class MultiPurposeProfileSearchScreen extends ChanceFragment {
                 public boolean onSingleTapUp(MotionEvent motionEvent) {
                     View profilePill = profilesContainer.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
                     if (profilePill != null) {
-                        String eventId = (String) profilePill.getTag();
-                        cvm.requestOpenEvent(eventId);
+                        User userInstance = (User) profilePill.getTag();
+                        interceptProfileClick(userInstance);
                         return true;
                     }
                     return false;
@@ -113,6 +113,10 @@ public class MultiPurposeProfileSearchScreen extends ChanceFragment {
                     idx.getAndIncrement());
             });
         //endregion
+    }
+
+    public void interceptProfileClick(User user) {
+
     }
 
     @Override

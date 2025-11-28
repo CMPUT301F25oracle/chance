@@ -77,6 +77,7 @@ public class MultiPurposeProfileSearchScreenListAdapter extends ListAdapter<User
         if (user == null) return;
 
         holder.username.setText(user.getUsername());
+        holder.itemView.setTag(user);
     }
 
     /**

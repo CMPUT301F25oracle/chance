@@ -1,7 +1,9 @@
 package com.example.chance.views;
 
 import android.os.Bundle;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -62,6 +64,44 @@ public class NotificationPopup extends ChancePopup {
                 });
                 notificationsAdapter.submitList(notificationList);
             }, __ -> {});
+        });
+
+        notificationsContainer.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
+            final GestureDetector gestureHandler = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
+                @Override
+                public boolean onFling(MotionEvent __, MotionEvent ___, float velocityX, float velocityY) {
+                    // Let RecyclerView handle the fling
+                    notificationsContainer.fling((int) velocityX, (int) velocityY);
+                    return true;
+                }
+
+                @Override
+                public boolean onSingleTapUp(MotionEvent motionEvent) {
+                    View notificationPill = notificationsContainer.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
+                    if (notificationPill != null) {
+                        Notification notificationInstance = (Notification) notificationPill.getTag();
+                        int type = notificationInstance.getType();
+                        switch (type) {
+                            case 0: {
+
+                                break;
+                            }
+                            case 1: {
+
+                                break;
+                            }
+                        }
+                        cvm.requestOpenEvent(eventId);
+                        return true;
+                    }
+                    return false;
+                }
+            });
+            @Override
+            public boolean onInterceptTouchEvent(@NonNull RecyclerView viewManager, @NonNull MotionEvent touchEvent) {
+                gestureHandler.onTouchEvent(touchEvent);
+                return false;
+            }
         });
     }
 }

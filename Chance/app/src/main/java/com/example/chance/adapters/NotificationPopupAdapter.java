@@ -80,6 +80,7 @@ public class NotificationPopupAdapter extends ListAdapter<Notification, Notifica
         Map<String, String> metaData = notification.getMeta();
         holder.title.setText(metaData.getOrDefault("title", "No title provided."));
         holder.description.setText(metaData.getOrDefault("description", "None provided."));
+        holder.itemView.setTag(notification);
     }
 
     /**
