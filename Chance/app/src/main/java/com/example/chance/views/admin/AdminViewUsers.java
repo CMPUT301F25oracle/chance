@@ -6,6 +6,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.chance.model.User;
 import com.example.chance.views.base.MultiPurposeProfileSearchScreen;
 
 /**
@@ -23,6 +24,11 @@ public class AdminViewUsers extends MultiPurposeProfileSearchScreen {
         dsm.getAllUsers(users -> {
             submitList(users);
         }, e->{});
+    }
+    public void onUserClicked(User user) {
+        Bundle bundle = new Bundle();
+        bundle.putString("userID", user.getID());
+        cvm.setNewFragment(AdminViewUserProfile.class, bundle, "fade");
     }
 
 }
