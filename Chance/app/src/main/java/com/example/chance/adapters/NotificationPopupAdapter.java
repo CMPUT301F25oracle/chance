@@ -80,6 +80,10 @@ public class NotificationPopupAdapter extends ListAdapter<Notification, Notifica
         Map<String, String> metaData = notification.getMeta();
         if (notification == null) return;
         switch (type) {
+            case -1: {
+                holder.itemView.setVisibility(View.GONE);
+                break;
+            }
             case 0: {
                 holder.title.setText(String.format("Update on invitiation from %s", notification.getMeta().getOrDefault("eventName", "Unknown")));
                 holder.description.setText("Click to view details");

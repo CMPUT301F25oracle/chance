@@ -69,6 +69,7 @@ public class NotificationPopup extends ChancePopup {
                     });
                     notificationsAdapter.submitList(notificationList);
                 } else {
+                    binding.notificationLoadingMessage.setText("No Notifications Found.");
                     binding.noNotificationsOverlay.setVisibility(VISIBLE);
                 }
             }, __ -> {});
