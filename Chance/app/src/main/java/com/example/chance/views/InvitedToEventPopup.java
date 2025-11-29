@@ -28,7 +28,7 @@ public class InvitedToEventPopup  extends ChancePopup {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        String eventID = meta.getString("eventId");
+        String eventID = meta.getString("eventID");
         dsm.getEvent(eventID, event -> {
             binding.title.setText(event.getName());
             binding.description.setText(event.getDescription());

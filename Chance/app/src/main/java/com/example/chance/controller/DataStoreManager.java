@@ -446,6 +446,7 @@ package com.example.chance.controller;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -993,10 +994,12 @@ public class DataStoreManager {
         }
 
         public void drawEntrants() {
+            Log.d("DataStoreManager", "drawEntrants called for event " + event.getID() + " at " + System.currentTimeMillis());
             event.pollForInvitation();
             Map<String, String> meta = new HashMap<>();
-            meta.put("title", "You've been invited to join " + event.getName());
-            meta.put("description", "Click here to join!");
+            meta.put("eventID", event.getID());
+            meta.put("title", event.getName());
+            meta.put("description", event.getDescription());
             Notification inviteNotification = new Notification();
             inviteNotification.setMeta(meta);
             inviteNotification.setType(0);
