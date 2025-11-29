@@ -31,20 +31,30 @@
             android:layout_width="wrap_content"
             android:layout_height="75dp"
             android:textSize="@dimen/common_text_size"
-            android:textColor="@color/black"
             android:text="Some description"/>
     </LinearLayout>
     <com.google.android.flexbox.FlexboxLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:flexDirection="row"
+        app:justifyContent="space_evenly">
         <Button
-            android:id="@+id/clipboard_button"
+            android:id="@+id/decline_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingHorizontal="5dp"
             android:textColor="@color/black"
             android:background="@drawable/box_rounded_corners"
-            android:backgroundTint="#66A0F0"
-            android:text="Copy to Clipboard"/>
+            android:backgroundTint="@color/button_red"
+            android:text="Decline Invitation"/>
+        <Button
+            android:id="@+id/accept_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="5dp"
+            android:textColor="@color/black"
+            android:background="@drawable/box_rounded_corners"
+            android:backgroundTint="@color/button_green"
+            android:text="Accept Invitation"/>
     </com.google.android.flexbox.FlexboxLayout>
 </LinearLayout>
