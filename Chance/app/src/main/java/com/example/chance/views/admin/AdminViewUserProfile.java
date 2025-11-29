@@ -8,13 +8,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.chance.model.Notification;
-import java.util.Comparator;
 
 import com.example.chance.adapters.NotificationPopupAdapter;
 import com.example.chance.databinding.AdminViewUserProfileBinding;
 import com.example.chance.model.Notification;
-import com.example.chance.model.User;
 import com.example.chance.views.base.ChanceFragment;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
@@ -23,9 +20,8 @@ import java.util.Comparator;
 
 public class AdminViewUserProfile extends ChanceFragment {
     private AdminViewUserProfileBinding binding;
-    private String userID;
+    private String username; // we pass username in the bundle
 
-    // NEW: adapter for the notifications list
     private NotificationPopupAdapter notificationAdapter;
 
     @Nullable
@@ -41,20 +37,27 @@ public class AdminViewUserProfile extends ChanceFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        userID = getArguments().getString("userID");
+        if (getArguments() != null) {
+            username = getArguments().getString("username");
+        }
 
-        // --- setup notifications RecyclerView (same as NotificationPopup) ---
-        RecyclerView notificationsContainer = binding.notificationsRecyclerView; // id: notifications_recycler_view
+        // --- setup notifications RecyclerView ---
+        RecyclerView notificationsContainer = binding.notificationsRecyclerView;
         notificationAdapter = new NotificationPopupAdapter();
         notificationsContainer.setAdapter(notificationAdapter);
 
         FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(requireContext());
         layoutManager.setFlexDirection(FlexDirection.ROW);
         notificationsContainer.setLayoutManager(layoutManager);
-        // ---------------------------------------------------------------------
+        // ----------------------------------------
 
-        // Fetch profile
-        dsm.getUser(userID, user -> {
+        // Fetch profile & notifications using USERNAME
+        dsm.getUser(username, user -> {   // <-- only 2 args: username, lambda
+            if (user == null) {
+                // user not found; you might want to show a message here
+                return;
+            }
+
             binding.usernameInput.setText(user.getUsername());
             binding.fullnameInput.setText(user.getFullName());
             binding.emailInput.setText(user.getEmail());
@@ -74,6 +77,14 @@ public class AdminViewUserProfile extends ChanceFragment {
                 notificationAdapter.submitList(notificationList);
             }, __ -> {});
 
+            // DELETE USER BUTTON: delete by username, then go back to list
+            binding.deleteUserButton.setOnClickListener(v -> {
+                dsm.deleteUser(user.getUsername(), unused -> {
+                    cvm.setNewFragment(AdminViewUsers.class, null, "fade");
+                });
+            });
+
         });
+        // Note: no error callback here because getUser only takes 2 params
     }
 }

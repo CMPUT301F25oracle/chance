@@ -27,7 +27,7 @@ public class AdminViewUsers extends MultiPurposeProfileSearchScreen {
     }
     public void onUserClicked(User user) {
         Bundle bundle = new Bundle();
-        bundle.putString("userID", user.getID());
+        bundle.putString("username", user.getUsername());  // <<< IMPORTANT
         cvm.setNewFragment(AdminViewUserProfile.class, bundle, "fade");
     }
 
