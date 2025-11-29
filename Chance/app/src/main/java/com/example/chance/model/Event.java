@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 /**
  * Represents an event in the Event Lottery System.
@@ -35,7 +36,7 @@ public class Event {
     private int maxInvited;   // Max entrants that can be invited
 
 
-    private List<String> waitingList;
+    private List<WaitingListEntry> waitingList;
 
     private List<String> invitationList;
 
@@ -123,16 +124,16 @@ public class Event {
         this.endDate = endDate;
     }
 
-    public List<String> getWaitingList() {
+    public List<WaitingListEntry> getWaitingList() {
         return waitingList;
     }
 
-    public void setWaitingList(ArrayList<String> waitingList) {
+    public void setWaitingList(ArrayList<WaitingListEntry> waitingList) {
         this.waitingList = waitingList;
     }
 
     public void leaveWaitingList(String userId) {
-        waitingList.remove(userId);
+        waitingList.removeIf(entry -> entry.getUserId().equals(userId));
     }
 
     public List<String> getInvitationList() {
@@ -142,12 +143,13 @@ public class Event {
         this.invitationList = invitationList;
     }
 
-    public void addToWaitingList(String userId) {
-        if (!waitingList.contains(userId) && waitingList.size() < maxInvited) {
-            waitingList.add(userId);
+    public void addToWaitingList(String userId, double latitude, double longitude) {
+        boolean userExists = waitingList.stream().anyMatch(entry -> entry.getUserId().equals(userId));
+        if (!userExists && waitingList.size() < maxInvited) {
+            waitingList.add(new WaitingListEntry(userId, latitude, longitude));
         }
         else {
-            System.out.println("Max capacity reached for this event");
+            System.out.println("Max capacity reached for this event or user already in waiting list");
         }
     }
 
@@ -156,12 +158,14 @@ public class Event {
     }
 
     public void rejectInvitation(String userId) {
-        waitingList.remove(userId);
+        waitingList.removeIf(entry -> entry.getUserId().equals(userId));
     }
 
     public List<String> viewWaitingListEntrants() {
-        return this.getWaitingList();
+        return this.getWaitingList().stream().map(WaitingListEntry::getUserId).collect(Collectors.toList());
     }
+
+
 
     public int viewWaitingListEntrantsCount() {
         return this.getWaitingList().size();
@@ -171,7 +175,7 @@ public class Event {
         int i = 0;
         Collections.shuffle(waitingList);
         while (i < this.getMaxInvited() && i < this.getCapacity() && !waitingList.isEmpty()) {
-            invitationList.add(waitingList.removeLast());
+            invitationList.add(waitingList.remove(waitingList.size() - 1).getUserId());
             i++;
         }
     }
