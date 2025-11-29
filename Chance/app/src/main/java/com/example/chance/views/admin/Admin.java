@@ -55,5 +55,10 @@ public class Admin extends ChanceFragment {
                 cvm.setNewFragment(MultiPurposeEventSearchScreen.class, bundle, "fade");
             });
         });
+
+        binding.browsePhotos.setOnClickListener(v -> {
+            cvm.setNewFragment(AdminViewPhotos.class, null, "fade");
+        });
+
     }
 }

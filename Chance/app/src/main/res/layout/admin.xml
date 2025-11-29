@@ -44,5 +44,14 @@
             android:textColor="@color/black"
             />
 
+        <Button
+            android:id="@+id/browse_photos"
+            android:layout_width="380dp"
+            android:layout_height="55dp"
+            android:text="Browse Photos"
+            android:backgroundTint="@color/orange"
+            android:textColor="@color/black"
+            />
+
         </com.google.android.flexbox.FlexboxLayout>
 </com.google.android.flexbox.FlexboxLayout>
