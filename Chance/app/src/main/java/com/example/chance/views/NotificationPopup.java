@@ -4,6 +4,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -69,6 +70,7 @@ public class NotificationPopup extends ChancePopup {
                     });
                     notificationsAdapter.submitList(notificationList);
                 } else {
+                    binding.notificationLoadingMessage.setText("No Notifications Found.");
                     binding.noNotificationsOverlay.setVisibility(VISIBLE);
                 }
             }, __ -> {});
@@ -89,8 +91,12 @@ public class NotificationPopup extends ChancePopup {
                     if (notificationPill != null) {
                         Notification notificationInstance = (Notification) notificationPill.getTag();
                         int type = notificationInstance.getType();
+                        Bundle bundle = new Bundle();
                         switch (type) {
                             case 0: {
+                                bundle.putString("eventId", notificationInstance.getMeta().getOrDefault("eventId", "3DJlfRD6hFkSW3rtxP8i"));
+                                cvm.setNewPopup(InvitedToEventPopup.class, bundle);
+                                Log.d("Notification", "Opening event: ");
 
                                 break;
                             }

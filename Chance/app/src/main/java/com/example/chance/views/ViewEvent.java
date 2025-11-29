@@ -170,6 +170,11 @@ public class ViewEvent extends ChanceFragment {
             cvm.setNewPopup(QRCodePopup.class, bundle);
         });
 
+        binding.pollCondition.setOnClickListener(__ -> {
+            cvm.setNewPopup(PollConditionPopup.class, null);
+        });
+
+
         binding.enterLotteryButton.setOnClickListener(__ -> {
             boolean isUserInList = currentEvent.getWaitingList().stream().anyMatch(entry -> entry.getUserId().equals(currentUser.getID()));
             if (isUserInList) {

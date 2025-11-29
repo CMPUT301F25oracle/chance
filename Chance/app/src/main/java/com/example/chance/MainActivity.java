@@ -9,6 +9,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.example.chance.controller.DataStoreManager;
 import com.example.chance.model.Event;
@@ -19,6 +20,9 @@ import com.example.chance.views.Profile;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -59,6 +63,24 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
+        //region: bring title bar down to not overlap with status bar
+        View titleBar = binding.getRoot().findViewById(R.id.title_bar);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        ViewCompat.setOnApplyWindowInsetsListener(titleBar, (v, insets) -> {
+            int topInset = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top;
+            ViewGroup.MarginLayoutParams marginParams = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+            marginParams.setMargins(
+                marginParams.leftMargin,
+                topInset,
+                marginParams.rightMargin,
+                marginParams.bottomMargin
+            );
+            v.setLayoutParams(marginParams);
+
+            return insets;
+        });
+        //endregion
+
         //region: prepare UI for splashscreen and potential login
         binding.popupContainer.setVisibility(GONE);
         binding.bannerContainer.setVisibility(GONE);
@@ -71,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
 
         //region: prepare navigation bar
         View navbar = binding.getRoot().findViewById(R.id.nav_bar);
-        View titleBar = binding.getRoot().findViewById(R.id.title_bar);
         navbar.findViewById(R.id.navbar_home_button).setOnClickListener((v) -> {
             cvm.setNewFragment(Home.class, null, "fade");
         });

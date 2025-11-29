@@ -17,6 +17,7 @@ import com.google.android.flexbox.FlexboxLayout;
 public class ChanceTextInput extends FlexboxLayout {
     private final ImageView icon;
     private final EditText textInput;
+    private TextWatcher textWatcher;
 
     final static int BLACK = 0xFF000000;
     final static int WHITE = 0xFFFFFFFF;
@@ -86,6 +87,15 @@ public class ChanceTextInput extends FlexboxLayout {
     }
 
     public void addTextChangedListener(TextWatcher textWatcher) {
-        textInput.addTextChangedListener(textWatcher);
+        this.textWatcher = textWatcher;
+        textInput.addTextChangedListener(this.textWatcher);
+    }
+
+    public void removeTextChangedListener() {
+        if (this.textWatcher != null) {
+            textInput.removeTextChangedListener(this.textWatcher);
+            this.textWatcher = null;
+        }
+
     }
 }

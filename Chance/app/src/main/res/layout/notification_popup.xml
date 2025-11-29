@@ -9,11 +9,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
+            android:id="@+id/notification_loading_message"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
             android:textSize="@dimen/common_text_size"
-            android:text="No Notifications Found."/>
+            android:text="Loading Notifications..."/>
     </FrameLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/notifications_container"

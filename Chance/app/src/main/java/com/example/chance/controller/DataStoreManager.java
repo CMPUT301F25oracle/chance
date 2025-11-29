@@ -22,6 +22,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
@@ -34,9 +35,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.core.Observable;
-
 
 public class DataStoreManager {
     // firestore requires emails to create new user accounts, so we simply
@@ -116,8 +117,8 @@ public class DataStoreManager {
                             User user = new User(username);
                             // now that the user is in firestore, we create their db entry
                             assert firestoreUser != null;
-                            fStore.collection(USER_COLLECTION)
-                                    .document(firestoreUser.getUid())
+                            DocumentReference userCollectionRef = fStore.collection(USER_COLLECTION).document(firestoreUser.getUid());
+                            userCollectionRef
                                     .set(user)
                                     .addOnSuccessListener((__) -> {
                                         onSuccess.onSuccess(user);
@@ -125,6 +126,9 @@ public class DataStoreManager {
                                     .addOnFailureListener((e) -> {
                                         onFailure.onFailure(e);
                                     });
+                            userCollectionRef
+                                .collection(NOTIFICATION_COLLECTION)
+                                .add(new Notification(-1, null, null));
                         } else {
                             onFailure.onFailure(task.getException());
                         }
@@ -363,7 +367,10 @@ public class DataStoreManager {
                 .collection(NOTIFICATION_COLLECTION)
                 .get()
                 .addOnSuccessListener((snapshot) -> {
-                    List<Notification> notifications = snapshot.toObjects(Notification.class);
+                    List<Notification> notifications = snapshot.toObjects(Notification.class)
+                        .stream()
+                        .filter(notification -> notification.getType() != -1)
+                        .collect(Collectors.toList());
                     onSuccess.onSuccess(notifications);
                 })
                 .addOnFailureListener(onFailure);
@@ -487,9 +494,7 @@ public class DataStoreManager {
             // }
         }
 
-        public void removeUnregisteredEntrants() {
 
-        }
     }
 
     public __eventImage eventImage(EventImage target_event_image) {
