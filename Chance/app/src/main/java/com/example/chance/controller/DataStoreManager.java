@@ -469,7 +469,18 @@ public class DataStoreManager {
 
         public void drawEntrants() {
             Log.d("DataStoreManager", "drawEntrants called for event " + event.getID() + " at " + System.currentTimeMillis());
-            event.pollForInvitation();
+            List<String> newInvitations = event.pollForInvitation();
+
+            db.setDocument(EVENT_COLLECTION, event.getID(), event, unused -> {
+                Log.d("DataStoreManager", "Event successfully updated after polling.");
+            }, e -> {
+                Log.e("DataStoreManager", "Error updating event after polling.", e);
+            });
+
+            if (newInvitations.isEmpty()) {
+                return;
+            }
+
             Map<String, String> meta = new HashMap<>();
             meta.put("eventID", event.getID());
             meta.put("title", event.getName());
@@ -478,22 +489,12 @@ public class DataStoreManager {
             inviteNotification.setMeta(meta);
             inviteNotification.setType(0);
             inviteNotification.setCreationDate(new Date());
-            for (String invitation : event.getInvitationList()) {
-                fStore.collection(EVENT_COLLECTION)
-                        .document(event.getID())
-                        .update("invitationList", FieldValue.arrayUnion(invitation));
+            for (String invitedUserId : newInvitations) {
                 fStore.collection(USER_COLLECTION)
-                    .document(invitation)
+                    .document(invitedUserId)
                     .collection(NOTIFICATION_COLLECTION)
                     .add(inviteNotification);
             }
-
-            // This part is also tricky, need to remove WaitingListEntry objects
-            // for (String invitation : event.getInvitationList()) {
-            //     fStore.collection(EVENT_COLLECTION)
-            //             .document(event.getID())
-            //             .update("waitingList", FieldValue.arrayRemove(invitation));
-            // }
         }
 
 

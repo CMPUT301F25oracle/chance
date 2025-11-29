@@ -171,13 +171,17 @@ public class Event {
         return this.getWaitingList().size();
     }
 
-    public void pollForInvitation() {
+    public List<String> pollForInvitation() {
+        List<String> newInvitations = new ArrayList<>();
         int i = 0;
         Collections.shuffle(waitingList);
-        while (i < this.getMaxInvited() && i < this.getCapacity() && !waitingList.isEmpty()) {
-            invitationList.add(waitingList.remove(waitingList.size() - 1).getUserId());
+        while (!waitingList.isEmpty() && i < this.getMaxInvited() && i < this.getCapacity()) {
+            String invitedUserId = waitingList.remove(waitingList.size() - 1).getUserId();
+            invitationList.add(invitedUserId);
+            newInvitations.add(invitedUserId);
             i++;
         }
+        return newInvitations;
     }
 
     public int getMaxInvited() {
