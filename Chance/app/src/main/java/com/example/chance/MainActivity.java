@@ -9,6 +9,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.example.chance.controller.DataStoreManager;
 import com.example.chance.model.Event;
@@ -19,15 +20,17 @@ import com.example.chance.views.Profile;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.chance.databinding.ActivityMainBinding;
 import com.example.chance.views.QrcodeScanner;
 import com.example.chance.views.SplashScreen;
-import com.example.chance.views.viewevent.ViewEvent;
+import com.example.chance.views.ViewEvent;
 import com.example.chance.views.base.ChanceFragment;
-import com.example.chance.views.base.ChancePopup;
 import com.google.firebase.firestore.DocumentChange;
 import com.example.chance.views.NotificationPopup;
 
@@ -36,8 +39,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
-    private ChanceViewModel chanceViewModel;
-    private DataStoreManager dataStoreManager;
+    private ChanceViewModel cvm;
+    private DataStoreManager dsm;
     private final List<BackstackFragment> backstackHistory = new ArrayList<>();
 
 
@@ -45,8 +48,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
-        chanceViewModel = new ViewModelProvider(this).get(ChanceViewModel.class);
-        dataStoreManager = DataStoreManager.getInstance();
+        cvm = new ViewModelProvider(this).get(ChanceViewModel.class);
+        dsm = DataStoreManager.getInstance();
         setContentView(binding.getRoot());
 
         initializeUI();
@@ -60,44 +63,52 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
+        //region: bring title bar down to not overlap with status bar
+        View titleBar = binding.getRoot().findViewById(R.id.title_bar);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        ViewCompat.setOnApplyWindowInsetsListener(titleBar, (v, insets) -> {
+            int topInset = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top;
+            ViewGroup.MarginLayoutParams marginParams = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+            marginParams.setMargins(
+                marginParams.leftMargin,
+                topInset,
+                marginParams.rightMargin,
+                marginParams.bottomMargin
+            );
+            v.setLayoutParams(marginParams);
+
+            return insets;
+        });
+        //endregion
+
+        //region: prepare UI for splashscreen and potential login
         binding.popupContainer.setVisibility(GONE);
         binding.bannerContainer.setVisibility(GONE);
         binding.popupContainer.setOnClickListener(v -> {
             binding.popupContainer.setVisibility(GONE);
         });
+        cvm.setLoadMainUI(false);
+        cvm.setNewFragment(SplashScreen.class, null, "none");
+        //endregion
 
-        chanceViewModel.setLoadMainUI(false);
-        chanceViewModel.setNewFragment(SplashScreen.class, null, "none");
-
+        //region: prepare navigation bar
         View navbar = binding.getRoot().findViewById(R.id.nav_bar);
-        View titleBar = binding.getRoot().findViewById(R.id.title_bar);
         navbar.findViewById(R.id.navbar_home_button).setOnClickListener((v) -> {
-            chanceViewModel.setNewFragment(Home.class, null, "fade");
+            cvm.setNewFragment(Home.class, null, "fade");
         });
         navbar.findViewById(R.id.navbar_qr_button).setOnClickListener(v -> {
-            chanceViewModel.setNewFragment(QrcodeScanner.class, null, "circular:300");
+            cvm.setNewFragment(QrcodeScanner.class, null, "circular:300");
         });
         navbar.findViewById(R.id.navbar_profile_button).setOnClickListener((v) -> {
-            chanceViewModel.setNewFragment(Profile.class, null, "fade");
+            cvm.setNewFragment(Profile.class, null, "fade");
         });
+        //endregion
 
-        chanceViewModel.getNewFragment().observe(this, this::getNewFragmentCallback);
-        chanceViewModel.getNewPopup().observe(this, this::getNewPopupCallback);
-        chanceViewModel.getBannerMessage().observe(this, message -> {
-            binding.bannerMessage.setText(message);
-            binding.bannerContainer.setVisibility(VISIBLE);
-            Runnable hideBannerRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    binding.bannerContainer.setVisibility(GONE);
-                }
-            };
-            binding.getRoot().postDelayed(hideBannerRunnable, 3000);
-        });
-
+        //region: prepare notification popup ui
         titleBar.findViewById(R.id.notification_button).setOnClickListener(v -> {
-            chanceViewModel.setNewPopup(NotificationPopup.class, null);
+            cvm.setNewPopup(NotificationPopup.class, null);
         });
+        //endregion
 
         OnBackPressedCallback backCallback = new OnBackPressedCallback(true) {
             @Override
@@ -108,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
                     Class<? extends ChanceFragment> fragmentClass = nextBackstackFragment.fragmentClass;
                     Bundle metaBundle = nextBackstackFragment.metaBundle;
                     metaBundle.putBoolean("addToBackStack", false);
-                    chanceViewModel.setNewFragment(fragmentClass, metaBundle, "fade");
+                    cvm.setNewFragment(fragmentClass, metaBundle, "fade");
                 } else {
                     finish();
                 }
@@ -118,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeChanceModelObservers() {
-        chanceViewModel.getLoadMainUI().observe(this, shouldLoad -> {
+        cvm.getLoadMainUI().observe(this, shouldLoad -> {
             backstackHistory.clear();
             // first we add some styling to the main content view
             int visibility;
@@ -137,20 +148,39 @@ public class MainActivity extends AppCompatActivity {
             binding.getRoot().findViewById(R.id.nav_bar).setVisibility(visibility);
         });
         //--
-        chanceViewModel.getAuthenticationSuccess().observe(this, user -> {
-            chanceViewModel.setCurrentUser(user);
+        cvm.getAuthenticationSuccess().observe(this, user -> {
+            cvm.setCurrentUser(user);
             // now we load the list of events from firestore
             List<Event> emptyList = new ArrayList<>();
-            chanceViewModel.setEvents(emptyList);
+            cvm.setEvents(emptyList);
             DataStoreManager.getInstance().getAllEvents((events) -> {
-                chanceViewModel.setEvents(events);
+                cvm.setEvents(events);
             });
         });
         //--
-        chanceViewModel.getEventToOpen().observe(this, eventId -> {
+        cvm.getEventToOpen().observe(this, eventId -> {
             Bundle bundle = new Bundle();
             bundle.putString("eventID", eventId);
-            chanceViewModel.setNewFragment(ViewEvent.class, bundle, "fade");
+            cvm.setNewFragment(ViewEvent.class, bundle, "fade");
+        });
+        cvm.getNewFragment().observe(this, this::getNewFragmentCallback);
+        //--
+        cvm.getNewPopup().observe(this, this::getNewPopupCallback);
+        //--
+        cvm.getBannerMessage().observe(this, message -> {
+            binding.bannerMessage.setText(message);
+            binding.bannerContainer.setVisibility(VISIBLE);
+            Runnable hideBannerRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    binding.bannerContainer.setVisibility(GONE);
+                }
+            };
+            binding.getRoot().postDelayed(hideBannerRunnable, 3000);
+        });
+        //--
+        cvm.getNotifications().observe(this, notifications -> {
+            // TODO: implement a more optimized notification poller
         });
 
     }
@@ -159,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
     private void initializeDatabasePolling() {
         // note we don't need to dispose of this subscriber since its runs
         // throughout the apps lifetime
-        dataStoreManager.observeEventsCollection()
+        dsm.observeEventsCollection()
             .observeOn(io.reactivex.rxjava3.android.schedulers.AndroidSchedulers.mainThread())
             .subscribe(eventChangeTuple -> {
                 Event event = eventChangeTuple.x;
@@ -167,11 +197,11 @@ public class MainActivity extends AppCompatActivity {
 
                 switch (changeType) {
                     case ADDED: {
-                        chanceViewModel.addEvent(event);
+                        cvm.addEvent(event);
                         break;
                     }
                     case REMOVED: {
-                        chanceViewModel.removeEvent(event);
+                        cvm.removeEvent(event);
                         break;
                     }
 

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chance.adapters.MainEventSearchListAdapter;
@@ -24,13 +25,17 @@ import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexWrap;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.Blob;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.disposables.Disposable;
 
@@ -69,6 +74,7 @@ public class Home extends ChanceFragment {
                 binding.homeSystemMessage.setText("Hello, ...");
                 return;
             }
+
             // Update UI once we have a user
             binding.homeSystemMessage.setText("Hello, " + user.getUsername());
 //            dsm.user(user).postNotification(new Notification("asdda", 1, "adaads", new Date(), Blob.fromBytes(new byte[0])),v -> {
@@ -145,6 +151,60 @@ public class Home extends ChanceFragment {
 
         // RxJava stream to populate the left and right columns with a stagger effect
         cvm.getEvents().observe(getViewLifecycleOwner(), events -> {
+            binding.searchBar.removeTextChangedListener();
+            binding.searchBar.addTextChangedListener(new android.text.TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    // Not needed for this functionality
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    // Not needed for this functionality
+                }
+
+                @Override
+                public void afterTextChanged(android.text.Editable s) {
+                    if (eventsDisposable != null) {
+                        eventsDisposable.dispose();
+                    }
+
+                    String searchText = s.toString().toLowerCase();
+                    List<Event> filteredEvents = events.stream()
+                            .filter(event -> event.getName().toLowerCase().contains(searchText))
+                            .collect(Collectors.toList());
+
+                    leftEventList.clear();
+                    rightEventList.clear();
+                    leftIdx.set(0);
+                    rightIdx.set(0);
+                    eventsAdapterLeft.notifyDataSetChanged();
+                    eventsAdapterRight.notifyDataSetChanged();
+
+                    eventsDisposable = io.reactivex.rxjava3.core.Observable
+                            .fromIterable(filteredEvents)
+                            .concatMap(ev ->
+                                    io.reactivex.rxjava3.core.Observable
+                                            .just(ev)
+                                            .delay(50, java.util.concurrent.TimeUnit.MILLISECONDS)
+                            )
+                            .observeOn(io.reactivex.rxjava3.android.schedulers.AndroidSchedulers.mainThread())
+                            .subscribe(event -> {
+                                if ((leftIdx.get() + rightIdx.get()) % 2 == 0) {
+                                    leftEventList.add(event);
+                                    eventsAdapterLeft.notifyItemInserted(leftEventList.size() - 1);
+                                    leftIdx.getAndIncrement();
+                                } else {
+                                    rightEventList.add(event);
+                                    eventsAdapterRight.notifyItemInserted(rightEventList.size() - 1);
+                                    rightIdx.getAndIncrement();
+                                }
+                            }, throwable -> {
+                                throwable.printStackTrace();
+                            });
+                }
+            });
+
             leftEventList.clear();
             rightEventList.clear();
             leftIdx.set(0);
@@ -219,6 +279,47 @@ public class Home extends ChanceFragment {
             }
         });
     }
+
+    public <T> void updateItemsFilter(android.text.Editable s, List<T> itemList, OnSuccessListener<List<T>> filteredListListener) {
+        String searchText = s.toString().toLowerCase();
+        List<T> filteredList = itemList.stream()
+            .filter(event -> event.toString().toLowerCase().contains(searchText))
+            .collect(Collectors.toList());
+
+        filteredListListener.onSuccess(filteredList);
+    }
+
+//    public <T, U, V> void updateEvents(List<T> leftEventList, List<T> rightEventList, AtomicInteger leftIdx, AtomicInteger rightIdx, ListAdapter<U, V> eventsAdapterLeft) {
+//        //updateItemsFilter();
+//        leftEventList.clear();
+//        rightEventList.clear();
+//        leftIdx.set(0);
+//        rightIdx.set(0);
+//        eventsAdapterLeft.notifyDataSetChanged();
+//        eventsAdapterRight.notifyDataSetChanged();
+//
+//        eventsDisposable = io.reactivex.rxjava3.core.Observable
+//            .fromIterable(filteredEvents)
+//            .concatMap(ev ->
+//                io.reactivex.rxjava3.core.Observable
+//                    .just(ev)
+//                    .delay(50, java.util.concurrent.TimeUnit.MILLISECONDS)
+//            )
+//            .observeOn(io.reactivex.rxjava3.android.schedulers.AndroidSchedulers.mainThread())
+//            .subscribe(event -> {
+//                if ((leftIdx.get() + rightIdx.get()) % 2 == 0) {
+//                    leftEventList.add(event);
+//                    eventsAdapterLeft.notifyItemInserted(leftEventList.size() - 1);
+//                    leftIdx.getAndIncrement();
+//                } else {
+//                    rightEventList.add(event);
+//                    eventsAdapterRight.notifyItemInserted(rightEventList.size() - 1);
+//                    rightIdx.getAndIncrement();
+//                }
+//            }, throwable -> {
+//                throwable.printStackTrace();
+//            });
+//    }
 
     /**
      * Cleans up RxJava disposables and view bindings when view is destroyed.

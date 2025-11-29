@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.chance.model.Event;
+import com.example.chance.model.Notification;
 import com.example.chance.model.User;
 import com.example.chance.util.Tuple3;
 import com.example.chance.views.base.ChanceFragment;
@@ -28,6 +29,7 @@ public class ChanceViewModel extends ViewModel {
     private final MutableLiveData<String> newBannerMessage = new MutableLiveData<>();
     private final MutableLiveData<String> requestedEventID = new MutableLiveData<>();
     private final MutableLiveData<List<Event>> events = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<List<Notification>> notifications = new MutableLiveData<>(new ArrayList<>());
 
 
     /**
@@ -101,6 +103,14 @@ public class ChanceViewModel extends ViewModel {
      */
     public void setEvents(List<Event> events) {
         this.events.postValue(events);
+    }
+
+    public LiveData<List<Notification>> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<Notification> notifications) {
+        this.notifications.postValue(notifications);
     }
 
     public void addEvent(Event event) {

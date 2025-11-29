@@ -13,8 +13,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/reusable_view_rounding"
-        android:clipToOutline="true">
+        android:background="@drawable/reusable_view_rounding">
         <FrameLayout
             android:id="@+id/content_view"
             android:layout_width="match_parent"
@@ -24,18 +23,20 @@
             android:id="@+id/popup_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#5F000000">
+            android:background="@drawable/box_rounded_corners"
+            android:backgroundTint="#5F000000"
+            android:outlineProvider="bounds">
             <FrameLayout
                 android:id="@+id/popup_view"
-                android:layout_width="350dp"
-                android:layout_height="350dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="5dp"
                 android:layout_gravity="center"
                 android:background="@drawable/box_rounded_corners"
                 android:backgroundTint="#bbd2f8"
                 android:elevation="20dp"
-                android:padding="10dp"
-                android:outlineProvider="bounds"/>
+                android:clipChildren="true"
+                android:clipToOutline="true"/>
         </FrameLayout>
         <FrameLayout
             android:id="@+id/banner_container"

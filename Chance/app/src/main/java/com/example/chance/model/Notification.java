@@ -1,24 +1,26 @@
 package com.example.chance.model;
 
-import com.google.common.primitives.Bytes;
-import com.google.firebase.firestore.Blob;
 import com.google.firebase.firestore.DocumentId;
+import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
 import java.util.Date;
+import java.util.Map;
 
 @IgnoreExtraProperties
 public class Notification {
     @DocumentId
+    @Exclude
     private String ID;
+    private Date creationDate;
     private int type;
-    private Date postedAt;
-    private Blob meta;
+    private Map<String, String> meta;
 
-    public Notification(String ID, int type, String message, Date postedAt, Blob meta) {
-        this.ID = ID;
+    public Notification() {}
+
+    public Notification(int type, Date creationDate, Map<String, String> meta) {
+        this.creationDate = creationDate;
         this.type = type;
-        this.postedAt = postedAt;
         this.meta = meta;
     }
 
@@ -38,19 +40,19 @@ public class Notification {
         this.type = type;
     }
 
-    public Date getPostedAt() {
-        return postedAt;
-    }
-
-    public void setPostedAt(Date postedAt) {
-        this.postedAt = postedAt;
-    }
-
-    public Blob getMeta() {
+    public Map<String, String> getMeta() {
         return meta;
     }
 
-    public void setMeta(Blob meta) {
+    public void setMeta(Map<String, String> meta) {
         this.meta = meta;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 }
