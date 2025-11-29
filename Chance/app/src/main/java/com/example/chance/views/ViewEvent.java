@@ -4,9 +4,11 @@ import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -21,6 +23,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 
 import com.example.chance.R;
@@ -31,6 +34,8 @@ import com.example.chance.model.Event;
 import com.example.chance.model.User;
 import com.example.chance.views.base.ChanceFragment;
 import com.example.chance.views.base.MultiPurposeProfileSearchScreen;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.zxing.WriterException;
 
 import java.io.ByteArrayOutputStream;
@@ -53,6 +58,18 @@ public class ViewEvent extends ChanceFragment {
     private EventController eventController;
     private String csvContentToSave;
 
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private Event currentEvent;
+    private User currentUser;
+
+    private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+        if (isGranted) {
+            joinLotteryWithLocation();
+        } else {
+            showErrorDialog("Location Permission Required", "Location permission is required to join the waiting list.");
+        }
+    });
+
     private final ActivityResultLauncher<Intent> createFileLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
@@ -64,7 +81,7 @@ public class ViewEvent extends ChanceFragment {
                                 Toast.makeText(getContext(), "Entrants exported successfully.", Toast.LENGTH_SHORT).show();
                             }
                         } catch (IOException e) {
-                            Toast.makeText(getContext(), "Failed to export entrants.", Toast.LENGTH_SHORT).show();
+                            showErrorDialog("Export Failed", "Failed to write CSV file: " + e.getMessage());
                             Log.e("ViewEvent", "Failed to write CSV file.", e);
                         }
                     }
@@ -78,6 +95,7 @@ public class ViewEvent extends ChanceFragment {
                              @Nullable Bundle savedInstanceState) {
         binding = ViewEventBinding.inflate(inflater, container, false);
         eventController = new EventController();
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity());
         return binding.getRoot();
     }
 
@@ -89,6 +107,7 @@ public class ViewEvent extends ChanceFragment {
         Bundle bundle = getArguments();
 
         cvm.getCurrentUser().observe(getViewLifecycleOwner(), user -> {
+            currentUser = user;
             String eventID = meta.getString("eventID");
             if (eventID == null) {
                 throw new RuntimeException("Event ID cannot be null");
@@ -96,10 +115,13 @@ public class ViewEvent extends ChanceFragment {
             cvm.getEvents().observe(getViewLifecycleOwner(), new Observer<List<Event>>() {
                 @Override
                 public void onChanged(List<Event> events) {
-                    Event event = events.stream().filter(ev -> Objects.equals(ev.getID(), eventID)).findFirst().orElse(null);
-                    loadEventInformation(event, user);
-                    if (event.getOrganizerUID().equals(user.getID())) {
-                        binding.organizerButtons.setVisibility(VISIBLE);
+                    Event event = events.stream().filter(ev -> ev != null && Objects.equals(ev.getID(), eventID)).findFirst().orElse(null);
+                    currentEvent = event;
+                    if (event != null) {
+                        loadEventInformation(event, user);
+                        if (event.getOrganizerUID().equals(user.getID())) {
+                            binding.organizerButtons.setVisibility(VISIBLE);
+                        }
                     }
 
                     cvm.getEvents().removeObserver(this);
@@ -110,20 +132,17 @@ public class ViewEvent extends ChanceFragment {
 
     public void loadEventInformation(Event event, User user) {
         assert event != null;
-        if (event.getWaitingList().contains(user.getID())) {
-            setLotteryButtonAppearance(true);
-        }
+        boolean isUserInWaitingList = event.getWaitingList().stream().anyMatch(entry -> entry.getUserId().equals(user.getID()));
+        setLotteryButtonAppearance(isUserInWaitingList);
 
         binding.eventName.setText(event.getName());
         binding.eventInformation.setText(
                 String.format("* %d users currently in waiting list  /  $%.2f per person.\n%s",
-                        event.getWaitingList().size(), event.getPrice(), event.getLocation()));
+                        event.viewWaitingListEntrantsCount(), event.getPrice(), event.getLocation()));
         binding.eventOverview.setText(event.getDescription());
 
-        // Format the end date from Firebase
         String formattedEndDate = formatDate(event.getEndDate());
 
-        // Set availability text with formatted date
         binding.availabilityText.setText(
                 String.format("The event is now available. You can sign up for the event and wait for a poll for %d candidates until %s.",
                         event.getMaxInvited(), formattedEndDate));
@@ -135,13 +154,10 @@ public class ViewEvent extends ChanceFragment {
         }
         binding.qrcodeButton.setImageBitmap(unique_qrcode);
 
-        // Load event banner
         dsm.getEventBannerFromID(event.getID(), imageBitmap -> {
             binding.eventBanner.setImageBitmap(imageBitmap);
-            // Setup removal when banner successfully loads
             setupBannerRemoval(event, user, true);
         }, __ -> {
-            // Setup removal when banner fails to load (does not exist)
             setupBannerRemoval(event, user, false);
         });
 
@@ -160,12 +176,15 @@ public class ViewEvent extends ChanceFragment {
 
 
         binding.enterLotteryButton.setOnClickListener(__ -> {
-            if (event.getWaitingList().contains(user.getID())) {
-                dsm.event(event).leaveLottery(user);
-                setLotteryButtonAppearance(false);
+            boolean isUserInList = currentEvent.getWaitingList().stream().anyMatch(entry -> entry.getUserId().equals(currentUser.getID()));
+            if (isUserInList) {
+                dsm.leaveWaitingList(currentEvent, currentUser.getID(), aVoid -> {
+                    setLotteryButtonAppearance(false);
+                }, e -> {
+                    showErrorDialog("Error Leaving Lottery", "Could not leave the waiting list. Please try again. Firebase error: " + e.getMessage());
+                });
             } else {
-                dsm.event(event).enterLottery(user);
-                setLotteryButtonAppearance(true);
+                joinLotteryWithLocation();
             }
         });
 
@@ -177,7 +196,7 @@ public class ViewEvent extends ChanceFragment {
                 cvm.setNewFragment(Home.class, bundle, "fade");
                 cvm.setBannerMessage("Event removed successfully.");
             }, failure -> {
-                Toast.makeText(requireContext(), "Failed to remove event.", Toast.LENGTH_SHORT).show();
+                showErrorDialog("Error Removing Event", "Failed to remove the event: " + failure.getMessage());
             });
         });
 
@@ -191,13 +210,13 @@ public class ViewEvent extends ChanceFragment {
 
         binding.viewFinalEntrantsButton.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
-            ArrayList<String> waitingUsersArrayList = new ArrayList<String>(event.getWaitingList());
+            ArrayList<String> waitingUsersArrayList = new ArrayList<>(event.viewWaitingListEntrants());
             bundle.putStringArrayList("users", waitingUsersArrayList);
             cvm.setNewPopup(MultiPurposeProfileSearchScreen.class, bundle);
         });
 
         binding.exportFinalEntrantsButton.setOnClickListener(v -> {
-            List<String> waitingListIds = event.getWaitingList();
+            List<String> waitingListIds = event.viewWaitingListEntrants();
             if (waitingListIds == null || waitingListIds.isEmpty()) {
                 Toast.makeText(getContext(), "Waiting list is empty.", Toast.LENGTH_SHORT).show();
                 return;
@@ -209,51 +228,63 @@ public class ViewEvent extends ChanceFragment {
                         .collect(Collectors.toList());
                 exportUsersToCsv(entrants, event.getName());
             }, e -> {
-                Toast.makeText(getContext(), "Failed to get user data for export.", Toast.LENGTH_SHORT).show();
+                showErrorDialog("Export Error", "Could not get user data for export: " + e.getMessage());
                 Log.e("ViewEvent", "Failed to fetch all users for CSV export.", e);
             });
         });
 
-        // We will implement this method after accept/reject button is implemented
+        binding.viewOnMapButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), OrganizerMapView.class);
+            intent.putExtra("eventID", event.getID());
+            startActivity(intent);
+        });
+
         binding.removeUnregisteredEntrantsButton.setOnClickListener(v -> {
 
         });
     }
 
+    private void joinLotteryWithLocation() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(location -> {
+                if (location != null) {
+                    dsm.joinWaitingList(currentEvent, currentUser.getID(), location.getLatitude(), location.getLongitude(), aVoid -> {
+                        setLotteryButtonAppearance(true);
+                    }, e -> {
+                        showErrorDialog("Error Joining Lottery", "Could not join the waiting list. Please try again. Firebase error: " + e.getMessage());
+                    });
+                } else {
+                    showErrorDialog("Location Error", "Could not retrieve your location. Please ensure location services are enabled and try again.");
+                }
+            });
+        } else {
+            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+    }
 
-    // START: BANNER REMOVAL FEATURE - MODIFIED FOR EVERYONE
     private void setupBannerRemoval(Event event, User user, boolean bannerExists) {
 
-        // --- AUTHORIZATION REMOVED: isAuthorized is now always true if bannerExists ---
-
         if (bannerExists) {
-            // Show the button if a banner actually exists, regardless of user role
             binding.removeBannerButton.setVisibility(VISIBLE);
         } else {
             binding.removeBannerButton.setVisibility(INVISIBLE);
         }
 
-        // Set the OnClickListener (Only needs to be done once)
         binding.removeBannerButton.setOnClickListener(v -> {
             new AlertDialog.Builder(requireContext())
                     .setTitle("Remove Event Banner")
                     .setMessage("Are you sure you want to permanently remove the event banner? This action is irreversible.")
                     .setPositiveButton("Remove", (dialog, which) -> {
-                        // Call the controller method
                         eventController.removeEventBanner(
                                 event.getID(),
                                 aVoid -> {
-                                    // Success callback
                                     Toast.makeText(requireContext(), "Event banner removed successfully.", Toast.LENGTH_SHORT).show();
-
-                                    // Update UI: set banner to placeholder and hide button
                                     binding.eventBanner.setImageResource(R.drawable.placeholder_banner);
                                     binding.removeBannerButton.setVisibility(INVISIBLE);
                                 },
                                 e -> {
-                                    // Failure callback
+                                    showErrorDialog("Banner Removal Failed", "Could not remove banner: " + e.getMessage());
                                     Log.e("ViewEvent", "Banner removal failed: " + e.getMessage(), e);
-                                    Toast.makeText(requireContext(), "Failed to remove banner: " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                                 }
                         );
                     })
@@ -261,7 +292,6 @@ public class ViewEvent extends ChanceFragment {
                     .show();
         });
     }
-    // END: BANNER REMOVAL FEATURE
 
     private void exportUsersToCsv(List<User> users, String eventName) {
         StringBuilder csvBuilder = new StringBuilder();
@@ -308,6 +338,14 @@ public class ViewEvent extends ChanceFragment {
         } else {
             binding.enterLotteryButton.setText("Enter Lottery");
         }
+    }
+
+    private void showErrorDialog(String title, String message) {
+        new AlertDialog.Builder(getContext())
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.ok, null)
+                .show();
     }
 
     @Override
