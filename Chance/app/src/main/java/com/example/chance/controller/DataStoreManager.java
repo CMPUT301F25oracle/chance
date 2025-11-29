@@ -346,6 +346,16 @@ public class DataStoreManager {
         }, (e)->{});
     }
 
+    public void getAllEventImages(OnSuccessListener<List<EventImage>> onSuccess, OnFailureListener onFailure) {
+        fStore.collection(EVENT_IMAGE_COLLECTION)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    List<EventImage> images = snapshot.toObjects(EventImage.class);
+                    onSuccess.onSuccess(images);
+                })
+                .addOnFailureListener(onFailure);
+    }
+
     public void removeEvent(Event event, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
         db.deleteDocument("events", event.getID(), onSuccess, onFailure);
     }
