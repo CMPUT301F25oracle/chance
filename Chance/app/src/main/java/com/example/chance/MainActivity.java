@@ -52,35 +52,6 @@ public class MainActivity extends AppCompatActivity {
         dsm = DataStoreManager.getInstance();
         setContentView(binding.getRoot());
 
-        // Draw behind system bars, we’ll handle insets manually
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-
-        View titleBar = binding.getRoot().findViewById(R.id.title_bar);
-        ViewCompat.setOnApplyWindowInsetsListener(titleBar, (v, insets) -> {
-            int topInset = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top;
-
-            // Use LayoutParams to set margin
-            ViewGroup.LayoutParams params = v.getLayoutParams();
-            if (params instanceof ViewGroup.MarginLayoutParams) {
-                ViewGroup.MarginLayoutParams marginParams = (ViewGroup.MarginLayoutParams) params;
-
-                // If you want to preserve any existing margins:
-                int baseLeft   = marginParams.leftMargin;
-                int baseRight  = marginParams.rightMargin;
-                int baseBottom = marginParams.bottomMargin;
-
-                marginParams.setMargins(
-                        baseLeft,
-                        topInset,   // apply status bar height as top margin
-                        baseRight,
-                        baseBottom
-                );
-                v.setLayoutParams(marginParams);
-            }
-
-            return insets;
-        });
-
         initializeUI();
         initializeChanceModelObservers();
         initializeDatabasePolling();
@@ -91,6 +62,24 @@ public class MainActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
+
+        //region: bring title bar down to not overlap with status bar
+        View titleBar = binding.getRoot().findViewById(R.id.title_bar);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        ViewCompat.setOnApplyWindowInsetsListener(titleBar, (v, insets) -> {
+            int topInset = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top;
+            ViewGroup.MarginLayoutParams marginParams = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+            marginParams.setMargins(
+                marginParams.leftMargin,
+                topInset,
+                marginParams.rightMargin,
+                marginParams.bottomMargin
+            );
+            v.setLayoutParams(marginParams);
+
+            return insets;
+        });
+        //endregion
 
         //region: prepare UI for splashscreen and potential login
         binding.popupContainer.setVisibility(GONE);
@@ -104,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
 
         //region: prepare navigation bar
         View navbar = binding.getRoot().findViewById(R.id.nav_bar);
-        View titleBar = binding.getRoot().findViewById(R.id.title_bar);
         navbar.findViewById(R.id.navbar_home_button).setOnClickListener((v) -> {
             cvm.setNewFragment(Home.class, null, "fade");
         });
@@ -178,6 +166,9 @@ public class MainActivity extends AppCompatActivity {
         cvm.getNewFragment().observe(this, this::getNewFragmentCallback);
         //--
         cvm.getNewPopup().observe(this, this::getNewPopupCallback);
+        cvm.getRemovePopup().observe(this, __ -> {
+            binding.popupContainer.setVisibility(GONE);
+        });
         //--
         cvm.getBannerMessage().observe(this, message -> {
             binding.bannerMessage.setText(message);

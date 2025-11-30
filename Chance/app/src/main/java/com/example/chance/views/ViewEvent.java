@@ -154,6 +154,11 @@ public class ViewEvent extends ChanceFragment {
             cvm.setNewPopup(QRCodePopup.class, bundle);
         });
 
+        binding.pollCondition.setOnClickListener(__ -> {
+            cvm.setNewPopup(PollConditionPopup.class, null);
+        });
+
+
         binding.enterLotteryButton.setOnClickListener(__ -> {
             if (event.getWaitingList().contains(user.getID())) {
                 dsm.event(event).leaveLottery(user);
@@ -181,7 +186,7 @@ public class ViewEvent extends ChanceFragment {
         });
 
         binding.drawReplacementButton.setOnClickListener(__ -> {
-            dsm.event(event).drawEntrants();
+            //dsm.event(event).drawEntrants();
         });
 
         binding.viewFinalEntrantsButton.setOnClickListener(v -> {

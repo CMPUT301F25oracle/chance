@@ -5,13 +5,10 @@ import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
 import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 
 /**
  * Represents an event in the Event Lottery System.
@@ -33,11 +30,10 @@ public class Event {
     private Date endDate;     // Event end date
     private String organizerUID;
     private int maxInvited;   // Max entrants that can be invited
-
-
-    private List<String> waitingList;
-
-    private List<String> invitationList;
+    private List<String> waitingList = new ArrayList<>();
+    private List<String> invitationList = new ArrayList<>();
+    private List<String> acceptedInvite = new ArrayList<>();
+    private List<String> declinedInvite = new ArrayList<>();
 
 
     // Required empty constructor for Firestore
@@ -152,11 +148,13 @@ public class Event {
     }
 
     public void acceptInvitation(String userId) {
-        invitationList.add(userId);
+        acceptedInvite.add(userId);
+        invitationList.remove(userId);
     }
 
-    public void rejectInvitation(String userId) {
-        waitingList.remove(userId);
+    public void declineInvitation(String userId) {
+        declinedInvite.add(userId);
+        invitationList.remove(userId);
     }
 
     public List<String> viewWaitingListEntrants() {
@@ -184,4 +182,19 @@ public class Event {
         this.maxInvited = maxInvited;
     }
 
+    public List<String> getAcceptedInvite() {
+        return acceptedInvite;
+    }
+
+    public void setAcceptedInvite(List<String> acceptedInvite) {
+        this.acceptedInvite = acceptedInvite;
+    }
+
+    public List<String> getDeclinedInvite() {
+        return declinedInvite;
+    }
+
+    public void setDeclinedInvite(List<String> declinedInvite) {
+        this.declinedInvite = declinedInvite;
+    }
 }

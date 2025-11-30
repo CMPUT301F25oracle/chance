@@ -26,6 +26,7 @@ public class ChanceViewModel extends ViewModel {
     private final MutableLiveData<Boolean> navBarVisible = new MutableLiveData<>();
     private final MutableLiveData<Tuple3<Class<? extends ChanceFragment>, Bundle, String>> newFragment = new MutableLiveData<>();
     private final MutableLiveData<Tuple3<Class<? extends ChanceFragment>, Bundle, Void>> newPopup = new MutableLiveData<>();
+    private final MutableLiveData<Void> removePopup = new MutableLiveData<>();
     private final MutableLiveData<String> newBannerMessage = new MutableLiveData<>();
     private final MutableLiveData<String> requestedEventID = new MutableLiveData<>();
     private final MutableLiveData<List<Event>> events = new MutableLiveData<>(new ArrayList<>());
@@ -156,6 +157,14 @@ public class ChanceViewModel extends ViewModel {
 
     public void setNewPopup(Class<? extends ChanceFragment> popup, Bundle bundle) {
         newPopup.postValue(new Tuple3<>(popup, bundle, null));
+    }
+
+    public MutableLiveData<Void> getRemovePopup() {
+        return removePopup;
+    }
+
+    public void removePopup() {
+        removePopup.postValue(null);
     }
 
     public MutableLiveData<String> getBannerMessage() {
