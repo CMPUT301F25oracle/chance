@@ -94,10 +94,9 @@ public class NotificationPopup extends ChancePopup {
                         Bundle bundle = new Bundle();
                         switch (type) {
                             case 0: {
-                                bundle.putString("eventId", notificationInstance.getMeta().getOrDefault("eventId", "3DJlfRD6hFkSW3rtxP8i"));
+                                bundle.putString("eventID", notificationInstance.getMeta().getOrDefault("eventID", ""));
                                 cvm.setNewPopup(InvitedToEventPopup.class, bundle);
                                 Log.d("Notification", "Opening event: ");
-
                                 break;
                             }
                             case 1: {

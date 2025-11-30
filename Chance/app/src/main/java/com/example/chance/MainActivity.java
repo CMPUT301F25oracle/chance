@@ -166,6 +166,9 @@ public class MainActivity extends AppCompatActivity {
         cvm.getNewFragment().observe(this, this::getNewFragmentCallback);
         //--
         cvm.getNewPopup().observe(this, this::getNewPopupCallback);
+        cvm.getRemovePopup().observe(this, __ -> {
+            binding.popupContainer.setVisibility(GONE);
+        });
         //--
         cvm.getBannerMessage().observe(this, message -> {
             binding.bannerMessage.setText(message);

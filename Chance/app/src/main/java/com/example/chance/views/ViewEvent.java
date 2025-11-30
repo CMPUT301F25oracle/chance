@@ -186,7 +186,7 @@ public class ViewEvent extends ChanceFragment {
         });
 
         binding.drawReplacementButton.setOnClickListener(__ -> {
-            dsm.event(event).drawEntrants();
+            //dsm.event(event).drawEntrants();
         });
 
         binding.viewFinalEntrantsButton.setOnClickListener(v -> {

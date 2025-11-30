@@ -459,7 +459,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -470,20 +469,13 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import org.checkerframework.checker.units.qual.N;
-
 import java.util.Base64;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.core.Observable;
@@ -801,7 +793,7 @@ public class DataStoreManager {
      * @param onSuccess
      */
     public void rejectInvitation(Event event, String entrantId, OnSuccessListener<Void> onSuccess) {
-        event.rejectInvitation(entrantId);
+        event.declineInvitation(entrantId);
         db.setDocument("events", event.getID(), event, onSuccess, (e)->{});
     }
 
@@ -978,6 +970,24 @@ public class DataStoreManager {
             }, e->{});
         }
 
+        public void acceptedInvite(User user) {
+            String userID = user.getID();
+            DocumentReference eventDocument = fStore.collection(EVENT_COLLECTION)
+                .document(event.getID());
+            eventDocument.update("acceptedInvite", FieldValue.arrayUnion(userID));
+            eventDocument.update("invitationList", FieldValue.arrayRemove(userID));
+            event.acceptInvitation(userID);
+        }
+
+        public void declinedInvite(User user) {
+            String userID = user.getID();
+            DocumentReference eventDocument = fStore.collection(EVENT_COLLECTION)
+                .document(event.getID());
+            eventDocument.update("declinedInvite", FieldValue.arrayUnion(userID));
+            eventDocument.update("invitationList", FieldValue.arrayRemove(userID));
+            event.declineInvitation(userID);
+        }
+
         public void enterLottery(User user) {
             fStore.collection(EVENT_COLLECTION)
                     .document(event.getID())
@@ -997,6 +1007,7 @@ public class DataStoreManager {
             Map<String, String> meta = new HashMap<>();
             meta.put("title", "You've been invited to join " + event.getName());
             meta.put("description", "Click here to join!");
+            meta.put("eventID", event.getID());
             Notification inviteNotification = new Notification();
             inviteNotification.setMeta(meta);
             inviteNotification.setType(0);

@@ -28,13 +28,25 @@ public class InvitedToEventPopup  extends ChancePopup {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        String eventID = meta.getString("eventId");
-        dsm.getEvent(eventID, event -> {
-            binding.title.setText(event.getName());
-            binding.description.setText(event.getDescription());
-            dsm.getEventBannerFromID(event.getID(), imageBitmap -> {
-                binding.banner.setImageBitmap(imageBitmap);
-            }, __ -> {});
+        String eventID = meta.getString("eventID");
+        cvm.getCurrentUser().observe(getViewLifecycleOwner(), user -> {
+            dsm.getEvent(eventID, event -> {
+                binding.title.setText(event.getName());
+                binding.description.setText(event.getDescription());
+                dsm.getEventBannerFromID(event.getID(), imageBitmap -> {
+                    binding.banner.setImageBitmap(imageBitmap);
+                }, __ -> {});
+
+                binding.declineButton.setOnClickListener(v -> {
+                    dsm.event(event).declinedInvite(user);
+                    cvm.removePopup();
+                });
+                binding.acceptButton.setOnClickListener(v -> {
+                    dsm.event(event).acceptedInvite(user);
+                    cvm.removePopup();
+                });
+            });
         });
+
     }
 }
