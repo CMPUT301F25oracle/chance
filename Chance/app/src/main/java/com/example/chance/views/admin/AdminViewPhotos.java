@@ -20,6 +20,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class AdminViewPhotos extends ChanceFragment {
 
@@ -87,17 +88,25 @@ public class AdminViewPhotos extends ChanceFragment {
             return; // nothing selected
         }
 
-        // Copy list to avoid modification issues while deleting
         List<AdminPhotosAdapter.PhotoItem> toDelete = new ArrayList<>(selected);
+        List<AdminPhotosAdapter.PhotoItem> successfullyDeleted = new ArrayList<>();
+        AtomicInteger remaining = new AtomicInteger(toDelete.size());
 
         for (AdminPhotosAdapter.PhotoItem item : toDelete) {
             StorageReference ref = storage.getReference().child(item.storagePath);
-            ref.delete().addOnSuccessListener(aVoid -> {
-                // Remove from local list and refresh UI
-                photoItems.remove(item);
-                photosAdapter.notifyDataSetChanged();
-            }).addOnFailureListener(e -> {
-                // Optional: show toast/log error
+            ref.delete().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    successfullyDeleted.add(item);
+                } else {
+                    // Optional: show toast/log error
+                }
+
+                if (remaining.decrementAndGet() == 0) {
+                    // All tasks are complete
+                    if (!successfullyDeleted.isEmpty()) {
+                        photosAdapter.removeItems(successfullyDeleted);
+                    }
+                }
             });
         }
     }
