@@ -25,10 +25,14 @@ public class AdminViewUsers extends MultiPurposeProfileSearchScreen {
             submitList(users);
         }, e->{});
     }
-    public void onUserClicked(User user) {
+
+    /**
+     * Override the click handler to navigate to the user profile view
+     */
+    @Override
+    public void interceptProfileClick(User user) {
         Bundle bundle = new Bundle();
-        bundle.putString("username", user.getUsername());  // <<< IMPORTANT
+        bundle.putString("userId", user.getID()); // Pass the user ID
         cvm.setNewFragment(AdminViewUserProfile.class, bundle, "fade");
     }
-
 }
