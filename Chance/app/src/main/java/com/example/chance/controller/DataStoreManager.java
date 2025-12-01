@@ -881,14 +881,23 @@ public class DataStoreManager {
         db.deleteDocument("events", event.getID(), onSuccess, onFailure);
     }
 
-    public __user user(User target_user) {
-        return new __user(target_user);
+    public DataStoreUser user(User target_user) {
+        return new DataStoreUser(target_user);
+    }
+
+    public DataStoreUser user(String target_user) {
+        DocumentSnapshot userDocument = fStore.collection(USER_COLLECTION)
+            .document(target_user)
+            .get()
+            .getResult();
+        User user = userDocument.toObject(User.class);
+        return  new DataStoreUser(user);
     }
 
 
-    public class __user {
+    public class DataStoreUser {
         User user;
-        __user(User user) {
+        DataStoreUser(User user) {
             this.user = user;
         }
 
@@ -941,13 +950,13 @@ public class DataStoreManager {
         }
     }
 
-    public __event event(Event target_event) {
-        return new __event(target_event);
+    public DataStoreEvent event(Event target_event) {
+        return new DataStoreEvent(target_event);
     }
 
-    public class __event {
+    public class DataStoreEvent {
         Event event;
-        __event(Event event) {
+        DataStoreEvent(Event event) {
             this.event = event;
         }
 
@@ -1008,18 +1017,22 @@ public class DataStoreManager {
             meta.put("title", "You've been invited to join " + event.getName());
             meta.put("description", "Click here to join!");
             meta.put("eventID", event.getID());
-            Notification inviteNotification = new Notification();
-            inviteNotification.setMeta(meta);
-            inviteNotification.setType(0);
-            inviteNotification.setCreationDate(new Date());
-            for (String invitation : event.getInvitationList()) {
+            Notification notificationTemplate = new Notification();
+            notificationTemplate.setMeta(meta);
+            notificationTemplate.setType(0);
+            notificationTemplate.setCreationDate(new Date());
+            for (String invitedUser : event.getInvitationList()) {
+                DataStoreUser invitedUserInstance = user(invitedUser);
+                boolean notificationsEnabled = invitedUserInstance.user.getNotificationsEnabled();
                 fStore.collection(EVENT_COLLECTION)
                         .document(event.getID())
-                        .update("invitationList", FieldValue.arrayUnion(invitation));
-                fStore.collection(USER_COLLECTION)
-                    .document(invitation)
-                    .collection(NOTIFICATION_COLLECTION)
-                    .add(inviteNotification);
+                        .update("invitationList", FieldValue.arrayUnion(invitedUser));
+                if (notificationsEnabled) {
+                    fStore.collection(USER_COLLECTION)
+                        .document(invitedUser)
+                        .collection(NOTIFICATION_COLLECTION)
+                        .add(notificationTemplate);
+                }
             }
 
             for (String invitation : event.getInvitationList()) {
@@ -1027,6 +1040,22 @@ public class DataStoreManager {
                         .document(event.getID())
                         .update("waitingList", FieldValue.arrayRemove(invitation));
             }
+
+            meta.put("title", "New notification for " + event.getName());
+            meta.put("description", "Click here to view information.");
+            notificationTemplate.setType(1);
+            for (String waitingUser : event.getWaitingList()) {
+                DataStoreUser waitingUserInstance = user(waitingUser);
+                boolean notificationsEnabled = waitingUserInstance.user.getNotificationsEnabled();
+                if (notificationsEnabled) {
+
+                }
+                fStore.collection(USER_COLLECTION)
+                    .document(waitingUser)
+                    .collection(NOTIFICATION_COLLECTION)
+                    .add(notificationTemplate);
+            }
+
         }
 
 

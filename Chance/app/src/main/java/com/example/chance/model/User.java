@@ -118,16 +118,14 @@ public class User {
     public void setProfileImageUrl(String profileImageUrl) { this.profileImageUrl = profileImageUrl; }
 
     /**
-     * returns if the user has notifications enabled
-     * @return
-     */
-    public boolean isNotificationsEnabled() { return notificationsEnabled; }
-
-    /**
      * sets the users notifcations preference
      * @param notificationsEnabled
      */
     public void setNotificationsEnabled(boolean notificationsEnabled) { this.notificationsEnabled = notificationsEnabled; }
+
+    public boolean getNotificationsEnabled() {
+        return notificationsEnabled;
+    }
 
     @Override
     public String toString() {

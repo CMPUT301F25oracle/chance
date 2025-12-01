@@ -77,20 +77,16 @@ public class NotificationPopupAdapter extends ListAdapter<Notification, Notifica
     public void onBindViewHolder(@NonNull NotificationViewHolder holder, int position) {
         Notification notification = getItem(position);
         int type = notification.getType();
-        Map<String, String> metaData = notification.getMeta();
+        Map<String, String> notificationMeta = notification.getMeta();
         if (notification == null) return;
         switch (type) {
             case -1: {
                 holder.itemView.setVisibility(View.GONE);
                 break;
             }
-            case 0: {
-                holder.title.setText(String.format("Update on invitiation from %s", notification.getMeta().getOrDefault("eventName", "Unknown")));
-                holder.description.setText("Click to view details");
-                break;
-            }
-            case 1: {
-                holder.title.setText("New Event Updated");
+            default: {
+                holder.title.setText(notificationMeta.getOrDefault("title", "No title provided."));
+                holder.description.setText(notificationMeta.getOrDefault("description", "Click here to view information."));
                 break;
             }
         }

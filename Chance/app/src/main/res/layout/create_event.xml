@@ -11,7 +11,7 @@
         app:alignItems="flex_start"
         app:flexDirection="column"
         android:orientation="vertical"
-        android:background="@color/grey">
+        android:background="@color/chance_off_blue">
 
         <!--region: event information input-->
         <com.google.android.flexbox.FlexboxLayout
