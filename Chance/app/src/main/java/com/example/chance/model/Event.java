@@ -174,6 +174,10 @@ public class Event {
         }
     }
 
+    public void removeUnregisteredEntrants() {
+       invitationList.clear();
+    }
+
     public int getMaxInvited() {
         return maxInvited;
     }

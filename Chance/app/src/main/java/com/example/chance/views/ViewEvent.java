@@ -186,13 +186,13 @@ public class ViewEvent extends ChanceFragment {
         });
 
         binding.drawReplacementButton.setOnClickListener(__ -> {
-            //dsm.event(event).drawEntrants();
+            dsm.event(event).drawEntrants();
         });
 
         binding.viewFinalEntrantsButton.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
-            ArrayList<String> waitingUsersArrayList = new ArrayList<String>(event.getWaitingList());
-            bundle.putStringArrayList("users", waitingUsersArrayList);
+            ArrayList<String> acceptedUsersArrayList = new ArrayList<String>(event.getAcceptedInvite());
+            bundle.putStringArrayList("users", acceptedUsersArrayList);
             cvm.setNewPopup(MultiPurposeProfileSearchScreen.class, bundle);
         });
 
@@ -259,6 +259,17 @@ public class ViewEvent extends ChanceFragment {
                     })
                     .setNegativeButton(android.R.string.cancel, null)
                     .show();
+        });
+
+        binding.viewChosenListButton.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            ArrayList<String> invitedUsersArrayList = new ArrayList<String>(event.getInvitationList());
+            bundle.putStringArrayList("users", invitedUsersArrayList);
+            cvm.setNewPopup(MultiPurposeProfileSearchScreen.class, bundle);
+        });
+
+        binding.removeUnregisteredEntrantsButton.setOnClickListener(v -> {
+            event.removeUnregisteredEntrants();
         });
     }
     // END: BANNER REMOVAL FEATURE
