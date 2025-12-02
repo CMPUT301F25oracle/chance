@@ -103,6 +103,7 @@ public class Profile extends ChanceFragment {
                         IDs.add(history.get("ID"));
                         Log.d("Item created", "yay");
                     }
+
                     bundle.putStringArrayList("names", names);
                     bundle.putStringArrayList("IDs", IDs);
                     cvm.setNewPopup(EventRegistrationHistoryPopup.class, bundle);

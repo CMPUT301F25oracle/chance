@@ -2,6 +2,8 @@ package com.example.chance.model;
 
 import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.IgnoreExtraProperties;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -11,17 +13,17 @@ public class User {
     @DocumentId
     private String ID;
 
-    private String username;
-    private String fullName;
-    private String email;
-    private String phoneNumber;
-    private List<String> joinedEvents;
-    private List<String> selectedEvents;
-    private List<String> waitingListEvents;
-    private String profileImageUrl;
-    private boolean notificationsEnabled;
-    private String organizationName;
-    private List<Map<String, String>> eventHistory;
+    private String username = "";
+    private String fullName = "";
+    private String email = "";
+    private String phoneNumber = "";
+    private List<String> joinedEvents = new ArrayList<>();
+    private List<String> selectedEvents = new ArrayList<>();
+    private List<String> waitingListEvents = new ArrayList<>();
+    private String profileImageUrl = "";
+    private boolean notificationsEnabled = true;
+    private String organizationName = "";
+    private List<Map<String, String>> eventHistory = new ArrayList<>();
 
 
 
