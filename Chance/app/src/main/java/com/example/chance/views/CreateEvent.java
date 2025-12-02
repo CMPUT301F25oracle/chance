@@ -114,9 +114,7 @@ public class CreateEvent extends ChanceFragment {
                 String event_description = binding.descriptionInput.getText().toString();
 
                 if (TextUtils.isEmpty(event_name) || TextUtils.isEmpty(event_address) ||
-                        TextUtils.isEmpty(max_candidates_str) || TextUtils.isEmpty(max_waitinglist_str) ||
-                        TextUtils.isEmpty(attendance_price_str) || TextUtils.isEmpty(event_description)) {
-
+                        TextUtils.isEmpty(max_candidates_str) || TextUtils.isEmpty(attendance_price_str) || TextUtils.isEmpty(event_description)) {
                     cvm.setBannerMessage("Please fill out all required fields");
                     return;
                 }
@@ -124,16 +122,35 @@ public class CreateEvent extends ChanceFragment {
                 Calendar calendar = Calendar.getInstance();
 
                 int maximum_candidates = Integer.parseInt(max_candidates_str);
-                int maximum_waitinglist = Integer.parseInt(max_waitinglist_str);
+                int maximum_waitinglist;
+                if (max_waitinglist_str.contains("")) {
+                    maximum_waitinglist = Integer.MAX_VALUE;
+                }
+                else {
+                    maximum_waitinglist = Integer.parseInt(max_waitinglist_str);
+                }
                 float attendance_price = Float.parseFloat(attendance_price_str);
 
-                DatePicker event_reg_start = binding.registrationStartInput;
+                DatePicker event_reg_start = binding.eventStartInput;
                 calendar.set(event_reg_start.getYear(), event_reg_start.getMonth(), event_reg_start.getDayOfMonth());
                 Date event_start_calendar = calendar.getTime();
 
-                DatePicker event_reg_end = binding.registrationEndInput;
+                DatePicker event_reg_end = binding.eventEndInput;
                 calendar.set(event_reg_end.getYear(), event_reg_end.getMonth(), event_reg_end.getDayOfMonth());
                 Date event_end_calendar = calendar.getTime();
+
+                DatePicker reg_start = binding.registrationStartInput;
+                calendar.set(reg_start.getYear(), reg_start.getMonth(), reg_start.getDayOfMonth());
+                Date reg_start_calendar = calendar.getTime();
+
+                DatePicker reg_end = binding.registrationEndInput;
+                calendar.set(reg_end.getYear(), reg_end.getMonth(), reg_end.getDayOfMonth());
+                Date reg_end_calendar = calendar.getTime();
+
+                if (event_end_calendar.before(event_start_calendar) || reg_end_calendar.before(reg_start_calendar)) {
+                    cvm.setBannerMessage("End date must be after start date");
+                    return;
+                }
 
                 Event new_event = new Event(event_name, event_address, maximum_candidates, attendance_price, event_description, event_start_calendar, event_end_calendar, user.getID(), maximum_waitinglist);
                 new_event.setOrganizerUID(user.getID());
