@@ -61,8 +61,7 @@ public class AdminViewPhotos extends ChanceFragment {
      * Adjust "profile_images" to your actual folder where you store images.
      */
     private void loadAllPhotosFromFirebase() {
-        StorageReference imagesRef = storage.getReference().child("profile_images");
-
+        StorageReference imagesRef = storage.getReference().child("event_images");
         imagesRef.listAll()
                 .addOnSuccessListener((ListResult listResult) -> {
                     for (StorageReference item : listResult.getItems()) {
@@ -76,7 +75,6 @@ public class AdminViewPhotos extends ChanceFragment {
                         });
                     }
                 });
-        // Optional: addOnFailureListener for error handling.
     }
 
     /**
@@ -98,7 +96,6 @@ public class AdminViewPhotos extends ChanceFragment {
                 if (task.isSuccessful()) {
                     successfullyDeleted.add(item);
                 } else {
-                    // Optional: show toast/log error
                 }
 
                 if (remaining.decrementAndGet() == 0) {
