@@ -282,14 +282,14 @@ public class DataStoreManager {
 
     /**
      * deletes the user from firebase
-     * @param username
+     * @param userId
      * @param onSuccess
      */
-    public void deleteUser(String username, OnSuccessListener<Void> onSuccess) {
-        db.deleteDocument("users", username, (___na) -> {
+    public void deleteUser(String userId, OnSuccessListener<Void> onSuccess) {
+        db.deleteDocument("users", userId, (___na) -> {
             onSuccess.onSuccess(null);
         }, (e)->{
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         });
     }
 
@@ -434,6 +434,20 @@ public class DataStoreManager {
             });
         }
 
+        public void deleteAllNotifications(OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+            fStore.collection(USER_COLLECTION)
+                    .document(user.getID())
+                    .collection(NOTIFICATION_COLLECTION)
+                    .get()
+                    .addOnSuccessListener(snapshot -> {
+                        for (DocumentSnapshot doc : snapshot.getDocuments()) {
+                            doc.getReference().delete();
+                        }
+                        onSuccess.onSuccess(null);
+                    })
+                    .addOnFailureListener(onFailure);
+        }
+
         public void postNotification(Notification notification, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
             fStore.collection(USER_COLLECTION)
                     .document(user.getID())
@@ -551,7 +565,7 @@ public class DataStoreManager {
 
         public void drawEntrants(OnSuccessListener<Void> completed) {
             Map<String, String> meta = new HashMap<>();
-            meta.put("title", "You've been invited to join " + event.getName());
+            meta.put("title", "You\'ve been invited to join " + event.getName());
             meta.put("description", "Click here to join!");
             meta.put("eventID", event.getID());
             Notification notificationTemplate = new Notification();
