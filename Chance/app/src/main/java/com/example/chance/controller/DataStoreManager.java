@@ -482,9 +482,6 @@ public class DataStoreManager {
             HashMap<String, String> newHistoryEntry = new HashMap<>();
             newHistoryEntry.put("name", event.getName());
             newHistoryEntry.put("ID", event.getID());
-            fStore.collection(USER_COLLECTION)
-                .document(userID)
-                .update("eventHistory", FieldValue.arrayUnion(newHistoryEntry));
             for (Map<String, String> history : user.getEventHistory()) {
                 if (history.get("ID").equals(event.getID())) {
                     return;
@@ -492,8 +489,11 @@ public class DataStoreManager {
             }
             Log.d("DataStoreManager", "Adding new history entry for user " + userID + " in event " + event.getID());
             List<Map<String, String>> newHistory = new ArrayList<>(user.getEventHistory());
-            newHistory.addLast(newHistoryEntry);
+            newHistory.addFirst(newHistoryEntry);
             user.setEventHistory(newHistory);
+            fStore.collection(USER_COLLECTION)
+                .document(userID)
+                .update("eventHistory", newHistory);
         }
 
         // BACKWARD COMPATIBILITY: Keep old method that doesn't require location
