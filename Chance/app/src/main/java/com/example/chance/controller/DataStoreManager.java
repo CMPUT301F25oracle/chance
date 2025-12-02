@@ -470,6 +470,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.GeoPoint;
 
 import java.util.Base64;
 import java.util.Date;
@@ -569,8 +570,8 @@ public class DataStoreManager {
                                         onFailure.onFailure(e);
                                     });
                             userCollectionRef
-                                .collection(NOTIFICATION_COLLECTION)
-                                .add(new Notification(-1, null, null));
+                                    .collection(NOTIFICATION_COLLECTION)
+                                    .add(new Notification(-1, null, null));
                         } else {
                             onFailure.onFailure(task.getException());
                         }
@@ -614,22 +615,22 @@ public class DataStoreManager {
     public Observable<Tuple3<Event, DocumentChange.Type, Void>> observeEventsCollection() {
         return Observable.create(emitter -> {
             fStore.collection(EVENT_COLLECTION)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
 
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
-                        if (error != null) {
-                            return;
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
+                            if (error != null) {
+                                return;
+                            }
+                            for (DocumentChange documentChange : snapshots.getDocumentChanges()) {
+                                DocumentSnapshot document = documentChange.getDocument();
+                                Event event = document.toObject(Event.class);
+                                emitter.onNext(new Tuple3(event, documentChange.getType(), null));
+                            }
+
                         }
-                        for (DocumentChange documentChange : snapshots.getDocumentChanges()) {
-                            DocumentSnapshot document = documentChange.getDocument();
-                            Event event = document.toObject(Event.class);
-                            emitter.onNext(new Tuple3(event, documentChange.getType(), null));
-                        }
 
-                    }
-
-                });
+                    });
         });
     }
 
@@ -648,35 +649,6 @@ public class DataStoreManager {
                     byte[] imageBase64 = Base64.getDecoder().decode(eventImage.getEventImage());
                     Bitmap imageBitmap = BitmapFactory.decodeByteArray(imageBase64, 0, imageBase64.length);
                     onSuccess.onSuccess(imageBitmap);
-
-                    // Guard: check that the document actually exists
-//                    if (document == null || !document.exists()) {
-//                        // no document found for this ID
-//                        onFailure.onFailure(new Exception("Event image not found for ID: " + ID));
-//                        return;
-//                    }
-//
-//                    EventImage eventImage = document.toObject(EventImage.class);
-//                    if (eventImage == null || eventImage.getEventImage() == null || eventImage.getEventImage().isEmpty()) {
-//                        onFailure.onFailure(new Exception("Event image data is missing or empty for ID: " + ID));
-//                        return;
-//                    }
-//
-//                    byte[] imageBase64;
-//                    try {
-//                        imageBase64 = Base64.getDecoder().decode(eventImage.getEventImage());
-//                    } catch (IllegalArgumentException ex) {
-//                        onFailure.onFailure(ex); // invalid base64
-//                        return;
-//                    }
-//
-//                    Bitmap imageBitmap = BitmapFactory.decodeByteArray(imageBase64, 0, imageBase64.length);
-//                    if (imageBitmap == null) {
-//                        onFailure.onFailure(new Exception("Failed to decode image bitmap for ID: " + ID));
-//                        return;
-//                    }
-//
-//                    onSuccess.onSuccess(imageBitmap);
                 })
                 .addOnFailureListener(onFailure);
     }
@@ -798,41 +770,6 @@ public class DataStoreManager {
     }
 
     /**
-     * uploads an event poster
-     * @param event_id
-     * @param image
-     * @param onSuccess
-     */
-//    public void uploadEventImage(String event_id, Base64 image, OnSuccessListener<Void> onSuccess) {
-//        EventImage eventImage = new EventImage(image);
-//        db.setDocument("event_images", event_id, eventImage, onSuccess, (e)->{});
-//    }
-
-    /**
-     * grabs an events associated poster
-     * @param event_id
-     * @param onSuccess
-     */
-//    public void browseEventImage(String event_id, OnSuccessListener<Base64> onSuccess) {
-//        if (event_id.isEmpty()) {
-//            onSuccess.onSuccess(null);
-//            return;
-//        } else {
-//            db.getDocument("event_images", event_id, (doc) -> {
-//                if (doc.exists()) {
-//                    EventImage eventImage = doc.toObject(EventImage.class);
-//                    onSuccess.onSuccess(eventImage.getEventImage());
-//                } else {
-//                    onSuccess.onSuccess(null);
-//                }
-//            }, (e) -> {
-//            });
-//        }
-//    }
-
-
-
-    /**
      * Create a new event in Firestore.
      * @param name
      * @param location
@@ -894,44 +831,44 @@ public class DataStoreManager {
 
         public void getNotifications(OnSuccessListener<List<Notification>> onSuccess, OnFailureListener onFailure) {
             fStore.collection(USER_COLLECTION)
-                .document(user.getID())
-                .collection(NOTIFICATION_COLLECTION)
-                .get()
-                .addOnSuccessListener((snapshot) -> {
-                    List<Notification> notifications = snapshot.toObjects(Notification.class)
-                        .stream()
-                        .filter(notification -> notification.getType() != -1)
-                        .collect(Collectors.toList());
-                    onSuccess.onSuccess(notifications);
-                })
-                .addOnFailureListener(onFailure);
+                    .document(user.getID())
+                    .collection(NOTIFICATION_COLLECTION)
+                    .get()
+                    .addOnSuccessListener((snapshot) -> {
+                        List<Notification> notifications = snapshot.toObjects(Notification.class)
+                                .stream()
+                                .filter(notification -> notification.getType() != -1)
+                                .collect(Collectors.toList());
+                        onSuccess.onSuccess(notifications);
+                    })
+                    .addOnFailureListener(onFailure);
         }
 
         public Observable<Tuple3<Notification, DocumentChange.Type, Void>> observeNotifications() {
             return Observable.create(emitter -> {
                 fStore.collection(USER_COLLECTION)
-                    .document(user.getID())
-                    .collection(NOTIFICATION_COLLECTION)
-                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
-                            if (error != null) {
-                                return;
+                        .document(user.getID())
+                        .collection(NOTIFICATION_COLLECTION)
+                        .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                            @Override
+                            public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
+                                if (error != null) {
+                                    return;
+                                }
+                                for (DocumentChange documentChange : snapshots.getDocumentChanges()) {
+                                    DocumentSnapshot document = documentChange.getDocument();
+                                    Notification notification = document.toObject(Notification.class);
+                                    emitter.onNext(new Tuple3(notification, documentChange.getType(), null));
+                                }
                             }
-                            for (DocumentChange documentChange : snapshots.getDocumentChanges()) {
-                                DocumentSnapshot document = documentChange.getDocument();
-                                Notification notification = document.toObject(Notification.class);
-                                emitter.onNext(new Tuple3(notification, documentChange.getType(), null));
-                            }
-                        }
-                    });
+                        });
             });
         }
 
         public void postNotification(Notification notification, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
             fStore.collection(USER_COLLECTION)
-                .document(user.getID())
-                .collection(NOTIFICATION_COLLECTION)
+                    .document(user.getID())
+                    .collection(NOTIFICATION_COLLECTION)
                     .add(notification)
                     .addOnSuccessListener(document -> {
                         //notification.setID(document.getId());
@@ -973,7 +910,7 @@ public class DataStoreManager {
         public void acceptedInvite(User user) {
             String userID = user.getID();
             DocumentReference eventDocument = fStore.collection(EVENT_COLLECTION)
-                .document(event.getID());
+                    .document(event.getID());
             eventDocument.update("acceptedInvite", FieldValue.arrayUnion(userID));
             eventDocument.update("invitationList", FieldValue.arrayRemove(userID));
             event.acceptInvitation(userID);
@@ -982,24 +919,50 @@ public class DataStoreManager {
         public void declinedInvite(User user) {
             String userID = user.getID();
             DocumentReference eventDocument = fStore.collection(EVENT_COLLECTION)
-                .document(event.getID());
+                    .document(event.getID());
             eventDocument.update("declinedInvite", FieldValue.arrayUnion(userID));
             eventDocument.update("invitationList", FieldValue.arrayRemove(userID));
             event.declineInvitation(userID);
         }
 
-        public void enterLottery(User user) {
-            fStore.collection(EVENT_COLLECTION)
-                    .document(event.getID())
-                    .update("waitingList", FieldValue.arrayUnion(user.getID()));
-            event.addToWaitingList(user.getID());
+        // MODIFIED: Now accepts latitude and longitude to store user location
+        public void enterLottery(User user, double latitude, double longitude) {
+            String userID = user.getID();
+            DocumentReference eventDoc = fStore.collection(EVENT_COLLECTION)
+                    .document(event.getID());
+
+            // Update waiting list
+            eventDoc.update("waitingList", FieldValue.arrayUnion(userID));
+
+            // Store location as GeoPoint in Firestore
+            GeoPoint location = new GeoPoint(latitude, longitude);
+            eventDoc.update("waitingListLocations." + userID, location);
+
+            // Update local event object
+            event.addToWaitingList(userID, latitude, longitude);
         }
 
+        // BACKWARD COMPATIBILITY: Keep old method that doesn't require location
+        public void enterLottery(User user) {
+            enterLottery(user, 0.0, 0.0);
+        }
+
+        // MODIFIED: Remove location data when user leaves lottery
         public void leaveLottery(User user) {
-            fStore.collection(EVENT_COLLECTION)
-                    .document(event.getID())
-                    .update("waitingList", FieldValue.arrayRemove(user.getID()));
-            event.leaveWaitingList(user.getID());
+            String userID = user.getID();
+            DocumentReference eventDoc = fStore.collection(EVENT_COLLECTION)
+                    .document(event.getID());
+
+            // Remove from waiting list
+            eventDoc.update("waitingList", FieldValue.arrayRemove(userID));
+
+            // Remove location data from Firestore
+            Map<String, Object> updates = new HashMap<>();
+            updates.put("waitingListLocations." + userID, FieldValue.delete());
+            eventDoc.update(updates);
+
+            // Update local event object
+            event.leaveWaitingList(userID);
         }
 
         public void drawEntrants() {
@@ -1017,9 +980,9 @@ public class DataStoreManager {
                         .document(event.getID())
                         .update("invitationList", FieldValue.arrayUnion(invitation));
                 fStore.collection(USER_COLLECTION)
-                    .document(invitation)
-                    .collection(NOTIFICATION_COLLECTION)
-                    .add(inviteNotification);
+                        .document(invitation)
+                        .collection(NOTIFICATION_COLLECTION)
+                        .add(inviteNotification);
             }
 
             for (String invitation : event.getInvitationList()) {
@@ -1028,8 +991,6 @@ public class DataStoreManager {
                         .update("waitingList", FieldValue.arrayRemove(invitation));
             }
         }
-
-
     }
 
     public __eventImage eventImage(EventImage target_event_image) {

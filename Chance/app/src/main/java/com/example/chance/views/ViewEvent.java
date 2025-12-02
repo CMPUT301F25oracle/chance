@@ -4,11 +4,14 @@ import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +24,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Observer;
 
 import com.example.chance.R;
@@ -31,6 +35,11 @@ import com.example.chance.model.Event;
 import com.example.chance.model.User;
 import com.example.chance.views.base.ChanceFragment;
 import com.example.chance.views.base.MultiPurposeProfileSearchScreen;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.zxing.WriterException;
 
 import java.io.ByteArrayOutputStream;
@@ -52,6 +61,12 @@ public class ViewEvent extends ChanceFragment {
     private Drawable buttonBackground;
     private EventController eventController;
     private String csvContentToSave;
+
+    // NEW: Location tracking fields
+    private FusedLocationProviderClient fusedLocationClient;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
+    private Event currentEvent; // Store current event for permission callback
+    private User currentUser;   // Store current user for permission callback
 
     private final ActivityResultLauncher<Intent> createFileLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -86,9 +101,14 @@ public class ViewEvent extends ChanceFragment {
         binding.organizerButtons.setVisibility(GONE);
 
         super.onViewCreated(view, savedInstanceState);
+
+        // NEW: Initialize location client
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
+
         Bundle bundle = getArguments();
 
         cvm.getCurrentUser().observe(getViewLifecycleOwner(), user -> {
+            currentUser = user; // NEW: Store user for permission callback
             String eventID = meta.getString("eventID");
             if (eventID == null) {
                 throw new RuntimeException("Event ID cannot be null");
@@ -97,6 +117,7 @@ public class ViewEvent extends ChanceFragment {
                 @Override
                 public void onChanged(List<Event> events) {
                     Event event = events.stream().filter(ev -> Objects.equals(ev.getID(), eventID)).findFirst().orElse(null);
+                    currentEvent = event; // NEW: Store event for permission callback
                     loadEventInformation(event, user);
                     if (event.getOrganizerUID().equals(user.getID())) {
                         binding.organizerButtons.setVisibility(VISIBLE);
@@ -158,14 +179,18 @@ public class ViewEvent extends ChanceFragment {
             cvm.setNewPopup(PollConditionPopup.class, null);
         });
 
-
+        // MODIFIED: Updated lottery button logic to use location
         binding.enterLotteryButton.setOnClickListener(__ -> {
             if (event.getWaitingList().contains(user.getID())) {
+                // Leave lottery
                 dsm.event(event).leaveLottery(user);
                 setLotteryButtonAppearance(false);
+                Toast.makeText(requireContext(),
+                        "Left the waiting list",
+                        Toast.LENGTH_SHORT).show();
             } else {
-                dsm.event(event).enterLottery(user);
-                setLotteryButtonAppearance(true);
+                // Enter lottery with location
+                enterLotteryWithLocation(event, user);
             }
         });
 
@@ -220,6 +245,135 @@ public class ViewEvent extends ChanceFragment {
         });
     }
 
+    // NEW: Method to enter lottery with location tracking
+    private void enterLotteryWithLocation(Event event, User user) {
+        // Check if we have location permission
+        if (ActivityCompat.checkSelfPermission(requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(requireContext(),
+                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            // Request permission
+            requestPermissions(
+                    new String[]{
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                    },
+                    LOCATION_PERMISSION_REQUEST_CODE
+            );
+            return;
+        }
+
+        // Show loading message
+        Toast.makeText(requireContext(), "Getting your location...", Toast.LENGTH_SHORT).show();
+
+        // Get last known location
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(location -> {
+                    if (location != null) {
+                        double latitude = location.getLatitude();
+                        double longitude = location.getLongitude();
+
+                        Log.d("ViewEvent", "Location obtained: " + latitude + ", " + longitude);
+
+                        // Enter lottery with location
+                        dsm.event(event).enterLottery(user, latitude, longitude);
+                        setLotteryButtonAppearance(true);
+
+                        Toast.makeText(requireContext(),
+                                "Joined waiting list at your current location",
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        // Location is null, try to get current location
+                        Log.d("ViewEvent", "Last known location is null, requesting current location");
+                        requestCurrentLocation(event, user);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ViewEvent", "Failed to get location", e);
+                    Toast.makeText(requireContext(),
+                            "Failed to get location. Please ensure location services are enabled.",
+                            Toast.LENGTH_LONG).show();
+                });
+    }
+
+    // NEW: Method to request current location if last known location is null
+    private void requestCurrentLocation(Event event, User user) {
+        if (ActivityCompat.checkSelfPermission(requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setNumUpdates(1);
+        locationRequest.setInterval(0);
+
+        fusedLocationClient.requestLocationUpdates(locationRequest,
+                new LocationCallback() {
+                    @Override
+                    public void onLocationResult(LocationResult locationResult) {
+                        if (locationResult != null && locationResult.getLastLocation() != null) {
+                            Location location = locationResult.getLastLocation();
+                            double latitude = location.getLatitude();
+                            double longitude = location.getLongitude();
+
+                            Log.d("ViewEvent", "Current location obtained: " + latitude + ", " + longitude);
+
+                            dsm.event(event).enterLottery(user, latitude, longitude);
+                            setLotteryButtonAppearance(true);
+
+                            Toast.makeText(requireContext(),
+                                    "Joined waiting list at your current location",
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            // Use default location (0, 0) as fallback
+                            Log.w("ViewEvent", "Could not get current location, using default (0, 0)");
+                            dsm.event(event).enterLottery(user, 0.0, 0.0);
+                            setLotteryButtonAppearance(true);
+
+                            Toast.makeText(requireContext(),
+                                    "Joined waiting list (location unavailable)",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, null);
+    }
+
+    // NEW: Handle permission request results
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, retry entering lottery
+                Log.d("ViewEvent", "Location permission granted");
+                if (currentEvent != null && currentUser != null) {
+                    enterLotteryWithLocation(currentEvent, currentUser);
+                }
+            } else {
+                // Permission denied - inform user
+                Log.w("ViewEvent", "Location permission denied");
+                new AlertDialog.Builder(requireContext())
+                        .setTitle("Location Permission Required")
+                        .setMessage("Location permission is required to join the waiting list. This helps organizers manage event capacity and verify attendance.")
+                        .setPositiveButton("Try Again", (dialog, which) -> {
+                            // User can request permission again
+                            if (currentEvent != null && currentUser != null) {
+                                enterLotteryWithLocation(currentEvent, currentUser);
+                            }
+                        })
+                        .setNegativeButton("Cancel", (dialog, which) -> {
+                            Toast.makeText(requireContext(),
+                                    "Cannot join waiting list without location permission",
+                                    Toast.LENGTH_LONG).show();
+                        })
+                        .show();
+            }
+        }
+    }
 
     // START: BANNER REMOVAL FEATURE - MODIFIED FOR EVERYONE
     private void setupBannerRemoval(Event event, User user, boolean bannerExists) {
