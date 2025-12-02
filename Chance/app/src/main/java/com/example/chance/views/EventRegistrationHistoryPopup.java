@@ -14,6 +14,8 @@ import com.example.chance.adapters.MultiPurposeProfileSearchScreenListAdapter;
 import com.example.chance.databinding.EventRegistrationHistoryPopupBinding;
 import com.example.chance.databinding.NotSelectedForEventPopupBinding;
 import com.example.chance.views.base.ChancePopup;
+import com.google.android.flexbox.FlexDirection;
+import com.google.android.flexbox.FlexboxLayoutManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,5 +49,9 @@ public class EventRegistrationHistoryPopup extends ChancePopup {
         historyAdapter = new EventRegistrationHistoryPopupListAdapter();
         historyContainer.setAdapter(historyAdapter);
         historyAdapter.submitList(historyMapList);
+
+        FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(getContext());
+        layoutManager.setFlexDirection(FlexDirection.ROW);
+        historyContainer.setLayoutManager(layoutManager);
     }
 }

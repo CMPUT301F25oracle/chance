@@ -6,8 +6,15 @@
     android:layout_height="350dp"
     android:orientation="vertical"
     android:weightSum="2"
-    android:background="@color/chance_grey"
-    >
+    android:background="@color/chance_off_blue">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textSize="@dimen/sub_sub_title_text_size"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:text="Registration History"/>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/history_container"
         android:layout_width="match_parent"
