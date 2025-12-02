@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="soft_text_grey"></color>
-    <color name="grey">#E8EFFF</color>
+    <color name="chance_off_blue">#E8EFFF</color>
+    <color name="chance_warning">#FF9E00</color>
+    <color name="chance_grey">#DCDCDC</color>
     <color name="orange">#FFC76C</color>
     <color name="button_red">#FF746C</color>
     <color name="theme_blue">#1170F5</color>

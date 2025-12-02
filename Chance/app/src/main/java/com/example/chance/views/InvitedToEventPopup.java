@@ -12,7 +12,6 @@ import com.example.chance.databinding.InvitedToEventPopupBinding;
 import com.example.chance.views.base.ChancePopup;
 
 public class InvitedToEventPopup  extends ChancePopup {
-
     private InvitedToEventPopupBinding binding;
 
     /**

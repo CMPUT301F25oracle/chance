@@ -296,6 +296,7 @@ public class CreateEvent extends ChanceFragment {
 
                 Event new_event = new Event(event_name, event_address, maximum_candidates, attendance_price, event_description, event_start_calendar, event_end_calendar, user.getID(), maximum_waitinglist);
                 dsm.createNewEvent(new_event, (event) -> {
+                    Log.d("Definitely created", "def");
                     if (selectedEventBanner != null) {
                         selectedEventBanner.setID(event.getID());
                         dsm.eventImage(selectedEventBanner).save((__)->{

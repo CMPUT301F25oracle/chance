@@ -19,7 +19,7 @@
         app:flexDirection="column"
         app:justifyContent="center"
         android:background="@drawable/reusable_view_rounding"
-        android:backgroundTint="@color/grey"
+        android:backgroundTint="@color/chance_off_blue"
         >
         <com.google.android.flexbox.FlexboxLayout
             android:layout_width="246dp"

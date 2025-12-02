@@ -8,7 +8,7 @@
     app:flexDirection="column"
     app:justifyContent="flex_start"
     android:orientation="vertical"
-    android:background="@color/grey">
+    android:background="@color/chance_off_blue">
 
     <com.google.android.flexbox.FlexboxLayout
         android:layout_width="match_parent"
@@ -156,6 +156,7 @@
             />
 
         <Button
+            android:id="@+id/notifications_button"
             android:layout_marginLeft="27dp"
             android:layout_width="350dp"
             android:layout_height="40dp"
