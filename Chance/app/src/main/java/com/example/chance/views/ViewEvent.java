@@ -179,6 +179,13 @@ public class ViewEvent extends ChanceFragment {
             cvm.setNewPopup(PollConditionPopup.class, null);
         });
 
+        binding.sendNotificationButton.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putString("eventName", event.getName());
+            bundle.putStringArrayList("waitlistIDS", new ArrayList<>(event.getWaitingList()));
+            cvm.setNewPopup(CustomEventNotificationPopup.class, bundle);
+        });
+
         // MODIFIED: Updated lottery button logic to use location
         binding.enterLotteryButton.setOnClickListener(__ -> {
             if (event.getWaitingList().contains(user.getID())) {

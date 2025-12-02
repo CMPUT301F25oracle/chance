@@ -102,6 +102,9 @@ public class NotificationPopup extends ChancePopup {
                                 cvm.setNewPopup(NotSelectedForEventPopup.class, bundle);
                                 break;
                             }
+                            default: {
+                                break;
+                            }
                         }
                         //cvm.requestOpenEvent(eventId);
                         return true;

@@ -12,7 +12,7 @@ public class Notification {
     @DocumentId
     @Exclude
     private String ID;
-    private Date creationDate;
+    private Date creationDate = new Date();
     private int type;
     private Map<String, String> meta;
 
