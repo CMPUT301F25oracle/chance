@@ -96,6 +96,7 @@ public class CreateEvent extends ChanceFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         binding.submitButton.setActivated(true);
+        binding.submitButton.setText("Create Event");
 
         // Request location permission when the view is created
         requestLocationPermission();
@@ -108,6 +109,7 @@ public class CreateEvent extends ChanceFragment {
         cvm.getCurrentUser().observe(getViewLifecycleOwner(), user -> {
             binding.submitButton.setOnClickListener(v -> {
                 binding.submitButton.setActivated(false);
+                binding.submitButton.setText("Please Wait...");
                 String event_name = binding.eventNameInput.getText().toString();
                 String event_address = binding.eventAddressInput.getText().toString();
                 String max_candidates_str = binding.candidateMaximumInput.getText().toString();
