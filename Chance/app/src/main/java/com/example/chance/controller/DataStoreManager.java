@@ -454,6 +454,7 @@ import com.example.chance.model.Event;
 import com.example.chance.model.EventImage;
 import com.example.chance.model.Notification;
 import com.example.chance.model.User;
+import com.example.chance.util.RxFirebase;
 import com.example.chance.util.Tuple3;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -471,7 +472,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -479,6 +482,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 
 
 public class DataStoreManager {
@@ -885,15 +889,6 @@ public class DataStoreManager {
         return new DataStoreUser(target_user);
     }
 
-    public DataStoreUser user(String target_user) {
-        DocumentSnapshot userDocument = fStore.collection(USER_COLLECTION)
-            .document(target_user)
-            .get()
-            .getResult();
-        User user = userDocument.toObject(User.class);
-        return  new DataStoreUser(user);
-    }
-
 
     public class DataStoreUser {
         User user;
@@ -1011,8 +1006,7 @@ public class DataStoreManager {
             event.leaveWaitingList(user.getID());
         }
 
-        public void drawEntrants() {
-            event.pollForInvitation();
+        public void drawEntrants(OnSuccessListener<Void> completed) {
             Map<String, String> meta = new HashMap<>();
             meta.put("title", "You've been invited to join " + event.getName());
             meta.put("description", "Click here to join!");
@@ -1021,41 +1015,64 @@ public class DataStoreManager {
             notificationTemplate.setMeta(meta);
             notificationTemplate.setType(0);
             notificationTemplate.setCreationDate(new Date());
+
+            event.pollForInvitation();
+            List<Single<DocumentSnapshot>> invitedUserInstances = new ArrayList<>();
+            List<Single<DocumentSnapshot>> notInvitedUserInstances = new ArrayList<>();
+
             for (String invitedUser : event.getInvitationList()) {
-                DataStoreUser invitedUserInstance = user(invitedUser);
-                boolean notificationsEnabled = invitedUserInstance.user.getNotificationsEnabled();
-                fStore.collection(EVENT_COLLECTION)
-                        .document(event.getID())
-                        .update("invitationList", FieldValue.arrayUnion(invitedUser));
-                if (notificationsEnabled) {
+                Single<DocumentSnapshot> userSingle = RxFirebase.toSingle(
                     fStore.collection(USER_COLLECTION)
-                        .document(invitedUser)
-                        .collection(NOTIFICATION_COLLECTION)
-                        .add(notificationTemplate);
-                }
-            }
-
-            for (String invitation : event.getInvitationList()) {
+                    .document(invitedUser)
+                    .get());
+                invitedUserInstances.add(userSingle);
                 fStore.collection(EVENT_COLLECTION)
-                        .document(event.getID())
-                        .update("waitingList", FieldValue.arrayRemove(invitation));
+                    .document(event.getID())
+                    .update("waitingList", FieldValue.arrayRemove(invitedUser));
+                fStore.collection(EVENT_COLLECTION)
+                    .document(event.getID())
+                    .update("invitationList", FieldValue.arrayUnion(invitedUser));
+            }
+            for (String notInvitedUser : event.getWaitingList()) {
+                Single<DocumentSnapshot> userSingle = RxFirebase.toSingle(
+                    fStore.collection(USER_COLLECTION)
+                    .document(notInvitedUser)
+                    .get());
+                notInvitedUserInstances.add(userSingle);
+                fStore.collection(EVENT_COLLECTION)
+                    .document(event.getID())
+                    .update("waitingList", FieldValue.arrayRemove(notInvitedUser));
             }
 
-            meta.put("title", "New notification for " + event.getName());
-            meta.put("description", "Click here to view information.");
-            notificationTemplate.setType(1);
-            for (String waitingUser : event.getWaitingList()) {
-                DataStoreUser waitingUserInstance = user(waitingUser);
-                boolean notificationsEnabled = waitingUserInstance.user.getNotificationsEnabled();
-                if (notificationsEnabled) {
 
-                }
-                fStore.collection(USER_COLLECTION)
-                    .document(waitingUser)
-                    .collection(NOTIFICATION_COLLECTION)
-                    .add(notificationTemplate);
-            }
+            Observable.fromIterable(invitedUserInstances)
+                .flatMapSingle(single -> single)
+                .subscribe(userSnapshot -> {
+                    User user = userSnapshot.toObject(User.class);
+                    DataStoreUser dataStoreUser = user(user);
+                    if (dataStoreUser.user.getNotificationsEnabled()) {
+                        dataStoreUser.postNotification(notificationTemplate, __ -> {}, __ -> {});
+                    }
+                }, e-> {
 
+                }, () -> {
+                    Observable.fromIterable(notInvitedUserInstances)
+                        .flatMapSingle(single -> single)
+                        .subscribe(userSnapshot -> {
+                            meta.put("title", "New notification from " + event.getName());
+                            meta.put("description", "Click here to view details.");
+                            notificationTemplate.setType(1);
+                            User user = userSnapshot.toObject(User.class);
+                            DataStoreUser dataStoreUser = user(user);
+                            if (dataStoreUser.user.getNotificationsEnabled()) {
+                                dataStoreUser.postNotification(notificationTemplate, __ -> {}, __ -> {});
+                            }
+                        }, e -> {
+
+                        }, () -> {
+                            completed.onSuccess(null);
+                        });
+                });
         }
 
 

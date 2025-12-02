@@ -182,11 +182,13 @@ public class ViewEvent extends ChanceFragment {
         });
 
         binding.drawEntrantsButton.setOnClickListener(__ -> {
-            dsm.event(event).drawEntrants();
+            dsm.event(event).drawEntrants(completed -> {
+                Toast.makeText(requireContext(), "Entrants drawn successfully.", Toast.LENGTH_SHORT).show();
+            });
         });
 
         binding.drawReplacementButton.setOnClickListener(__ -> {
-            dsm.event(event).drawEntrants();
+            //dsm.event(event).drawEntrants();
         });
 
         binding.viewFinalEntrantsButton.setOnClickListener(v -> {
