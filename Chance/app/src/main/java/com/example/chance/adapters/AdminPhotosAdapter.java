@@ -49,9 +49,22 @@ public class AdminPhotosAdapter extends RecyclerView.Adapter<AdminPhotosAdapter.
     public void onBindViewHolder(@NonNull PhotoViewHolder holder, int position) {
         PhotoItem item = photos.get(position);
 
-        Glide.with(context)
-                .load(item.url)
-                .into(holder.imageView);
+        try {
+            // 1. Check if the "url" field is actually a Base64 string (which it is now)
+            byte[] decodedString = android.util.Base64.decode(item.url, android.util.Base64.DEFAULT);
+
+            // 2. Convert bytes into a Bitmap image
+            android.graphics.Bitmap decodedByte = android.graphics.BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+
+            // 3. Set the bitmap directly to the ImageView
+            holder.imageView.setImageBitmap(decodedByte);
+
+        } catch (Exception e) {
+            // Fallback: If it fails (e.g. maybe it IS a real URL in some legacy cases), try Glide
+            Glide.with(context)
+                    .load(item.url)
+                    .into(holder.imageView);
+        }
 
         holder.selectionIndicator.setVisibility(item.selected ? View.VISIBLE : View.GONE);
 
