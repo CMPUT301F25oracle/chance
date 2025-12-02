@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,6 +101,7 @@ public class Profile extends ChanceFragment {
                     for (Map<String, String> history : user.getEventHistory()) {
                         names.add(history.get("name"));
                         IDs.add(history.get("ID"));
+                        Log.d("Item created", "yay");
                     }
                     bundle.putStringArrayList("names", names);
                     bundle.putStringArrayList("IDs", IDs);
