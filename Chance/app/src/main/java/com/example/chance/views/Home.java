@@ -171,7 +171,22 @@ public class Home extends ChanceFragment {
 
                     String searchText = s.toString().toLowerCase();
                     List<Event> filteredEvents = events.stream()
-                            .filter(event -> event.getName().toLowerCase().contains(searchText))
+                            .filter(event -> {
+                                String filterText =
+                                    event.getName() + " " +
+                                    event.getDescription() + " " +
+                                    event.getLocation() + " " +
+                                    event.getStartDate().toString() + " " +
+                                    event.getEndDate().toString();
+                                filterText = filterText.toLowerCase();
+                                String[] searchTokens = searchText.split("\\s+");
+                                for (String token : searchTokens) {
+                                    if (!filterText.contains(token.toLowerCase())) {
+                                        return false;
+                                    }
+                                }
+                                return true;
+                            })
                             .collect(Collectors.toList());
 
                     leftEventList.clear();
