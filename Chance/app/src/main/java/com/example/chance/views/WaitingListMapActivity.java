@@ -5,7 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.chance.R;
-import com.example.chance.controller.FirebaseManager;
+import com.example.chance.controller.DataStoreManager;
 import com.example.chance.model.Event;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -25,7 +25,6 @@ public class WaitingListMapActivity extends AppCompatActivity implements OnMapRe
 
     private GoogleMap mMap;
     private String eventId;
-    private FirebaseManager firebaseManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +39,6 @@ public class WaitingListMapActivity extends AppCompatActivity implements OnMapRe
             return;
         }
 
-        firebaseManager = FirebaseManager.getInstance();
 
         // Obtain the SupportMapFragment and get notified when the map is ready
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -63,19 +61,11 @@ public class WaitingListMapActivity extends AppCompatActivity implements OnMapRe
     }
 
     private void loadEventAndDisplayMarkers() {
-        firebaseManager.getDocument("events", eventId,
-                documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        Event event = documentSnapshot.toObject(Event.class);
-                        if (event != null) {
-                            displayUserMarkers(event);
-                        }
-                    } else {
-                        Log.e(TAG, "Event not found");
-                    }
-                },
-                e -> Log.e(TAG, "Error loading event", e)
-        );
+        DataStoreManager.getInstance().getEvent(eventId, event -> {
+            if (event != null) {
+                displayUserMarkers(event);
+            }
+        });
     }
 
     private void displayUserMarkers(Event event) {

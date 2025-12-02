@@ -28,7 +28,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Observer;
 
 import com.example.chance.R;
-import com.example.chance.controller.EventController;
 import com.example.chance.controller.QRCodeHandler;
 import com.example.chance.databinding.ViewEventBinding;
 import com.example.chance.model.Event;
@@ -58,8 +57,6 @@ public class ViewEvent extends ChanceFragment {
     private ViewEventBinding binding;
     Bitmap unique_qrcode;
 
-    private Drawable buttonBackground;
-    private EventController eventController;
     private String csvContentToSave;
 
     // NEW: Location tracking fields
@@ -92,7 +89,6 @@ public class ViewEvent extends ChanceFragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = ViewEventBinding.inflate(inflater, container, false);
-        eventController = new EventController();
         return binding.getRoot();
     }
 
@@ -421,7 +417,7 @@ public class ViewEvent extends ChanceFragment {
                     .setMessage("Are you sure you want to permanently remove the event banner? This action is irreversible.")
                     .setPositiveButton("Remove", (dialog, which) -> {
                         // Call the controller method
-                        eventController.removeEventBanner(
+                        dsm.deleteEventBanner(
                                 event.getID(),
                                 aVoid -> {
                                     // Success callback

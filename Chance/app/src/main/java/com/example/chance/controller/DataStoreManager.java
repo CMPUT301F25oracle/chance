@@ -52,7 +52,6 @@ public class DataStoreManager {
     private static DataStoreManager instance;
     private static FirebaseAuth fAuth;
     private static FirebaseFirestore fStore;
-    private final FirebaseManager db;
 
     private final String PSEUDO_EMAIL = "@authentication.chance";
     private final String USER_COLLECTION = "users";
@@ -63,7 +62,6 @@ public class DataStoreManager {
     private DataStoreManager() {
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
-        db = FirebaseManager.getInstance();
     }
 
     /**
@@ -165,14 +163,18 @@ public class DataStoreManager {
 
 
     public void getUserFromUID(String uid, OnSuccessListener<User> onSuccess, OnFailureListener onFailure) {
-        db.getDocument("users", uid, (document) -> {
-            if (document.exists()) {
-                User user = document.toObject(User.class);
-                onSuccess.onSuccess(user);
-            } else {
-                onFailure.onFailure(null);
-            }
-        }, onFailure);
+        fStore.collection(USER_COLLECTION)
+            .document(uid)
+            .get()
+            .addOnSuccessListener(userDocument -> {
+                if (userDocument.exists()) {
+                    User user = userDocument.toObject(User.class);
+                    onSuccess.onSuccess(user);
+                } else {
+                    onFailure.onFailure(null);
+                }
+            })
+            .addOnFailureListener(onFailure);
     }
 
     public void createNewEvent(Event event, OnSuccessListener<Event> onSuccess, OnFailureListener onFailure) {
@@ -257,32 +259,15 @@ public class DataStoreManager {
     }
 
     /**
-     * Get a user from Firestore.
-     * @param username
-     * @param onSuccess
-     */
-    public void getUser(String username, OnSuccessListener<User> onSuccess) {
-        if (username.isEmpty()) {
-            onSuccess.onSuccess(null);
-            return;
-        }
-        db.getDocument("users", username, (doc) -> {
-            if (doc.exists()) {
-                User user = doc.toObject(User.class);
-                onSuccess.onSuccess(user);
-            } else {
-                onSuccess.onSuccess(null);
-            }
-        }, (e)->{});
-    }
-
-    /**
      * updates the user in firebase
      * @param updatedUser
      * @param onSuccess
      */
     public void updateUser(User updatedUser, OnSuccessListener<Void> onSuccess) {
-        db.setDocument("users", updatedUser.getID(), updatedUser, onSuccess, (e)->{});
+        fStore.collection(USER_COLLECTION)
+            .document(updatedUser.getID())
+            .set(updatedUser)
+            .addOnSuccessListener(onSuccess);
     }
 
     /**
@@ -291,74 +276,13 @@ public class DataStoreManager {
      * @param onSuccess
      */
     public void deleteUser(String userId, OnSuccessListener<Void> onSuccess) {
-        db.deleteDocument("users", userId, (___na) -> {
-            onSuccess.onSuccess(null);
-        }, (e)->{
-            throw new RuntimeException(e);
-        });
-    }
-
-
-    /**
-     * joins the user into the waiting list
-     * @param event
-     * @param entrantId
-     * @param onSuccess
-     */
-    public void joinWaitingList(Event event, String entrantId, OnSuccessListener<Void> onSuccess) {
-        event.addToWaitingList(entrantId);
-        db.setDocument("events", event.getID(), event, onSuccess, (e)->{});
-    }
-
-    /**
-     * removes the user from the waiting list
-     * @param event
-     * @param entrantId
-     * @param onSuccess
-     */
-    public void leaveWaitingList(Event event, String entrantId, OnSuccessListener<Void> onSuccess) {
-        event.leaveWaitingList(entrantId);
-        db.setDocument("events", event.getID(), event, onSuccess, (e)->{});
-    }
-
-    /**
-     * accepts the invitation for the specified event
-     * @param event
-     * @param entrantId
-     * @param onSuccess
-     */
-    public void acceptInvitation(Event event, String entrantId, OnSuccessListener<Void> onSuccess) {
-        event.acceptInvitation(entrantId);
-        db.setDocument("events", event.getID(), event, onSuccess, (e)->{});
-    }
-
-    /**
-     * rejects the invitation for the specified event
-     * @param event
-     * @param entrantId
-     * @param onSuccess
-     */
-    public void rejectInvitation(Event event, String entrantId, OnSuccessListener<Void> onSuccess) {
-        event.declineInvitation(entrantId);
-        db.setDocument("events", event.getID(), event, onSuccess, (e)->{});
-    }
-
-    /**
-     * Create a new event in Firestore.
-     * @param name
-     * @param location
-     * @param capacity
-     * @param price
-     * @param description
-     * @param startDate
-     * @param endDate
-     * @param organizerUserName
-     * @return
-     */
-    public Event createEvent(String name, String location, int capacity, double price, String description, Date startDate, Date endDate, String organizerUserName) {
-        Event new_event = new Event(name, location, capacity, price, description, startDate, endDate, organizerUserName, 0);
-        db.setDocument("events", new_event.getID(), new_event, (s)->{}, (s)->{});
-        return new_event;
+        fStore.collection(USER_COLLECTION)
+            .document(userId)
+            .delete()
+            .addOnSuccessListener(onSuccess)
+            .addOnFailureListener(e -> {
+                throw new RuntimeException(e);
+            });
     }
 
     /**
@@ -367,14 +291,18 @@ public class DataStoreManager {
      * @param onSuccess
      */
     public void getEvent(String id, OnSuccessListener<Event> onSuccess) {
-        db.getDocument("events", id, (doc) -> {
-            if (doc.exists()) {
-                Event event = doc.toObject(Event.class);
-                onSuccess.onSuccess(event);
-            } else {
-                onSuccess.onSuccess(null);
-            }
-        }, (e)->{});
+        fStore.collection(EVENT_COLLECTION)
+            .document(id)
+            .get()
+            .addOnSuccessListener(eventSnapshot -> {
+                if (eventSnapshot.exists()) {
+                    Event event = eventSnapshot.toObject(Event.class);
+                    onSuccess.onSuccess(event);
+                } else {
+                    onSuccess.onSuccess(null);
+                }
+            })
+            .addOnFailureListener(e -> {});
     }
 
     /**
@@ -382,14 +310,21 @@ public class DataStoreManager {
      * @param onSuccess
      */
     public void getAllEvents(OnSuccessListener<List<Event>> onSuccess) {
-        db.getCollection("events", (snapshot) -> {
-            List<Event> events = snapshot.toObjects(Event.class);
-            onSuccess.onSuccess(events);
-        }, (e)->{});
+        fStore.collection(EVENT_COLLECTION)
+            .get()
+            .addOnSuccessListener(snapshot -> {
+                List<Event> events = snapshot.toObjects(Event.class);
+                onSuccess.onSuccess(events);
+            })
+            .addOnFailureListener(e -> {});
     }
 
     public void removeEvent(Event event, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
-        db.deleteDocument("events", event.getID(), onSuccess, onFailure);
+        fStore.collection(EVENT_COLLECTION)
+            .document(event.getID())
+            .delete()
+            .addOnSuccessListener(onSuccess)
+            .addOnFailureListener(onFailure);
     }
 
     public DataStoreUser user(User target_user) {
