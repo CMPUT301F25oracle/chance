@@ -58,6 +58,19 @@ public class Profile extends ChanceFragment {
                 binding.emailInput.setText(user.getEmail());
                 binding.phoneInput.setText(user.getPhoneNumber());
 
+                binding.notificationsButton.setText(
+                    user.getNotificationsEnabled() ? "Disable Notifications" : "Enable Notifications"
+                );
+                binding.notificationsButton.setOnClickListener(v -> {
+                    user.setNotificationsEnabled(!user.getNotificationsEnabled());
+                    binding.notificationsButton.setText(
+                        user.getNotificationsEnabled() ? "Disable Notifications" : "Enable Notifications"
+                    );
+                    dsm.updateUser(user, (na)->{
+                        Toast.makeText(getContext(), "Information saved successfully", Toast.LENGTH_SHORT).show();
+                    });
+                });
+
                 binding.logoutButton.setOnClickListener(v -> {
                     logoutUser();
                 });

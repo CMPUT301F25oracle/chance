@@ -30,6 +30,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- Google Play Services metadata -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <!-- Google Maps API Key -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCCfSUhUo1zKPnwowKyol8z5kZ1bWmxIBM"/>
 
     </application>
 

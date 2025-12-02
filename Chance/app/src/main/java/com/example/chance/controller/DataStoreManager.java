@@ -10,6 +10,7 @@ import com.example.chance.model.Event;
 import com.example.chance.model.EventImage;
 import com.example.chance.model.Notification;
 import com.example.chance.model.User;
+import com.example.chance.util.RxFirebase;
 import com.example.chance.util.Tuple3;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -26,7 +27,9 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.GeoPoint;
 
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
@@ -35,6 +38,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 
 
 public class DataStoreManager {
@@ -125,8 +129,8 @@ public class DataStoreManager {
                                         onFailure.onFailure(e);
                                     });
                             userCollectionRef
-                                .collection(NOTIFICATION_COLLECTION)
-                                .add(new Notification(-1, null, null));
+                                    .collection(NOTIFICATION_COLLECTION)
+                                    .add(new Notification(-1, null, null));
                         } else {
                             onFailure.onFailure(task.getException());
                         }
@@ -170,22 +174,22 @@ public class DataStoreManager {
     public Observable<Tuple3<Event, DocumentChange.Type, Void>> observeEventsCollection() {
         return Observable.create(emitter -> {
             fStore.collection(EVENT_COLLECTION)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
 
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
-                        if (error != null) {
-                            return;
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
+                            if (error != null) {
+                                return;
+                            }
+                            for (DocumentChange documentChange : snapshots.getDocumentChanges()) {
+                                DocumentSnapshot document = documentChange.getDocument();
+                                Event event = document.toObject(Event.class);
+                                emitter.onNext(new Tuple3(event, documentChange.getType(), null));
+                            }
+
                         }
-                        for (DocumentChange documentChange : snapshots.getDocumentChanges()) {
-                            DocumentSnapshot document = documentChange.getDocument();
-                            Event event = document.toObject(Event.class);
-                            emitter.onNext(new Tuple3(event, documentChange.getType(), null));
-                        }
 
-                    }
-
-                });
+                    });
         });
     }
 
@@ -204,35 +208,6 @@ public class DataStoreManager {
                     byte[] imageBase64 = Base64.getDecoder().decode(eventImage.getEventImage());
                     Bitmap imageBitmap = BitmapFactory.decodeByteArray(imageBase64, 0, imageBase64.length);
                     onSuccess.onSuccess(imageBitmap);
-
-                    // Guard: check that the document actually exists
-//                    if (document == null || !document.exists()) {
-//                        // no document found for this ID
-//                        onFailure.onFailure(new Exception("Event image not found for ID: " + ID));
-//                        return;
-//                    }
-//
-//                    EventImage eventImage = document.toObject(EventImage.class);
-//                    if (eventImage == null || eventImage.getEventImage() == null || eventImage.getEventImage().isEmpty()) {
-//                        onFailure.onFailure(new Exception("Event image data is missing or empty for ID: " + ID));
-//                        return;
-//                    }
-//
-//                    byte[] imageBase64;
-//                    try {
-//                        imageBase64 = Base64.getDecoder().decode(eventImage.getEventImage());
-//                    } catch (IllegalArgumentException ex) {
-//                        onFailure.onFailure(ex); // invalid base64
-//                        return;
-//                    }
-//
-//                    Bitmap imageBitmap = BitmapFactory.decodeByteArray(imageBase64, 0, imageBase64.length);
-//                    if (imageBitmap == null) {
-//                        onFailure.onFailure(new Exception("Failed to decode image bitmap for ID: " + ID));
-//                        return;
-//                    }
-//
-//                    onSuccess.onSuccess(imageBitmap);
                 })
                 .addOnFailureListener(onFailure);
     }
@@ -354,41 +329,6 @@ public class DataStoreManager {
     }
 
     /**
-     * uploads an event poster
-     * @param event_id
-     * @param image
-     * @param onSuccess
-     */
-//    public void uploadEventImage(String event_id, Base64 image, OnSuccessListener<Void> onSuccess) {
-//        EventImage eventImage = new EventImage(image);
-//        db.setDocument("event_images", event_id, eventImage, onSuccess, (e)->{});
-//    }
-
-    /**
-     * grabs an events associated poster
-     * @param event_id
-     * @param onSuccess
-     */
-//    public void browseEventImage(String event_id, OnSuccessListener<Base64> onSuccess) {
-//        if (event_id.isEmpty()) {
-//            onSuccess.onSuccess(null);
-//            return;
-//        } else {
-//            db.getDocument("event_images", event_id, (doc) -> {
-//                if (doc.exists()) {
-//                    EventImage eventImage = doc.toObject(EventImage.class);
-//                    onSuccess.onSuccess(eventImage.getEventImage());
-//                } else {
-//                    onSuccess.onSuccess(null);
-//                }
-//            }, (e) -> {
-//            });
-//        }
-//    }
-
-
-
-    /**
      * Create a new event in Firestore.
      * @param name
      * @param location
@@ -437,50 +377,50 @@ public class DataStoreManager {
         db.deleteDocument("events", event.getID(), onSuccess, onFailure);
     }
 
-    public __user user(User target_user) {
-        return new __user(target_user);
+    public DataStoreUser user(User target_user) {
+        return new DataStoreUser(target_user);
     }
 
 
-    public class __user {
+    public class DataStoreUser {
         User user;
-        __user(User user) {
+        DataStoreUser(User user) {
             this.user = user;
         }
 
         public void getNotifications(OnSuccessListener<List<Notification>> onSuccess, OnFailureListener onFailure) {
             fStore.collection(USER_COLLECTION)
-                .document(user.getID())
-                .collection(NOTIFICATION_COLLECTION)
-                .get()
-                .addOnSuccessListener((snapshot) -> {
-                    List<Notification> notifications = snapshot.toObjects(Notification.class)
-                        .stream()
-                        .filter(notification -> notification.getType() != -1)
-                        .collect(Collectors.toList());
-                    onSuccess.onSuccess(notifications);
-                })
-                .addOnFailureListener(onFailure);
+                    .document(user.getID())
+                    .collection(NOTIFICATION_COLLECTION)
+                    .get()
+                    .addOnSuccessListener((snapshot) -> {
+                        List<Notification> notifications = snapshot.toObjects(Notification.class)
+                                .stream()
+                                .filter(notification -> notification.getType() != -1)
+                                .collect(Collectors.toList());
+                        onSuccess.onSuccess(notifications);
+                    })
+                    .addOnFailureListener(onFailure);
         }
 
         public Observable<Tuple3<Notification, DocumentChange.Type, Void>> observeNotifications() {
             return Observable.create(emitter -> {
                 fStore.collection(USER_COLLECTION)
-                    .document(user.getID())
-                    .collection(NOTIFICATION_COLLECTION)
-                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
-                            if (error != null) {
-                                return;
+                        .document(user.getID())
+                        .collection(NOTIFICATION_COLLECTION)
+                        .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                            @Override
+                            public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
+                                if (error != null) {
+                                    return;
+                                }
+                                for (DocumentChange documentChange : snapshots.getDocumentChanges()) {
+                                    DocumentSnapshot document = documentChange.getDocument();
+                                    Notification notification = document.toObject(Notification.class);
+                                    emitter.onNext(new Tuple3(notification, documentChange.getType(), null));
+                                }
                             }
-                            for (DocumentChange documentChange : snapshots.getDocumentChanges()) {
-                                DocumentSnapshot document = documentChange.getDocument();
-                                Notification notification = document.toObject(Notification.class);
-                                emitter.onNext(new Tuple3(notification, documentChange.getType(), null));
-                            }
-                        }
-                    });
+                        });
             });
         }
 
@@ -500,8 +440,8 @@ public class DataStoreManager {
 
         public void postNotification(Notification notification, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
             fStore.collection(USER_COLLECTION)
-                .document(user.getID())
-                .collection(NOTIFICATION_COLLECTION)
+                    .document(user.getID())
+                    .collection(NOTIFICATION_COLLECTION)
                     .add(notification)
                     .addOnSuccessListener(document -> {
                         //notification.setID(document.getId());
@@ -517,27 +457,29 @@ public class DataStoreManager {
 
     public class __event {
         Event event;
+
         __event(Event event) {
             this.event = event;
         }
 
         public void getUsersInLottery(OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
             fStore.collection(EVENT_COLLECTION)
-                    .document(event.getID())
-                    .get()
-                    .addOnSuccessListener(snapshot -> {
-                        Event event = snapshot.toObject(Event.class);
-                        List<String> waitingListUsers = event.getWaitingList();
-                        onSuccess.onSuccess(waitingListUsers);
-                    })
-                    .addOnFailureListener(onFailure);
+                .document(event.getID())
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    Event event = snapshot.toObject(Event.class);
+                    List<String> waitingListUsers = event.getWaitingList();
+                    onSuccess.onSuccess(waitingListUsers);
+                })
+                .addOnFailureListener(onFailure);
         }
 
         public void checkUserInLottery(User user, OnSuccessListener<Boolean> onSuccess) {
             getUsersInLottery(users -> {
                 boolean isInLottery = users.contains(user.getID());
                 onSuccess.onSuccess(isInLottery);
-            }, e->{});
+            }, e -> {
+            });
         }
 
         public void acceptedInvite(User user) {
@@ -558,48 +500,118 @@ public class DataStoreManager {
             event.declineInvitation(userID);
         }
 
+        // MODIFIED: Now accepts latitude and longitude to store user location
+        public void enterLottery(User user, double latitude, double longitude) {
+            String userID = user.getID();
+            DocumentReference eventDoc = fStore.collection(EVENT_COLLECTION)
+                .document(event.getID());
+
+            // Update waiting list
+            eventDoc.update("waitingList", FieldValue.arrayUnion(userID));
+
+            // Store location as GeoPoint in Firestore
+            GeoPoint location = new GeoPoint(latitude, longitude);
+            eventDoc.update("waitingListLocations." + userID, location);
+
+            // Update local event object
+            event.addToWaitingList(userID, latitude, longitude);
+        }
+
+        // BACKWARD COMPATIBILITY: Keep old method that doesn't require location
         public void enterLottery(User user) {
-            fStore.collection(EVENT_COLLECTION)
-                    .document(event.getID())
-                    .update("waitingList", FieldValue.arrayUnion(user.getID()));
-            event.addToWaitingList(user.getID());
+            enterLottery(user, 0.0, 0.0);
         }
 
+        // MODIFIED: Remove location data when user leaves lottery
         public void leaveLottery(User user) {
-            fStore.collection(EVENT_COLLECTION)
-                    .document(event.getID())
-                    .update("waitingList", FieldValue.arrayRemove(user.getID()));
-            event.leaveWaitingList(user.getID());
+            String userID = user.getID();
+            DocumentReference eventDoc = fStore.collection(EVENT_COLLECTION)
+                .document(event.getID());
+
+            // Remove from waiting list
+            eventDoc.update("waitingList", FieldValue.arrayRemove(userID));
+
+            // Remove location data from Firestore
+            Map<String, Object> updates = new HashMap<>();
+            updates.put("waitingListLocations." + userID, FieldValue.delete());
+            eventDoc.update(updates);
+
+            // Update local event object
+            event.leaveWaitingList(userID);
         }
 
-        public void drawEntrants() {
-            event.pollForInvitation();
+        public void drawEntrants(OnSuccessListener<Void> completed) {
             Map<String, String> meta = new HashMap<>();
             meta.put("title", "You\'ve been invited to join " + event.getName());
             meta.put("description", "Click here to join!");
             meta.put("eventID", event.getID());
-            Notification inviteNotification = new Notification();
-            inviteNotification.setMeta(meta);
-            inviteNotification.setType(0);
-            inviteNotification.setCreationDate(new Date());
-            for (String invitation : event.getInvitationList()) {
+            Notification notificationTemplate = new Notification();
+            notificationTemplate.setMeta(meta);
+            notificationTemplate.setType(0);
+            notificationTemplate.setCreationDate(new Date());
+
+            event.pollForInvitation();
+            List<Single<DocumentSnapshot>> invitedUserInstances = new ArrayList<>();
+            List<Single<DocumentSnapshot>> notInvitedUserInstances = new ArrayList<>();
+
+            for (String invitedUser : event.getInvitationList()) {
+                Single<DocumentSnapshot> userSingle = RxFirebase.toSingle(
+                    fStore.collection(USER_COLLECTION)
+                        .document(invitedUser)
+                        .get());
+                invitedUserInstances.add(userSingle);
                 fStore.collection(EVENT_COLLECTION)
-                        .document(event.getID())
-                        .update("invitationList", FieldValue.arrayUnion(invitation));
-                fStore.collection(USER_COLLECTION)
-                    .document(invitation)
-                    .collection(NOTIFICATION_COLLECTION)
-                    .add(inviteNotification);
+                    .document(event.getID())
+                    .update("waitingList", FieldValue.arrayRemove(invitedUser));
+                fStore.collection(EVENT_COLLECTION)
+                    .document(event.getID())
+                    .update("invitationList", FieldValue.arrayUnion(invitedUser));
+            }
+            for (String notInvitedUser : event.getWaitingList()) {
+                Single<DocumentSnapshot> userSingle = RxFirebase.toSingle(
+                    fStore.collection(USER_COLLECTION)
+                        .document(notInvitedUser)
+                        .get());
+                notInvitedUserInstances.add(userSingle);
+                fStore.collection(EVENT_COLLECTION)
+                    .document(event.getID())
+                    .update("waitingList", FieldValue.arrayRemove(notInvitedUser));
             }
 
-            for (String invitation : event.getInvitationList()) {
-                fStore.collection(EVENT_COLLECTION)
-                        .document(event.getID())
-                        .update("waitingList", FieldValue.arrayRemove(invitation));
-            }
+
+            Observable.fromIterable(invitedUserInstances)
+                .flatMapSingle(single -> single)
+                .subscribe(userSnapshot -> {
+                    User user = userSnapshot.toObject(User.class);
+                    DataStoreUser dataStoreUser = user(user);
+                    if (dataStoreUser.user.getNotificationsEnabled()) {
+                        dataStoreUser.postNotification(notificationTemplate, __ -> {
+                        }, __ -> {
+                        });
+                    }
+                }, e -> {
+
+                }, () -> {
+                    Observable.fromIterable(notInvitedUserInstances)
+                        .flatMapSingle(single -> single)
+                        .subscribe(userSnapshot -> {
+                            meta.put("title", "New notification from " + event.getName());
+                            meta.put("description", "Click here to view details.");
+                            notificationTemplate.setType(1);
+                            User user = userSnapshot.toObject(User.class);
+                            DataStoreUser dataStoreUser = user(user);
+                            if (dataStoreUser.user.getNotificationsEnabled()) {
+                                dataStoreUser.postNotification(notificationTemplate, __ -> {
+                                }, __ -> {
+                                });
+                            }
+                        }, e -> {
+
+                        }, () -> {
+                            completed.onSuccess(null);
+                        });
+                });
         }
-
-
     }
 
     public __eventImage eventImage(EventImage target_event_image) {

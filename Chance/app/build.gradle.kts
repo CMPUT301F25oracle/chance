@@ -10,8 +10,6 @@ android {
     namespace = "com.example.chance"
     compileSdk = 36
 
-
-
     defaultConfig {
         applicationId = "com.example.chance"
         minSdk = 24
@@ -21,7 +19,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
 
     buildTypes {
         release {
@@ -40,33 +37,28 @@ android {
         viewBinding = true
         dataBinding = true
     }
-
 }
 
 dependencies {
     //region: firebase dependencies
     implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
     implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-analytics")
     //endregion
 
-    // Add this line for location services
+    //region: Google Play Services
+    // Location services for tracking user location when joining waiting lists
     implementation("com.google.android.gms:play-services-location:21.3.0")
+    // Google Maps SDK
+    implementation("com.google.android.gms:play-services-maps:19.0.0")
+
+    //endregion
 
     //region: ui dependencies
     implementation("com.google.android.flexbox:flexbox:3.0.0")
     //endregion
-    //region: javadoc generation line
-    //implementation(files("/Users/lamersc/Library/Android/sdk/platforms/android-36/android.jar"))
-    //endregion
-    testImplementation("org.mockito:mockito-core:5.11.0")
 
-    testImplementation("org.mockito:mockito-inline:5.2.0")
-
-    testImplementation("junit:junit:4.13.2")
-
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-
+    //region: Camera dependencies
     // CameraX Core library
     implementation("androidx.camera:camera-core:1.3.1")
     // CameraX Camera2 extensions
@@ -76,14 +68,19 @@ dependencies {
     // CameraX View library for PreviewView
     implementation("androidx.camera:camera-view:1.3.1")
     implementation("androidx.camera:camera-extensions:1.3.1")
+    //endregion
 
-    implementation("com.google.firebase:firebase-analytics")
-    //implementation("com.journeyapps:zxing-android-embedded:4.3.0")
+    //region: QR Code and Image processing
     implementation("com.google.zxing:core:3.5.3")
     implementation("com.github.bumptech.glide:glide:5.0.5")
+    //endregion
+
+    //region: RxJava
     implementation("io.reactivex.rxjava3:rxandroid:3.0.2")
     implementation("io.reactivex.rxjava3:rxjava:3.1.5")
+    //endregion
 
+    //region: AndroidX Core
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)
@@ -93,13 +90,27 @@ dependencies {
     implementation(libs.navigation.ui)
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.storage)
-    implementation(libs.espresso.intents)
-    implementation(libs.ext.junit)
     implementation(libs.runtime)
+    implementation(libs.play.services.maps)
+    //endregion
+
+    //region: Testing dependencies
+    testImplementation("org.mockito:mockito-core:5.11.0")
+    testImplementation("org.mockito:mockito-inline:5.2.0")
+    testImplementation("junit:junit:4.13.2")
     testImplementation(libs.junit)
+
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.test.uiautomator:uiautomator:2.4.0-alpha05")
+    androidTestImplementation(libs.espresso.intents)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    androidTestImplementation("androidx.test.uiautomator:uiautomator:2.4.0-alpha05")
+    //endregion
+
+    //region: javadoc generation line
+    //implementation(files("/Users/lamersc/Library/Android/sdk/platforms/android-36/android.jar"))
+    //endregion
 }
 
 tasks.withType<JavaCompile> {

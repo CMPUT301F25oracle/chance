@@ -31,6 +31,8 @@ public class ChanceViewModel extends ViewModel {
     private final MutableLiveData<String> requestedEventID = new MutableLiveData<>();
     private final MutableLiveData<List<Event>> events = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<List<Notification>> notifications = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<Object> message = new MutableLiveData<>();
+
 
 
     /**
@@ -174,4 +176,13 @@ public class ChanceViewModel extends ViewModel {
     public void setBannerMessage(String message) {
         newBannerMessage.postValue(message);
     }
+
+    public MutableLiveData<Object> getMessage() {
+        return message;
+    }
+
+    public void setMessage(Object message) {
+        this.message.postValue(message);
+    }
+
 }
