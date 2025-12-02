@@ -1,5 +1,9 @@
 com.example.chance
+com.example.chance.adapters
 com.example.chance.controller
+com.example.chance.customviews
 com.example.chance.model
 com.example.chance.util
 com.example.chance.views
+com.example.chance.views.admin
+com.example.chance.views.base
