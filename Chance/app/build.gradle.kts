@@ -91,6 +91,7 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.storage)
     implementation(libs.runtime)
+    implementation(libs.play.services.maps)
     //endregion
 
     //region: Testing dependencies
