@@ -80,10 +80,6 @@ public class AdminViewPhotos extends ChanceFragment {
                 }
 
                 for (EventImage image : eventImages) {
-                    // CRITICAL: Your previous code expected a URL (String).
-                    // Your DSM code suggests EventImage contains the actual encoded image string.
-
-                    // OPTION A: If your adapter works with Base64 Strings or the generic model
                     photoItems.add(new AdminPhotosAdapter.PhotoItem(
                             image.getEventImage(), // Passing the Base64 string or URL
                             image.getID()          // Passing the ID/Path
@@ -105,30 +101,37 @@ public class AdminViewPhotos extends ChanceFragment {
      * Deletes all selected photos from Firebase Storage and removes them from the list.
      */
     private void deleteSelectedPhotos() {
-        List<AdminPhotosAdapter.PhotoItem> selected = photosAdapter.getSelectedItems();
-        if (selected.isEmpty()) {
-            return; // nothing selected
+        // 1. Get selected items from the adapter
+        List<AdminPhotosAdapter.PhotoItem> selectedItems = photosAdapter.getSelectedItems();
+        if (selectedItems.isEmpty()) {
+            return; // Nothing selected
         }
 
-        List<AdminPhotosAdapter.PhotoItem> toDelete = new ArrayList<>(selected);
-        List<AdminPhotosAdapter.PhotoItem> successfullyDeleted = new ArrayList<>();
-        AtomicInteger remaining = new AtomicInteger(toDelete.size());
+        DataStoreManager dsm = DataStoreManager.getInstance();
+        List<AdminPhotosAdapter.PhotoItem> itemsToRemove = new ArrayList<>();
 
-        for (AdminPhotosAdapter.PhotoItem item : toDelete) {
-            StorageReference ref = storage.getReference().child(item.storagePath);
-            ref.delete().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    successfullyDeleted.add(item);
-                } else {
-                }
+        for (AdminPhotosAdapter.PhotoItem item : selectedItems) {
 
-                if (remaining.decrementAndGet() == 0) {
-                    // All tasks are complete
-                    if (!successfullyDeleted.isEmpty()) {
-                        photosAdapter.removeItems(successfullyDeleted);
+            String documentId = item.storagePath;
+
+            dsm.deleteEventBanner(documentId, aVoid -> {
+                // SUCCESS: Add to list of items to remove from UI
+                itemsToRemove.add(item);
+
+                if (itemsToRemove.size() == selectedItems.size()) {
+                    // Check if fragment is still attached to avoid crashes
+                    if (isAdded() && getActivity() != null) {
+                        requireActivity().runOnUiThread(() -> {
+                            photosAdapter.removeItems(itemsToRemove);
+                        });
                     }
                 }
+
+            }, e -> {
+                android.util.Log.e("AdminViewPhotos", "Failed to delete image: " + documentId, e);
             });
         }
+
     }
+
 }
