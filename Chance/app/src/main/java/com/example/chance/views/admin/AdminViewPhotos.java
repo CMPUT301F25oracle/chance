@@ -10,10 +10,14 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chance.adapters.AdminPhotosAdapter;
+import com.example.chance.controller.DataStoreManager;
 import com.example.chance.databinding.AdminViewPhotosBinding;
+import com.example.chance.model.EventImage;
 import com.example.chance.views.base.ChanceFragment;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
@@ -61,20 +65,40 @@ public class AdminViewPhotos extends ChanceFragment {
      * Adjust "profile_images" to your actual folder where you store images.
      */
     private void loadAllPhotosFromFirebase() {
-        StorageReference imagesRef = storage.getReference().child("event_images");
-        imagesRef.listAll()
-                .addOnSuccessListener((ListResult listResult) -> {
-                    for (StorageReference item : listResult.getItems()) {
-                        item.getDownloadUrl().addOnSuccessListener(uri -> {
-                            // item.getPath() gives something like "profile_images/username"
-                            photoItems.add(new AdminPhotosAdapter.PhotoItem(
-                                    uri.toString(),
-                                    item.getPath()
-                            ));
-                            photosAdapter.notifyItemInserted(photoItems.size() - 1);
-                        });
-                    }
-                });
+        // 1. Get the DataStoreManager instance
+        DataStoreManager dsm = DataStoreManager.getInstance();
+        // 2. Clear the list and notify adapter
+        photoItems.clear();
+        photosAdapter.notifyDataSetChanged();
+
+        // 3. Call the new method
+        dsm.getAllEventBanners(new OnSuccessListener<List<EventImage>>() {
+            @Override
+            public void onSuccess(List<EventImage> eventImages) {
+                if (eventImages == null || eventImages.isEmpty()) {
+                    return;
+                }
+
+                for (EventImage image : eventImages) {
+                    // CRITICAL: Your previous code expected a URL (String).
+                    // Your DSM code suggests EventImage contains the actual encoded image string.
+
+                    // OPTION A: If your adapter works with Base64 Strings or the generic model
+                    photoItems.add(new AdminPhotosAdapter.PhotoItem(
+                            image.getEventImage(), // Passing the Base64 string or URL
+                            image.getID()          // Passing the ID/Path
+                    ));
+                }
+
+                // 4. Update UI
+                photosAdapter.notifyDataSetChanged();
+            }
+        }, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                android.util.Log.e("AdminViewPhotos", "Error loading banners", e);
+            }
+        });
     }
 
     /**

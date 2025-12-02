@@ -86,7 +86,20 @@ public class DataStoreManager {
             onFailure.onFailure(null);
         }
     }
-
+    /**
+     * Gets all event images from firestore
+     * @param onSuccess Listener for list of EventImage objects
+     * @param onFailure Listener for failure
+     */
+    public void getAllEventBanners(OnSuccessListener<List<EventImage>> onSuccess, OnFailureListener onFailure) {fStore.collection(EVENT_IMAGE_COLLECTION)
+            .get()
+            .addOnSuccessListener((snapshot) -> {
+                // Convert all documents in the collection to EventImage objects
+                List<EventImage> images = snapshot.toObjects(EventImage.class);
+                onSuccess.onSuccess(images);
+            })
+            .addOnFailureListener(onFailure);
+    }
     public void authenticateUser(String username, String password, OnSuccessListener<User> onSuccess, OnFailureListener onFailure) {
         fAuth.signInWithEmailAndPassword(username + PSEUDO_EMAIL, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -539,6 +552,7 @@ public class DataStoreManager {
             // Update local event object
             event.leaveWaitingList(userID);
         }
+
 
         public void drawEntrants(OnSuccessListener<Void> completed) {
             Map<String, String> meta = new HashMap<>();
