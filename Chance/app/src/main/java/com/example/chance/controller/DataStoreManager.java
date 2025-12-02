@@ -3,6 +3,7 @@ package com.example.chance.controller;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -478,12 +479,21 @@ public class DataStoreManager {
 
             // Update local event object
             event.addToWaitingList(userID, latitude, longitude);
-            HashMap<String, String> eventAttributes = new HashMap<>();
-            eventAttributes.put("name", event.getName());
-            eventAttributes.put("ID", event.getID());
+            HashMap<String, String> newHistoryEntry = new HashMap<>();
+            newHistoryEntry.put("name", event.getName());
+            newHistoryEntry.put("ID", event.getID());
             fStore.collection(USER_COLLECTION)
                 .document(userID)
-                .update("eventHistory", FieldValue.arrayUnion(eventAttributes));
+                .update("eventHistory", FieldValue.arrayUnion(newHistoryEntry));
+            for (Map<String, String> history : user.getEventHistory()) {
+                if (history.get("ID").equals(event.getID())) {
+                    return;
+                }
+            }
+            Log.d("DataStoreManager", "Adding new history entry for user " + userID + " in event " + event.getID());
+            List<Map<String, String>> newHistory = new ArrayList<>(user.getEventHistory());
+            newHistory.addLast(newHistoryEntry);
+            user.setEventHistory(newHistory);
         }
 
         // BACKWARD COMPATIBILITY: Keep old method that doesn't require location
