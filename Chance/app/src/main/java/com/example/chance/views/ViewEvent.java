@@ -189,6 +189,14 @@ public class ViewEvent extends ChanceFragment {
         binding.cancelUnregisteredEntrantsButton.setOnClickListener(v -> {
             dsm.event(event).clearWaitingList();
         });
+
+        binding.viewCancelledListButton.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            ArrayList<String> waitingUsersArrayList = new ArrayList<String>(event.getDeclinedInvite());
+            bundle.putStringArrayList("users", waitingUsersArrayList);
+            cvm.setNewPopup(MultiPurposeProfileSearchScreen.class, bundle);
+        });
+
         // MODIFIED: Updated lottery button logic to use location
         binding.enterLotteryButton.setOnClickListener(__ -> {
             if (event.getWaitingList().contains(user.getID())) {
