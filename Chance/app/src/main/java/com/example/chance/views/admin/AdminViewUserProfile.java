@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chance.adapters.NotificationPopupAdapter;
 import com.example.chance.databinding.AdminViewUserProfileBinding;
+import com.example.chance.model.Event;
 import com.example.chance.model.Notification;
 import com.example.chance.model.User;
 import com.example.chance.views.base.ChanceFragment;
@@ -19,6 +20,9 @@ import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
 
 import java.util.Comparator;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class AdminViewUserProfile extends ChanceFragment {
     private AdminViewUserProfileBinding binding;
@@ -109,28 +113,44 @@ public class AdminViewUserProfile extends ChanceFragment {
      * Deletes the user and all events they created
      */
     private void deleteUserAndEvents(User user) {
-        // First, delete all notifications for the user
-        dsm.user(user).deleteAllNotifications(unused -> {
-            // Then, get all events created by this user
-            dsm.getAllEvents(events -> {
-                // Filter events created by this user
-                for (com.example.chance.model.Event event : events) {
-                    if (event.getOrganizerUID().equals(user.getID())) {
-                        // Delete the event and its banner
-                        dsm.removeEvent(event, unused2 -> {}, error -> {});
-                        dsm.deleteEventBanner(event.getID(), unused3 -> {}, error -> {});
-                    }
-                }
+        dsm.getEvents(events -> {
+            List<Event> userEvents = events.stream()
+                    .filter(event -> user.getUsername().equals(event.getOrganizerUID()))
+                    .collect(Collectors.toList());
 
-                // Finally, delete the user
-                dsm.deleteUser(user.getID(), unused4 -> {
-                    Toast.makeText(requireContext(), "User deleted successfully", Toast.LENGTH_SHORT).show();
-                    cvm.setNewFragment(AdminViewUsers.class, null, "fade");
+            if (userEvents.isEmpty()) {
+                // No events to delete, just delete the user
+                deleteTheUser(user);
+                return;
+            }
+
+            AtomicInteger eventsToDelete = new AtomicInteger(userEvents.size());
+
+            for (Event event : userEvents) {
+                // Try to delete banner, but don't worry if it fails
+                dsm.deleteEventBanner(event.getID(), unused -> {}, error -> {});
+                dsm.removeEvent(event, unused -> {
+                    if (eventsToDelete.decrementAndGet() == 0) {
+                        deleteTheUser(user);
+                    }
+                }, error -> {
+                    // Log error or show a toast if you want
+                    if (eventsToDelete.decrementAndGet() == 0) {
+                        deleteTheUser(user);
+                    }
                 });
-            });
+            }
         }, error -> {
-            // Handle error while deleting notifications
-            Toast.makeText(requireContext(), "Error deleting user's notifications", Toast.LENGTH_SHORT).show();
+            // If we can't get events, just delete the user
+            Toast.makeText(requireContext(), "Could not query events. Deleting user only.", Toast.LENGTH_LONG).show();
+            deleteTheUser(user);
+        });
+    }
+
+    private void deleteTheUser(User user) {
+        dsm.deleteUser(user.getID(), unused -> {
+            Toast.makeText(requireContext(), "User and their events deleted successfully", Toast.LENGTH_SHORT).show();
+            cvm.setNewFragment(AdminViewUsers.class, null, "fade");
         });
     }
 
