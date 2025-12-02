@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     app:flexDirection="column"
     app:justifyContent="flex_start"
-    android:background="@color/grey">
+    android:background="@color/chance_grey">
 
     <TextView
         android:id="@+id/photos_title"

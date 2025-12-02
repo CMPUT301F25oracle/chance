@@ -7,7 +7,7 @@
     app:flexDirection="column"
     app:justifyContent="flex_start"
     android:orientation="vertical"
-    android:background="@color/grey">
+    android:background="@color/chance_grey">
 
     <!-- Header: avatar + title -->
     <com.google.android.flexbox.FlexboxLayout
