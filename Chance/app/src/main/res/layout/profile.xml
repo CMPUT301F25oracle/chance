@@ -129,10 +129,10 @@
 
         <Button
             android:id="@+id/save_information_button"
+            android:background="@color/button_green"
             android:layout_marginLeft="27dp"
             android:layout_width="350dp"
             android:layout_height="40dp"
-            android:backgroundTint="@color/black"
             android:text="Save Account Information"
             android:textColor="@color/white"
             />
@@ -143,15 +143,6 @@
             android:layout_height="40dp"
             android:backgroundTint="@color/orange"
             android:text="View Notification History"
-            android:textColor="@color/white"
-            />
-
-        <Button
-            android:layout_marginLeft="27dp"
-            android:layout_width="350dp"
-            android:layout_height="40dp"
-            android:backgroundTint="@color/orange"
-            android:text="Disable Account"
             android:textColor="@color/white"
             />
 

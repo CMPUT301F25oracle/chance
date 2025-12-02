@@ -1,5 +1,6 @@
 package com.example.chance.controller;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
@@ -16,9 +17,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Firebase;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -35,6 +38,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.core.Observable;
@@ -194,6 +198,7 @@ public class DataStoreManager {
                             for (DocumentChange documentChange : snapshots.getDocumentChanges()) {
                                 DocumentSnapshot document = documentChange.getDocument();
                                 Event event = document.toObject(Event.class);
+                                event.setID(document.getId());
                                 emitter.onNext(new Tuple3(event, documentChange.getType(), null));
                             }
 
@@ -472,6 +477,17 @@ public class DataStoreManager {
             this.event = event;
         }
 
+        public void create(OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+            DocumentReference newDocument = fStore.collection(EVENT_COLLECTION)
+                .document();
+            event.setID(newDocument.getId());
+            newDocument.set(event)
+                .addOnSuccessListener(document -> {
+                    onSuccess.onSuccess(null);
+                })
+                .addOnFailureListener(onFailure);
+        }
+
         public void getUsersInLottery(OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
             fStore.collection(EVENT_COLLECTION)
                 .document(event.getID())
@@ -563,6 +579,7 @@ public class DataStoreManager {
             event.setWaitingList(new ArrayList<>());
         }
 
+        @SuppressLint("CheckResult")
         public void drawEntrants(OnSuccessListener<Void> completed) {
             Map<String, String> meta = new HashMap<>();
             meta.put("title", "You\'ve been invited to join " + event.getName());
