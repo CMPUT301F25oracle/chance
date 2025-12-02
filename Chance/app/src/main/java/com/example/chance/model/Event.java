@@ -3,11 +3,14 @@ package com.example.chance.model;
 import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.IgnoreExtraProperties;
+import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -35,6 +38,9 @@ public class Event {
     private List<String> acceptedInvite = new ArrayList<>();
     private List<String> declinedInvite = new ArrayList<>();
 
+    // NEW: Store user locations when they join the waiting list
+    private Map<String, GeoPoint> waitingListLocations = new HashMap<>();
+
 
     // Required empty constructor for Firestore
     public Event() {}
@@ -51,11 +57,11 @@ public class Event {
         this.maxInvited = maxInvited;
         this.waitingList = new ArrayList<>();
         this.invitationList = new ArrayList<>();
+        this.waitingListLocations = new HashMap<>();
     }
 
     @Override
     public String toString() {
-
         return name + " (" + location + ") on ?";
     }
 
@@ -77,23 +83,6 @@ public class Event {
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
-
-    // --- Utility Methods ---
-    @Exclude
-    public boolean isFull() {
-        return capacity <= 0;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Event)) return false;
-        Event event = (Event) o;
-        return Objects.equals(ID, event.ID);
-    }
-
-    @Override
-    public int hashCode() { return Objects.hash(ID); }
 
     public String getOrganizerUID() {
         return organizerUID;
@@ -127,24 +116,87 @@ public class Event {
         this.waitingList = waitingList;
     }
 
-    public void leaveWaitingList(String userId) {
-        waitingList.remove(userId);
-    }
-
     public List<String> getInvitationList() {
         return invitationList;
     }
+
     public void setInvitationList(List<String> invitationList) {
         this.invitationList = invitationList;
     }
 
-    public void addToWaitingList(String userId) {
+    public int getMaxInvited() {
+        return maxInvited;
+    }
+
+    public void setMaxInvited(int maxInvited) {
+        this.maxInvited = maxInvited;
+    }
+
+    public List<String> getAcceptedInvite() {
+        return acceptedInvite;
+    }
+
+    public void setAcceptedInvite(List<String> acceptedInvite) {
+        this.acceptedInvite = acceptedInvite;
+    }
+
+    public List<String> getDeclinedInvite() {
+        return declinedInvite;
+    }
+
+    public void setDeclinedInvite(List<String> declinedInvite) {
+        this.declinedInvite = declinedInvite;
+    }
+
+    // NEW: Getter and Setter for waitingListLocations
+    public Map<String, GeoPoint> getWaitingListLocations() {
+        return waitingListLocations;
+    }
+
+    public void setWaitingListLocations(Map<String, GeoPoint> waitingListLocations) {
+        this.waitingListLocations = waitingListLocations;
+    }
+
+    // --- Utility Methods ---
+    @Exclude
+    public boolean isFull() {
+        return capacity <= 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Event)) return false;
+        Event event = (Event) o;
+        return Objects.equals(ID, event.ID);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(ID);
+    }
+
+    // MODIFIED: Now accepts latitude and longitude to store user location
+    public void addToWaitingList(String userId, double latitude, double longitude) {
         if (!waitingList.contains(userId) && waitingList.size() < maxInvited) {
             waitingList.add(userId);
-        }
-        else {
+            // Store the location as GeoPoint
+            waitingListLocations.put(userId, new GeoPoint(latitude, longitude));
+        } else {
             System.out.println("Max capacity reached for this event");
         }
+    }
+
+    // BACKWARD COMPATIBILITY: Keep old method that doesn't require location
+    // This uses default location (0, 0) if no location is provided
+    public void addToWaitingList(String userId) {
+        addToWaitingList(userId, 0.0, 0.0);
+    }
+
+    // MODIFIED: Remove location data when user leaves waiting list
+    public void leaveWaitingList(String userId) {
+        waitingList.remove(userId);
+        waitingListLocations.remove(userId);  // Remove location data too
     }
 
     public void acceptInvitation(String userId) {
@@ -172,33 +224,5 @@ public class Event {
             invitationList.add(waitingList.removeLast());
             i++;
         }
-    }
-
-    public void removeUnregisteredEntrants() {
-       invitationList.clear();
-    }
-
-    public int getMaxInvited() {
-        return maxInvited;
-    }
-
-    public void setMaxInvited(int maxInvited) {
-        this.maxInvited = maxInvited;
-    }
-
-    public List<String> getAcceptedInvite() {
-        return acceptedInvite;
-    }
-
-    public void setAcceptedInvite(List<String> acceptedInvite) {
-        this.acceptedInvite = acceptedInvite;
-    }
-
-    public List<String> getDeclinedInvite() {
-        return declinedInvite;
-    }
-
-    public void setDeclinedInvite(List<String> declinedInvite) {
-        this.declinedInvite = declinedInvite;
     }
 }

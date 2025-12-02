@@ -207,9 +207,7 @@ public class ViewEvent extends ChanceFragment {
         });
 
         binding.drawEntrantsButton.setOnClickListener(__ -> {
-            dsm.event(event).drawEntrants(completed -> {
-                Toast.makeText(requireContext(), "Entrants drawn successfully.", Toast.LENGTH_SHORT).show();
-            });
+            dsm.event(event).drawEntrants();
         });
 
         binding.drawReplacementButton.setOnClickListener(__ -> {
@@ -218,8 +216,8 @@ public class ViewEvent extends ChanceFragment {
 
         binding.viewFinalEntrantsButton.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
-            ArrayList<String> acceptedUsersArrayList = new ArrayList<String>(event.getAcceptedInvite());
-            bundle.putStringArrayList("users", acceptedUsersArrayList);
+            ArrayList<String> waitingUsersArrayList = new ArrayList<String>(event.getWaitingList());
+            bundle.putStringArrayList("users", waitingUsersArrayList);
             cvm.setNewPopup(MultiPurposeProfileSearchScreen.class, bundle);
         });
 
@@ -241,15 +239,9 @@ public class ViewEvent extends ChanceFragment {
             });
         });
 
-        binding.viewChosenListButton.setOnClickListener(v -> {
-            Bundle bundle = new Bundle();
-            ArrayList<String> invitedUsersArrayList = new ArrayList<String>(event.getInvitationList());
-            bundle.putStringArrayList("users", invitedUsersArrayList);
-            cvm.setNewPopup(MultiPurposeProfileSearchScreen.class, bundle);
-        });
-
+        // We will implement this method after accept/reject button is implemented
         binding.removeUnregisteredEntrantsButton.setOnClickListener(v -> {
-            event.removeUnregisteredEntrants();
+
         });
     }
 
