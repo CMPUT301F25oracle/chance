@@ -219,6 +219,16 @@
                         android:text="Draw Replacement Applicants"
                         android:textColor="@color/white"
                         />
+                    <Button
+                        android:id="@+id/view_waiting_list_map_button"
+                        android:layout_marginLeft="27dp"
+                        android:layout_width="350dp"
+                        android:layout_height="40dp"
+                        android:backgroundTint="@color/black"
+                        android:text="View Waiting List Map"
+                        android:textColor="@color/white"
+                        />
+
                 </LinearLayout>
 
 

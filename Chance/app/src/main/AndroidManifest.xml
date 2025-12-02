@@ -40,6 +40,15 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCCfSUhUo1zKPnwowKyol8z5kZ1bWmxIBM"/>
 
+
+        <!-- Add the WaitingListMapActivity -->
+        <activity
+            android:name=".views.WaitingListMapActivity"
+            android:exported="false"
+            android:label="Waiting List Map" />
+
     </application>
 
 </manifest>
+
+

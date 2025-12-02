@@ -258,6 +258,13 @@ public class ViewEvent extends ChanceFragment {
                 Log.e("ViewEvent", "Failed to fetch all users for CSV export.", e);
             });
         });
+        // NEW: View waiting list map button
+        binding.viewWaitingListMapButton.setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), WaitingListMapActivity.class);
+            intent.putExtra(WaitingListMapActivity.EXTRA_EVENT_ID, event.getID());
+            startActivity(intent);
+        });
+
 
         // We will implement this method after accept/reject button is implemented
         binding.removeUnregisteredEntrantsButton.setOnClickListener(v -> {
