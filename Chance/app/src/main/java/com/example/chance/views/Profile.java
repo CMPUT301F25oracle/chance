@@ -22,6 +22,10 @@ import com.example.chance.model.User;
 import com.example.chance.views.base.ChanceFragment;
 
 import com.example.chance.views.Authentication;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 
@@ -71,10 +75,6 @@ public class Profile extends ChanceFragment {
                     });
                 });
 
-                binding.logoutButton.setOnClickListener(v -> {
-                    logoutUser();
-                });
-
                 binding.saveInformationButton.setOnClickListener(v -> {
                     String fullName = binding.fullnameInput.getText().toString();
                     String email = binding.emailInput.getText().toString();
@@ -91,6 +91,23 @@ public class Profile extends ChanceFragment {
                     else {
                         Toast.makeText(getContext(), "Please fill out all fields", Toast.LENGTH_SHORT).show();
                     }
+                });
+
+                binding.registrationHistoryButton.setOnClickListener(v -> {
+                    Bundle bundle = new Bundle();
+                    ArrayList<String> names = new ArrayList<>();
+                    ArrayList<String> IDs = new ArrayList<>();
+                    for (Map<String, String> history : user.getEventHistory()) {
+                        names.add(history.get("name"));
+                        IDs.add(history.get("ID"));
+                    }
+                    bundle.putStringArrayList("names", names);
+                    bundle.putStringArrayList("IDs", IDs);
+                    cvm.setNewPopup(EventRegistrationHistoryPopup.class, bundle);
+                });
+
+                binding.logoutButton.setOnClickListener(v -> {
+                    logoutUser();
                 });
 
                 binding.deleteAccountButton.setOnClickListener(v -> {

@@ -148,6 +148,16 @@ public class DataStoreManager {
                 .addOnFailureListener(onFailure);
     }
 
+    public void getAllEventBanners(OnSuccessListener<List<EventImage>> onSuccess, OnFailureListener onFailure) {
+        fStore.collection(EVENT_IMAGE_COLLECTION)
+            .get()
+            .addOnSuccessListener(snapshot -> {
+                List<EventImage> eventImages = snapshot.toObjects(EventImage.class);
+                onSuccess.onSuccess(eventImages);
+            })
+            .addOnFailureListener(onFailure);
+    }
+
 
 
     public void getUserFromUID(String uid, OnSuccessListener<User> onSuccess, OnFailureListener onFailure) {
@@ -501,6 +511,12 @@ public class DataStoreManager {
 
             // Update local event object
             event.addToWaitingList(userID, latitude, longitude);
+            HashMap<String, String> eventAttributes = new HashMap<>();
+            eventAttributes.put("name", event.getName());
+            eventAttributes.put("ID", event.getID());
+            fStore.collection(USER_COLLECTION)
+                .document(userID)
+                .update("eventHistory", FieldValue.arrayUnion(eventAttributes));
         }
 
         // BACKWARD COMPATIBILITY: Keep old method that doesn't require location

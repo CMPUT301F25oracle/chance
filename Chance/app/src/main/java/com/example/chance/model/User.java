@@ -3,6 +3,7 @@ package com.example.chance.model;
 import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 import java.util.List;
+import java.util.Map;
 
 @IgnoreExtraProperties
 public class User {
@@ -20,6 +21,8 @@ public class User {
     private String profileImageUrl;
     private boolean notificationsEnabled;
     private String organizationName;
+    private List<Map<String, String>> eventHistory;
+
 
 
 
@@ -170,5 +173,13 @@ public class User {
 
     public void setID(String ID) {
         this.ID = ID;
+    }
+
+    public List<Map<String, String>> getEventHistory() {
+        return eventHistory;
+    }
+
+    public void setEventHistory(List<Map<String, String>> eventHistory) {
+        this.eventHistory = eventHistory;
     }
 }
