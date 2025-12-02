@@ -125,14 +125,16 @@ public class DataStoreManager {
                             userCollectionRef
                                     .set(user)
                                     .addOnSuccessListener((__) -> {
-                                        onSuccess.onSuccess(user);
+                                        userCollectionRef
+                                            .collection(NOTIFICATION_COLLECTION)
+                                            .add(new Notification(-1, null, null))
+                                            .addOnSuccessListener(___ -> {
+                                                onSuccess.onSuccess(user);
+                                            });
                                     })
                                     .addOnFailureListener((e) -> {
                                         onFailure.onFailure(e);
                                     });
-                            userCollectionRef
-                                    .collection(NOTIFICATION_COLLECTION)
-                                    .add(new Notification(-1, null, null));
                         } else {
                             onFailure.onFailure(task.getException());
                         }

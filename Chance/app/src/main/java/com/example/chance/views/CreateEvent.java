@@ -159,21 +159,14 @@ public class CreateEvent extends ChanceFragment {
                 Event new_event = new Event(event_name, event_address, maximum_candidates, attendance_price, event_description, event_start_calendar, event_end_calendar, user.getID(), maximum_waitinglist);
                 new_event.setOrganizerUID(user.getID());
 
-                cvm.getEvents().observe(getViewLifecycleOwner(), events -> {
-                    for (Event event : events) {
-                        Log.d("CreateEvent", "Event ID: " + event.getID());
-                        if (event.getID().equals(new_event.getID())) {
-                            cvm.setNewFragment(Home.class, null, "");
-                            return;
-                        }
-                    }
-                });
-
                 dsm.event(new_event).create(none -> {
                     if (selectedEventBanner != null) {
                         selectedEventBanner.setID(new_event.getID());
                         dsm.eventImage(selectedEventBanner).save((__)->{
+                            cvm.setNewFragment(Home.class, null, "");
                         }, (__)->{});
+                    } else {
+                        cvm.setNewFragment(Home.class, null, "");
                     }
                 }, e -> {});
 

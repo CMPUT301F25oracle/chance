@@ -151,11 +151,9 @@ public class MainActivity extends AppCompatActivity {
         cvm.getAuthenticationSuccess().observe(this, user -> {
             cvm.setCurrentUser(user);
             // now we load the list of events from firestore
-            List<Event> emptyList = new ArrayList<>();
-            cvm.setEvents(emptyList);
-            DataStoreManager.getInstance().getAllEvents((events) -> {
-                cvm.setEvents(events);
-            });
+//            DataStoreManager.getInstance().getAllEvents((events) -> {
+//                cvm.setEvents(events);
+//            });
         });
         //--
         cvm.getEventToOpen().observe(this, eventId -> {
