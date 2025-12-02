@@ -526,6 +526,13 @@ public class DataStoreManager {
             event.leaveWaitingList(userID);
         }
 
+        public void clearWaitingList() {
+            DocumentReference eventDoc = fStore.collection(EVENT_COLLECTION)
+                .document(event.getID());
+            eventDoc.update("waitingList", new ArrayList<>());
+            event.setWaitingList(new ArrayList<>());
+        }
+
         public void drawEntrants(OnSuccessListener<Void> completed) {
             Map<String, String> meta = new HashMap<>();
             meta.put("title", "You've been invited to join " + event.getName());
