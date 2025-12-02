@@ -609,3 +609,147 @@ public class DataStoreManager {
 
     }
 }
+
+
+
+/**
+ * ==================== DataStoreManager.java Comments ====================
+ *
+ * This file contains the DataStoreManager class, which is responsible for all interactions
+ * with the Firebase Firestore database. It follows a singleton pattern to ensure only one
+ * instance manages the database connection.
+ *
+ * === DataStoreManager Class ===
+ * Manages all data persistence and retrieval from Firestore. It includes methods for
+ * managing users, events, and their related data like notifications and images.
+ *
+ * --- getInstance Method ---
+ * Provides a global access point to the singleton instance of DataStoreManager.
+ * @return The single instance of DataStoreManager.
+ *
+ * --- observeEvents Method ---
+ * Sets up a real-time listener on the events collection in Firestore. It emits a tuple
+ * containing the event object, the type of change (added, modified, removed), and a null value
+ * whenever there is a change in the event data.
+ * @return An Observable that emits event changes.
+ *
+ * --- getEventBannerFromID Method ---
+ * Retrieves the banner image for a specific event, decodes it from Base64, and returns it as a Bitmap.
+ * @param ID The ID of the event to get the banner for.
+ * @param onSuccess Success listener returning the Bitmap image.
+ * @param onFailure Failure listener.
+ *
+ * --- deleteEventBanner Method ---
+ * Deletes the event banner associated with a given event ID from the 'event_image' collection.
+ * @param eventId The ID of the event, which is also the document ID of the banner image.
+ * @param onSuccess Listener for successful deletion.
+ * @param onFailure Listener for failed deletion.
+ *
+ * --- getEvents Method ---
+ * Fetches all events from the Firestore 'events' collection once.
+ * @param onSuccess Success listener returning a list of all events.
+ * @param onFailure Failure listener.
+ *
+ * --- updateUser Method ---
+ * Updates a user's document in the 'users' collection. The entire user object is overwritten.
+ * @param updatedUser The User object with updated information.
+ * @param onSuccess Success listener.
+ *
+ * --- deleteUser Method ---
+ * Deletes a user from the 'users' collection in Firestore.
+ * @param userId The ID of the user to be deleted.
+ * @param onSuccess Success listener.
+ *
+ * --- getEvent Method ---
+ * Retrieves a single event by its document ID from the 'events' collection.
+ * @param id The document ID of the event.
+ * @param onSuccess Success listener returning the Event object, or null if not found.
+ *
+ * --- getAllEvents Method ---
+ * Retrieves all events from the 'events' collection.
+ * @param onSuccess Success listener returning a list of all Event objects.
+ *
+ * --- removeEvent Method ---
+ * Deletes a specific event document from the 'events' collection.
+ * @param event The event object to be deleted.
+ * @param onSuccess Listener for successful deletion.
+ * @param onFailure Listener for failed deletion.
+ *
+ * --- user Method ---
+ * Factory method to create a DataStoreUser instance for a specific user. This provides
+ * a scoped API for user-related database operations.
+ * @param target_user The user to perform operations on.
+ * @return A new DataStoreUser instance.
+ *
+ *
+ * === DataStoreUser Inner Class ===
+ * Provides a scoped API for database operations related to a single user.
+ *
+ * --- getNotifications Method ---
+ * Fetches all non-system notifications for the user.
+ * @param onSuccess Success listener returning a list of Notification objects.
+ * @param onFailure Failure listener.
+ *
+ * --- observeNotifications Method ---
+ * Sets up a real-time listener for the user's notifications.
+ * @return An Observable that emits notification changes.
+ *
+ * --- deleteAllNotifications Method ---
+ * Deletes all notifications for the user.
+ * @param onSuccess Success listener.
+ * @param onFailure Failure listener.
+ *
+ * --- postNotification Method ---
+ * Adds a new notification to the user's notification sub-collection.
+ * @param notification The notification to add.
+ * @param onSuccess Success listener.
+ * @param onFailure Failure listener.
+ *
+ *
+ * --- event Method ---
+ * Factory method to create an __event instance for a specific event. This provides
+ * a scoped API for event-related database operations.
+ * @param target_event The event to perform operations on.
+ * @return A new __event instance.
+ *
+ * === __event Inner Class ===
+ * Provides a scoped API for database operations related to a single event.
+ *
+ * --- create Method ---
+ * Creates a new event document in Firestore and sets its ID.
+ * @param onSuccess Success listener.
+ * @param onFailure Failure listener.
+ *
+ * --- getUsersInLottery Method ---
+ * Retrieves the list of user IDs in the event's waiting list (lottery).
+ * @param onSuccess Success listener returning a list of user IDs.
+ * @param onFailure Failure listener.
+ *
+ * --- checkUserInLottery Method ---
+ * Checks if a specific user is in the event's lottery.
+ * @param user The user to check.
+ * @param onSuccess Success listener returning true if the user is in the lottery, false otherwise.
+ *
+ * --- acceptedInvite Method ---
+ * Moves a user from the 'invitationList' to the 'acceptedInvite' list for the event.
+ * @param user The user who accepted the invitation.
+ *
+ * --- declinedInvite Method ---
+ * Moves a user from the 'invitationList' to the 'declinedInvite' list for the event.
+ * @param user The user who declined the invitation.
+ *
+ * --- enterLottery (with location) Method ---
+ * Adds a user to the event's waiting list and records their geographical location.
+ * Also adds the event to the user's event history.
+ * @param user The user entering the lottery.
+ * @param latitude The user's latitude.
+ * @param longitude The user's longitude.
+ *
+ * --- enterLottery (without location) Method ---
+ * Backward-compatible method to add a user to the lottery without location data.
+ * @param user The user entering the lottery.
+ *
+ * --- leaveLottery Method ---
+ * Removes a user from the event's waiting list and deletes their associated location data.
+ * @param user The user leaving the lottery.
+ */

@@ -493,3 +493,79 @@ public class ViewEvent extends ChanceFragment {
         binding = null;
     }
 }
+
+/**
+ * ==================== ViewEvent.java Comments ====================
+ *
+ * This file defines the ViewEvent class, a Fragment responsible for displaying
+ * the detailed view of a single event. It provides functionality for both
+ * attendees and organizers, such as viewing event details, joining or leaving
+ * a waiting list (lottery), viewing participants, sending notifications, and
+ * managing the event.
+ *
+ * === ViewEvent Class ===
+ * A Fragment that shows all details of a specific event. It handles UI updates
+ * based on the user's interaction and role (organizer vs. attendee). It integrates
+ * heavily with DataStoreManager to fetch and update event data in Firestore.
+ * Recently updated to include location-based services for event sign-ups.
+ *
+ * --- Instance Variables ---
+ * - `currentEvent`, `currentUser`: Hold the state of the event and user being viewed.
+ * - `unique_qrcode`: A Bitmap for the event's QR code.
+ * - `fusedLocationClient`: The main entry point for interacting with the fused location provider.
+ * - `LOCATION_PERMISSION_REQUEST_CODE`: A constant for the location permission request.
+ *
+ * --- onCreateView & onViewCreated ---
+ * Standard Fragment lifecycle methods to inflate the layout, initialize data binding,
+ * and set up initial state, including the FusedLocationProviderClient.
+ *
+ * --- loadDataFromBundle ---
+ * Retrieves the event ID from the arguments passed to the fragment and loads the
+ * corresponding event and current user data from Firestore. It then calls
+ * `loadEventInformation` to populate the UI.
+ *
+ * --- loadEventInformation Method ---
+ * This is the core method for populating the UI with event data. It sets text views,
+ * generates and displays the event QR code, and loads the event banner. It also sets
+ - up numerous OnClickListeners for all the interactive elements on the screen,
+ * such as:
+ *  - Entering/leaving the event lottery.
+ *  - Viewing the waiting list map (`viewWaitingListMapButton`).
+ *  - Sending custom notifications to the waiting list.
+ *  - Drawing entrants for the event.
+ *  - Exporting the list of final entrants to a CSV file.
+ *  - Removing the event (for organizers).
+ *
+ * --- enterLotteryWithLocation Method ---
+ * Handles the logic for a user joining the event's waiting list. It first checks for
+ * location permissions. If granted, it attempts to fetch the user's last known location.
+ * If successful, it calls the `enterLottery` method in DataStoreManager with the
+ * user's coordinates. If not, it triggers a request for the current location.
+ *
+ * --- requestCurrentLocation Method ---
+ * A fallback method that actively requests the device's current location if the last
+ * known location was unavailable. It uses a `LocationRequest` to get a single,
+ * high-accuracy update. If this also fails, it joins the lottery with default (0,0)
+ * coordinates as a final fallback.
+ *
+ * --- onRequestPermissionsResult Method ---
+ * The callback method for the location permission request. If the user grants
+ * permission, it retries the `enterLotteryWithLocation` flow. Otherwise, the
+ * functionality that requires location is unavailable.
+ *
+ * --- formatDate Method ---
+ * A helper utility to format a Date object into a more readable string ("dd/MM/yyyy").
+ *
+ * --- setLotteryButtonAppearance Method ---
+ * A UI helper method to toggle the appearance and text of the "Enter Lottery" button
+ * based on whether the user is currently in the waiting list or not.
+ *
+ * --- setupBannerRemoval Method ---
+ * Configures the long-press listener on the event banner for organizers, allowing
+ * them to delete the event's banner image.
+ *
+ * --- exportUsersToCsv Method ---
+ * Gathers user data for the event's waiting list and formats it into a CSV string.
+ * It then uses an Intent with `ACTION_CREATE_DOCUMENT` to allow the user to save
+ * the CSV file to their device.
+ */

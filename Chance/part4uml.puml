@@ -1,0 +1,1154 @@
+@startuml
+class com.example.chance.util.DialogUtils {
++ {static} void showAlert(Context,String,String)
++ {static} void showConfirmDialog(Context,String,String,String,DialogInterface.OnClickListener,String,DialogInterface.OnClickListener)
++ {static} void showError(Context,String)
+}
+
+class com.example.chance.views.NotSelectedForEventPopup {
+- NotSelectedForEventPopupBinding binding
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
++ void onViewCreated(View,Bundle)
+}
+
+
+class com.example.chance.views.InvitedToEventPopup {
+- InvitedToEventPopupBinding binding
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
++ void onViewCreated(View,Bundle)
+}
+
+
+class com.example.chance.util.DateUtils {
++ {static} String formatDate(Date)
++ {static} String getRelativeTime(Date)
++ {static} boolean isPast(Date)
++ {static} boolean isToday(Date)
+}
+
+class com.example.chance.views.CreateEvent {
+- CreateEventBinding binding
+- ActivityResultLauncher<PickVisualMediaRequest> pickMedia
+- EventImage selectedEventBanner
+- ActivityResultLauncher<String> requestPermissionLauncher
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
++ void onViewCreated(View,Bundle)
+- void requestLocationPermission()
++ void promptImageFromUser()
++ byte[] inputStreamToPNGByteArray(InputStream)
++ void onDestroyView()
+}
+
+
+class com.example.chance.views.Home {
+- HomeBinding binding
+- Disposable eventsDisposable
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
++ void onViewCreated(View,Bundle)
++ void updateItemsFilter(android.text.Editable,List<T>,OnSuccessListener<List<T>>)
++ void onDestroyView()
+}
+
+
+class com.example.chance.adapters.MultiPurposeProfileSearchScreenListAdapter {
++ {static} DiffUtil.ItemCallback<User> DIFF_CALLBACK
++ ProfileViewHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(ProfileViewHolder,int)
+- {static} int dpToPx(View,float)
+}
+
+
+class com.example.chance.adapters.MultiPurposeProfileSearchScreenListAdapter$ProfileViewHolder {
+~ TextView username
+}
+
+class com.example.chance.customviews.ChanceTextInput {
+- ImageView icon
+- EditText textInput
+- TextWatcher textWatcher
+~ {static} int BLACK
+~ {static} int WHITE
+- int dpToPx(float)
++ String getText()
++ void addTextChangedListener(TextWatcher)
++ void removeTextChangedListener()
+}
+
+
+class com.example.chance.model.Administrator {
+- String id
+- String name
+- String email
+- List<String> managedEvents
+- List<String> flaggedUsers
++ String getId()
++ void setId(String)
++ String getName()
++ void setName(String)
++ String getEmail()
++ void setEmail(String)
++ List<String> getManagedEvents()
++ void setManagedEvents(List<String>)
++ List<String> getFlaggedUsers()
++ void setFlaggedUsers(List<String>)
++ String toString()
+}
+
+
+class com.example.chance.views.ViewEvent {
+- ViewEventBinding binding
+~ Bitmap unique_qrcode
+- Drawable buttonBackground
+- EventController eventController
+- String csvContentToSave
+- FusedLocationProviderClient fusedLocationClient
+- {static} int LOCATION_PERMISSION_REQUEST_CODE
+- Event currentEvent
+- User currentUser
+- ActivityResultLauncher<Intent> createFileLauncher
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
++ void onViewCreated(View,Bundle)
++ void loadEventInformation(Event,User)
+- void enterLotteryWithLocation(Event,User)
+- void requestCurrentLocation(Event,User)
++ void onRequestPermissionsResult(int,String[],int[])
+- void setupBannerRemoval(Event,User,boolean)
+- void exportUsersToCsv(List<User>,String)
+- String escapeCsvValue(String)
+- String formatDate(Date)
++ void setLotteryButtonAppearance(Boolean)
++ void onDestroyView()
+}
+
+
+class com.example.chance.model.WaitingList {
+- String id
+- String eventId
+- List<String> entrantIds
++ String getId()
++ void setId(String)
++ String getEventId()
++ void setEventId(String)
++ List<String> getEntrantIds()
++ void setEntrantIds(List<String>)
++ void addEntrant(String)
++ void removeEntrant(String)
++ boolean isEmpty()
++ String getNextEntrant()
++ String toString()
+}
+
+
+class com.example.chance.model.NotificationItem {
+- String id
+- String title
+- String message
+- String timeAgo
++ String getId()
++ void setId(String)
++ String getTitle()
++ void setTitle(String)
++ String getMessage()
++ void setMessage(String)
++ String getTimeAgo()
++ void setTimeAgo(String)
+}
+
+
+abstract class com.example.chance.views.base.ChanceFragment {
+# DataStoreManager dsm
+# ChanceViewModel cvm
++ Bundle meta
++ void onCreate(Bundle)
++ void chanceEnterTransitionComplete()
+}
+
+
+class com.example.chance.views.WaitingListMapActivity {
+- {static} String TAG
++ {static} String EXTRA_EVENT_ID
+- GoogleMap mMap
+- String eventId
+- FirebaseManager firebaseManager
+# void onCreate(Bundle)
++ void onMapReady(GoogleMap)
+- void loadEventAndDisplayMarkers()
+- void displayUserMarkers(Event)
+}
+
+
+class com.example.chance.adapters.MultiPurposeEventSearchScreenListAdapter {
++ {static} DiffUtil.ItemCallback<Event> DIFF_CALLBACK
++ EventViewHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(EventViewHolder,int)
+- {static} int dpToPx(View,float)
+}
+
+
+class com.example.chance.adapters.MultiPurposeEventSearchScreenListAdapter$EventViewHolder {
+~ TextView title
+~ ImageView banner
+}
+
+class com.example.chance.util.RxFirebase {
++ {static} Single<T> toSingle(Task<T>)
++ {static} Completable toCompletable(Task<Void>)
+}
+
+class com.example.chance.controller.FirebaseManager {
+- {static} String TAG
+- {static} FirebaseManager instance
+- FirebaseFirestore db
+- FirebaseStorage storage
++ {static} FirebaseManager getInstance()
++ void addDocument(String,T,OnSuccessListener<DocumentReference>,OnFailureListener)
++ void setDocument(String,String,T,OnSuccessListener<Void>,OnFailureListener)
++ void getDocument(String,String,OnSuccessListener<DocumentSnapshot>,OnFailureListener)
++ void getCollection(String,OnSuccessListener<QuerySnapshot>,OnFailureListener)
++ void deleteDocument(String,String,OnSuccessListener<Void>,OnFailureListener)
++ void listenToCollection(String,EventListener<QuerySnapshot>)
++ void uploadFile(String,byte[],OnSuccessListener,OnFailureListener)
++ StorageReference getStorageReference(String)
++ FirebaseFirestore getDb()
++ void logError(String,Exception)
++ void logInfo(String)
+}
+
+
+class com.example.chance.model.Event {
+- String ID
+- String name
+- String location
+- int capacity
+- double price
+- String description
+- Date startDate
+- Date endDate
+- String organizerUID
+- int maxInvited
+- List<String> waitingList
+- List<String> invitationList
+- List<String> acceptedInvite
+- List<String> declinedInvite
+- Map<String,GeoPoint> waitingListLocations
++ String toString()
++ String getID()
++ void setID(String)
++ String getName()
++ void setName(String)
++ String getLocation()
++ void setLocation(String)
++ int getCapacity()
++ void setCapacity(int)
++ double getPrice()
++ void setPrice(double)
++ String getDescription()
++ void setDescription(String)
++ String getOrganizerUID()
++ void setOrganizerUID(String)
++ Date getStartDate()
++ void setStartDate(Date)
++ Date getEndDate()
++ void setEndDate(Date)
++ List<String> getWaitingList()
++ void setWaitingList(ArrayList<String>)
++ List<String> getInvitationList()
++ void setInvitationList(List<String>)
++ int getMaxInvited()
++ void setMaxInvited(int)
++ List<String> getAcceptedInvite()
++ void setAcceptedInvite(List<String>)
++ List<String> getDeclinedInvite()
++ void setDeclinedInvite(List<String>)
++ Map<String,GeoPoint> getWaitingListLocations()
++ void setWaitingListLocations(Map<String,GeoPoint>)
++ boolean isFull()
++ boolean equals(Object)
++ int hashCode()
++ void addToWaitingList(String,double,double)
++ void addToWaitingList(String)
++ void leaveWaitingList(String)
++ void acceptInvitation(String)
++ void declineInvitation(String)
++ List<String> viewWaitingListEntrants()
++ int viewWaitingListEntrantsCount()
++ void pollForInvitation()
+}
+
+
+class com.example.chance.adapters.NotificationPopupAdapter {
++ {static} DiffUtil.ItemCallback<Notification> DIFF_CALLBACK
++ NotificationViewHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(NotificationViewHolder,int)
+- {static} int dpToPx(View,float)
+}
+
+
+class com.example.chance.adapters.NotificationPopupAdapter$NotificationViewHolder {
+~ TextView title
+}
+
+class com.example.chance.views.admin.AdminViewUserProfile {
+- AdminViewUserProfileBinding binding
+- NotificationPopupAdapter notificationAdapter
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
++ void onViewCreated(View,Bundle)
+- void deleteUserAndEvents(User)
++ void onDestroyView()
+}
+
+
+abstract class com.example.chance.views.base.ChancePopup {
+}
+class com.example.chance.controller.EventController {
+- {static} String COLLECTION
+- {static} String EVENT_IMAGE_COLLECTION
+- FirebaseManager firebaseManager
+- DataStoreManager dataStoreManager
++ void createEvent(Event,OnSuccessListener<DocumentReference>,OnFailureListener)
++ void getEvent(String,OnSuccessListener<Event>,OnFailureListener)
++ void getAllEvents(OnSuccessListener<List<Event>>,OnFailureListener)
++ void updateEvent(String,Event,OnSuccessListener<Void>,OnFailureListener)
++ void removeEventBanner(String,OnSuccessListener<Void>,OnFailureListener)
++ void deleteEvent(String,OnSuccessListener<Void>,OnFailureListener)
++ void listenForEventChanges(EventListener<QuerySnapshot>)
+}
+
+
+class com.example.chance.views.base.MultiPurposeProfileSearchScreen {
+- MultiPurposeProfileSearchScreenBinding binding
+~ List<User> profileList
+- MultiPurposeProfileSearchScreenListAdapter profileAdapter
+- Disposable profilesDisposable
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
++ void onViewCreated(View,Bundle)
++ void submitList(List<User>)
++ void interceptProfileClick(User)
++ void onDestroyView()
+}
+
+
+class com.example.chance.views.admin.Admin {
+- AdminBinding binding
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
++ void onViewCreated(View,Bundle)
+}
+
+
+class com.example.chance.adapters.EventRegistrationHistoryPopupListAdapter {
++ {static} DiffUtil.ItemCallback<Map<String,String>> DIFF_CALLBACK
++ EventRegistrationHistoryPopupViewHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(EventRegistrationHistoryPopupViewHolder,int)
+- {static} int dpToPx(View,float)
+}
+
+
+class com.example.chance.adapters.EventRegistrationHistoryPopupListAdapter$EventRegistrationHistoryPopupViewHolder {
+~ TextView title
+}
+
+class com.example.chance.adapters.AdminPhotosAdapter {
+- Context context
+- List<PhotoItem> photos
++ PhotoViewHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(PhotoViewHolder,int)
++ int getItemCount()
++ List<PhotoItem> getSelectedItems()
++ void removeItems(List<PhotoItem>)
+}
+
+
+class com.example.chance.adapters.AdminPhotosAdapter$PhotoItem {
++ String url
++ String storagePath
++ boolean selected
+}
+
+class com.example.chance.adapters.AdminPhotosAdapter$PhotoViewHolder {
+~ ImageView imageView
+~ ImageView selectionIndicator
+}
+
+class com.example.chance.views.admin.AdminViewPhotos {
+- AdminViewPhotosBinding binding
+- AdminPhotosAdapter photosAdapter
+- List<AdminPhotosAdapter.PhotoItem> photoItems
+- FirebaseStorage storage
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
++ void onViewCreated(View,Bundle)
+- void loadAllPhotosFromFirebase()
+- void deleteSelectedPhotos()
+}
+
+
+class com.example.chance.views.EventRegistrationHistoryPopup {
+- EventRegistrationHistoryPopupBinding binding
+- EventRegistrationHistoryPopupListAdapter historyAdapter
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
++ void onViewCreated(View,Bundle)
+}
+
+
+class com.example.chance.views.RegisteredEvents {
++ void onViewCreated(View,Bundle)
+}
+
+class com.example.chance.controller.SignUpController {
+- {static} String COLLECTION
+- FirebaseManager firebaseManager
++ void registerUser(SignUp,OnSuccessListener<DocumentReference>,OnFailureListener)
++ void getUser(String,OnSuccessListener<SignUp>,OnFailureListener)
++ void updateUser(String,SignUp,OnSuccessListener<Void>,OnFailureListener)
++ void deleteUser(String,OnSuccessListener<Void>,OnFailureListener)
++ void verifyUser(String,OnSuccessListener<Void>,OnFailureListener)
+}
+
+
+class com.example.chance.views.SplashScreen {
+- SplashScreenBinding binding
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
++ void onViewCreated(View,Bundle)
++ void onDestroyView()
+}
+
+
+class com.example.chance.adapters.EventSearchScreenListAdapter {
++ {static} DiffUtil.ItemCallback<Event> DIFF_CALLBACK
++ EventViewHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(EventViewHolder,int)
+}
+
+
+class com.example.chance.adapters.EventSearchScreenListAdapter$EventViewHolder {
+~ TextView title
+~ ImageView banner
+}
+
+class com.example.chance.views.base.MultiPurposeEventSearchScreen {
+- MultiPurposeEventSearchScreenBinding binding
+~ List<Event> eventList
+- MultiPurposeEventSearchScreenListAdapter eventsAdapter
+- Disposable eventsDisposable
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
++ void onViewCreated(View,Bundle)
++ void submitList(List<Event>)
++ void onDestroyView()
+}
+
+
+class com.example.chance.views.NotificationPopup {
+- NotificationPopupBinding binding
+- NotificationPopupAdapter notificationsAdapter
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
++ void onViewCreated(View,Bundle)
+}
+
+
+class com.example.chance.views.CustomEventNotificationPopup {
+- CustomEventNotificationPopupBinding binding
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
++ void onViewCreated(View,Bundle)
+}
+
+
+class com.example.chance.views.Authentication {
+- AuthenticationBinding binding
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
++ void onViewCreated(View,Bundle)
+- void userAuthenticated(User)
++ void onDestroyView()
+}
+
+
+class com.example.chance.controller.QRCodeHandler {
+- {static} int QR_SIZE
++ {static} Bitmap generateQRCode(String)
++ {static} String bitmapToBase64(Bitmap)
++ {static} Bitmap base64ToBitmap(String)
++ {static} String decodeQRCode(Bitmap)
++ {static} String decodeQrCode(byte[],int,int)
+}
+
+
+class com.example.chance.model.Organizer {
+- List<String> createdEvents
+- String organizationName
+- String bio
+- Event event
++ List<String> getCreatedEvents()
++ void setCreatedEvents(List<String>)
++ String getOrganizationName()
++ void setOrganizationName(String)
++ String getBio()
++ void setBio(String)
++ String toString()
+}
+
+
+class com.example.chance.views.CreatedEvents {
++ void onViewCreated(View,Bundle)
+}
+
+class com.example.chance.model.SignUp {
+- String id
+- String name
+- String email
+- String role
+- String deviceId
+- Date createdAt
+- boolean verified
++ String getId()
++ void setId(String)
++ String getName()
++ void setName(String)
++ String getEmail()
++ void setEmail(String)
++ String getRole()
++ void setRole(String)
++ String getDeviceId()
++ void setDeviceId(String)
++ Date getCreatedAt()
++ void setCreatedAt(Date)
++ boolean isVerified()
++ void setVerified(boolean)
++ boolean isOrganizer()
++ boolean isEntrant()
++ boolean isAdmin()
++ String toString()
+}
+
+
+class com.example.chance.MainActivity {
+- ActivityMainBinding binding
+- ChanceViewModel cvm
+- DataStoreManager dsm
+- List<BackstackFragment> backstackHistory
+# void onCreate(Bundle)
+- void initializeUI()
+- void initializeChanceModelObservers()
+- void initializeDatabasePolling()
+- void getNewFragmentCallback(Tuple3<Class<? extends ChanceFragment>,Bundle,String>)
++ void getNewPopupCallback(Tuple3<Class<? extends ChanceFragment>,Bundle,Void>)
+- void animateFragmentTransition(FragmentTransaction,ChanceFragment,String)
+- void circularRevealAnimation(FragmentTransaction,ChanceFragment,int)
+}
+
+
+class com.example.chance.MainActivity$BackstackFragment {
++ Class<? extends ChanceFragment> fragmentClass
++ Bundle metaBundle
+}
+
+class com.example.chance.views.QRCodePopup {
+- QrcodePopupBinding binding
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
++ void onViewCreated(View,Bundle)
+}
+
+
+class com.example.chance.controller.ProfileController {
+- {static} String ENTRANT_COLLECTION
+- {static} String ORGANIZER_COLLECTION
+- {static} String ADMIN_COLLECTION
+- FirebaseManager firebaseManager
++ void getEntrant(String,OnSuccessListener<User>,OnFailureListener)
++ void updateEntrant(String,User,OnSuccessListener<Void>,OnFailureListener)
++ void deleteEntrant(String,OnSuccessListener<Void>,OnFailureListener)
++ void getOrganizer(String,OnSuccessListener<Organizer>,OnFailureListener)
++ void updateOrganizer(String,Organizer,OnSuccessListener<Void>,OnFailureListener)
++ void deleteOrganizer(String,OnSuccessListener<Void>,OnFailureListener)
++ void getAdministrator(String,OnSuccessListener<Administrator>,OnFailureListener)
++ void updateAdministrator(String,Administrator,OnSuccessListener<Void>,OnFailureListener)
++ void deleteAdministrator(String,OnSuccessListener<Void>,OnFailureListener)
+}
+
+
+class com.example.chance.controller.DataStoreManager {
+- {static} DataStoreManager instance
+- {static} FirebaseAuth fAuth
+- {static} FirebaseFirestore fStore
+- FirebaseManager db
+- String PSEUDO_EMAIL
+- String USER_COLLECTION
+- String NOTIFICATION_COLLECTION
+- String EVENT_COLLECTION
+- String EVENT_IMAGE_COLLECTION
++ {static} DataStoreManager getInstance()
++ Boolean isDeviceAuthenticated()
++ void getAuthenticatedUser(OnSuccessListener<User>,OnFailureListener)
++ void authenticateUser(String,String,OnSuccessListener<User>,OnFailureListener)
++ void logoutAuthenticatedUser()
++ void createNewUser(String,String,OnSuccessListener<User>,OnFailureListener)
++ void getAllUsers(OnSuccessListener<List<User>>,OnFailureListener)
++ void getAllEventBanners(OnSuccessListener<List<EventImage>>,OnFailureListener)
++ void getUserFromUID(String,OnSuccessListener<User>,OnFailureListener)
++ void createNewEvent(Event,OnSuccessListener<Event>,OnFailureListener)
++ Observable<Tuple3<Event,DocumentChange.Type,Void>> observeEventsCollection()
++ void getEventBannerFromID(String,OnSuccessListener<Bitmap>,OnFailureListener)
++ void deleteEventBanner(String,OnSuccessListener<Void>,OnFailureListener)
++ void getEvents(OnSuccessListener<List<Event>>,OnFailureListener)
++ void getUser(String,OnSuccessListener<User>)
++ void updateUser(User,OnSuccessListener<Void>)
++ void deleteUser(String,OnSuccessListener<Void>)
++ void joinWaitingList(Event,String,OnSuccessListener<Void>)
++ void leaveWaitingList(Event,String,OnSuccessListener<Void>)
++ void acceptInvitation(Event,String,OnSuccessListener<Void>)
++ void rejectInvitation(Event,String,OnSuccessListener<Void>)
++ Event createEvent(String,String,int,double,String,Date,Date,String)
++ void getEvent(String,OnSuccessListener<Event>)
++ void getAllEvents(OnSuccessListener<List<Event>>)
++ void removeEvent(Event,OnSuccessListener<Void>,OnFailureListener)
++ DataStoreUser user(User)
++ __event event(Event)
++ __eventImage eventImage(EventImage)
+}
+
+
+class com.example.chance.controller.DataStoreManager$DataStoreUser {
+~ User user
++ void getNotifications(OnSuccessListener<List<Notification>>,OnFailureListener)
++ Observable<Tuple3<Notification,DocumentChange.Type,Void>> observeNotifications()
++ void deleteAllNotifications(OnSuccessListener<Void>,OnFailureListener)
++ void postNotification(Notification,OnSuccessListener<Void>,OnFailureListener)
+}
+
+
+class com.example.chance.controller.DataStoreManager$__event {
+~ Event event
++ void getUsersInLottery(OnSuccessListener<List<String>>,OnFailureListener)
++ void checkUserInLottery(User,OnSuccessListener<Boolean>)
++ void acceptedInvite(User)
++ void declinedInvite(User)
++ void enterLottery(User,double,double)
++ void enterLottery(User)
++ void leaveLottery(User)
++ void clearWaitingList()
++ void drawEntrants(OnSuccessListener<Void>)
+}
+
+
+class com.example.chance.controller.DataStoreManager$__eventImage {
+~ EventImage eventImage
++ void save(OnSuccessListener<Void>,OnFailureListener)
+}
+
+
+class com.example.chance.ChanceViewModel {
+- MutableLiveData<User> currentUser
+- MutableLiveData<User> authenticationSuccess
+- MutableLiveData<Boolean> navBarVisible
+- MutableLiveData<Tuple3<Class<? extends ChanceFragment>,Bundle,String>> newFragment
+- MutableLiveData<Tuple3<Class<? extends ChanceFragment>,Bundle,Void>> newPopup
+- MutableLiveData<Void> removePopup
+- MutableLiveData<String> newBannerMessage
+- MutableLiveData<String> requestedEventID
+- MutableLiveData<List<Event>> events
+- MutableLiveData<List<Notification>> notifications
+- MutableLiveData<Object> message
++ LiveData<User> getCurrentUser()
++ void setCurrentUser(User)
++ LiveData<Boolean> getLoadMainUI()
++ void setLoadMainUI(boolean)
++ MutableLiveData<Tuple3<Class<? extends ChanceFragment>,Bundle,String>> getNewFragment()
++ void setNewFragment(Class<? extends ChanceFragment>,Bundle,String)
++ LiveData<List<Event>> getEvents()
++ void setEvents(List<Event>)
++ LiveData<List<Notification>> getNotifications()
++ void setNotifications(List<Notification>)
++ void addEvent(Event)
++ void removeEvent(Event)
++ void requestOpenEvent(String)
++ LiveData<String> getEventToOpen()
++ LiveData<User> getAuthenticationSuccess()
++ void setAuthenticationSuccess(User)
++ MutableLiveData<Tuple3<Class<? extends ChanceFragment>,Bundle,Void>> getNewPopup()
++ void setNewPopup(Class<? extends ChanceFragment>,Bundle)
++ MutableLiveData<Void> getRemovePopup()
++ void removePopup()
++ MutableLiveData<String> getBannerMessage()
++ void setBannerMessage(String)
++ MutableLiveData<Object> getMessage()
++ void setMessage(Object)
+}
+
+
+class com.example.chance.model.EventImage {
+- String ID
+- String eventImage
++ String getID()
++ void setID(String)
++ String getEventImage()
++ void setEventImage(String)
+}
+
+
+class com.example.chance.adapters.MainEventSearchListAdapter {
++ {static} DiffUtil.ItemCallback<Event> DIFF_CALLBACK
++ EventViewHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(EventViewHolder,int)
+}
+
+
+class com.example.chance.adapters.MainEventSearchListAdapter$EventViewHolder {
+~ TextView title
+~ ImageView banner
+}
+
+class com.example.chance.model.Notification {
+- String ID
+- Date creationDate
+- int type
+- Map<String,String> meta
++ String getID()
++ void setID(String)
++ int getType()
++ void setType(int)
++ Map<String,String> getMeta()
++ void setMeta(Map<String,String>)
++ Date getCreationDate()
++ void setCreationDate(Date)
+}
+
+
+class com.example.chance.util.ValidationUtils {
++ {static} boolean isEmpty(String)
++ {static} boolean isValidEmail(String)
++ {static} boolean isValidPhone(String)
++ {static} boolean isValidPassword(String)
++ {static} boolean isNumeric(String)
+}
+
+class com.example.chance.util.Tuple3 {
++ X x
++ Y y
++ Z z
+}
+
+class com.example.chance.model.User {
+- String ID
+- String username
+- String fullName
+- String email
+- String phoneNumber
+- List<String> joinedEvents
+- List<String> selectedEvents
+- List<String> waitingListEvents
+- String profileImageUrl
+- boolean notificationsEnabled
+- String organizationName
+- List<Map<String,String>> eventHistory
++ String getUsername()
++ void setUsername(String)
++ String getEmail()
++ void setEmail(String)
++ String getPhoneNumber()
++ void setPhoneNumber(String)
++ List<String> getJoinedEvents()
++ void setJoinedEvents(List<String>)
++ List<String> getSelectedEvents()
++ void setSelectedEvents(List<String>)
++ List<String> getWaitingListEvents()
++ void setWaitingListEvents(List<String>)
++ String getProfileImageUrl()
++ void setProfileImageUrl(String)
++ void setNotificationsEnabled(boolean)
++ boolean getNotificationsEnabled()
++ String toString()
++ String getOrganizationName()
++ void setOrganizationName(String)
++ String getFullName()
++ void setFullName(String)
++ String getID()
++ void setID(String)
++ List<Map<String,String>> getEventHistory()
++ void setEventHistory(List<Map<String,String>>)
+}
+
+
+class com.example.chance.views.PollConditionPopup {
+- PollconditionPopupBinding binding
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
++ void onViewCreated(View,Bundle)
+}
+
+
+class com.example.chance.model.Lottery {
+- String id
+- String eventId
+- List<String> entrants
+- List<String> winners
+- List<String> waitingList
+- boolean isCompleted
++ String getId()
++ void setId(String)
++ String getEventId()
++ void setEventId(String)
++ List<String> getEntrants()
++ void setEntrants(List<String>)
++ List<String> getWinners()
++ void setWinners(List<String>)
++ List<String> getWaitingList()
++ void setWaitingList(List<String>)
++ boolean isCompleted()
++ void setCompleted(boolean)
++ void conductDraw(int)
++ String toString()
+}
+
+
+class com.example.chance.controller.LotteryController {
+- {static} String COLLECTION
+- FirebaseManager firebaseManager
++ void createLottery(String,OnSuccessListener<DocumentReference>,OnFailureListener)
++ void getLottery(String,OnSuccessListener<Lottery>,OnFailureListener)
++ void addEntrant(String,String,OnSuccessListener<Void>,OnFailureListener)
++ void conductDraw(String,int,OnSuccessListener<Lottery>,OnFailureListener)
++ void deleteLottery(String,OnSuccessListener<Void>,OnFailureListener)
+}
+
+
+class com.example.chance.views.QrcodeScanner {
+- {static} int CAMERA_PERMISSION_CODE
+- {static} String TAG
+- QrcodeScannerBinding binding
+~ ActivityResultLauncher<String> requestPermissionPopup
+~ {static} Preview cameraPreview
+~ {static} ImageAnalysis qrcodeAnalyzer
+- ExecutorService cameraExecutor
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
++ void onViewCreated(View,Bundle)
++ void chanceEnterTransitionComplete()
+- void QRCodeScannerRoutine()
++ void onDestroyView()
+}
+
+
+class com.example.chance.views.QrcodeScanner$QrCodeAnalyzer {
+- long timeSinceLastDecode
++ void analyze(ImageProxy)
+}
+
+
+class com.example.chance.views.admin.AdminViewUsers {
++ void onViewCreated(View,Bundle)
++ void interceptProfileClick(User)
+}
+
+class com.example.chance.views.Profile {
+- ProfileBinding binding
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
++ void onViewCreated(View,Bundle)
++ void logoutUser()
++ void onDestroyView()
+}
+
+
+
+
+com.example.chance.views.base.ChancePopup <|-- com.example.chance.views.NotSelectedForEventPopup
+com.example.chance.views.base.ChancePopup <|-- com.example.chance.views.InvitedToEventPopup
+com.example.chance.views.base.ChanceFragment <|-- com.example.chance.views.CreateEvent
+com.example.chance.views.base.ChanceFragment <|-- com.example.chance.views.Home
+androidx.recyclerview.widget.ListAdapter <|-- com.example.chance.adapters.MultiPurposeProfileSearchScreenListAdapter
+com.example.chance.adapters.MultiPurposeProfileSearchScreenListAdapter +.. com.example.chance.adapters.MultiPurposeProfileSearchScreenListAdapter$ProfileViewHolder
+com.example.chance.adapters.ViewHolder <|-- com.example.chance.adapters.MultiPurposeProfileSearchScreenListAdapter$ProfileViewHolder
+com.google.android.flexbox.FlexboxLayout <|-- com.example.chance.customviews.ChanceTextInput
+com.example.chance.views.base.ChanceFragment <|-- com.example.chance.views.ViewEvent
+androidx.fragment.app.Fragment <|-- com.example.chance.views.base.ChanceFragment
+com.google.android.gms.maps.OnMapReadyCallback <|.. com.example.chance.views.WaitingListMapActivity
+androidx.appcompat.app.AppCompatActivity <|-- com.example.chance.views.WaitingListMapActivity
+androidx.recyclerview.widget.ListAdapter <|-- com.example.chance.adapters.MultiPurposeEventSearchScreenListAdapter
+com.example.chance.adapters.MultiPurposeEventSearchScreenListAdapter +.. com.example.chance.adapters.MultiPurposeEventSearchScreenListAdapter$EventViewHolder
+com.example.chance.adapters.ViewHolder <|-- com.example.chance.adapters.MultiPurposeEventSearchScreenListAdapter$EventViewHolder
+androidx.recyclerview.widget.ListAdapter <|-- com.example.chance.adapters.NotificationPopupAdapter
+com.example.chance.adapters.NotificationPopupAdapter +.. com.example.chance.adapters.NotificationPopupAdapter$NotificationViewHolder
+com.example.chance.adapters.ViewHolder <|-- com.example.chance.adapters.NotificationPopupAdapter$NotificationViewHolder
+com.example.chance.views.base.ChanceFragment <|-- com.example.chance.views.admin.AdminViewUserProfile
+com.example.chance.views.base.ChanceFragment <|-- com.example.chance.views.base.ChancePopup
+com.example.chance.views.base.ChanceFragment <|-- com.example.chance.views.base.MultiPurposeProfileSearchScreen
+com.example.chance.views.base.ChanceFragment <|-- com.example.chance.views.admin.Admin
+androidx.recyclerview.widget.ListAdapter <|-- com.example.chance.adapters.EventRegistrationHistoryPopupListAdapter
+com.example.chance.adapters.EventRegistrationHistoryPopupListAdapter +.. com.example.chance.adapters.EventRegistrationHistoryPopupListAdapter$EventRegistrationHistoryPopupViewHolder
+com.example.chance.adapters.ViewHolder <|-- com.example.chance.adapters.EventRegistrationHistoryPopupListAdapter$EventRegistrationHistoryPopupViewHolder
+com.example.chance.adapters.Adapter <|-- com.example.chance.adapters.AdminPhotosAdapter
+com.example.chance.adapters.AdminPhotosAdapter +.. com.example.chance.adapters.AdminPhotosAdapter$PhotoItem
+com.example.chance.adapters.AdminPhotosAdapter +.. com.example.chance.adapters.AdminPhotosAdapter$PhotoViewHolder
+com.example.chance.adapters.ViewHolder <|-- com.example.chance.adapters.AdminPhotosAdapter$PhotoViewHolder
+com.example.chance.views.base.ChanceFragment <|-- com.example.chance.views.admin.AdminViewPhotos
+com.example.chance.views.base.ChancePopup <|-- com.example.chance.views.EventRegistrationHistoryPopup
+com.example.chance.views.base.MultiPurposeEventSearchScreen <|-- com.example.chance.views.RegisteredEvents
+com.example.chance.views.base.ChanceFragment <|-- com.example.chance.views.SplashScreen
+androidx.recyclerview.widget.ListAdapter <|-- com.example.chance.adapters.EventSearchScreenListAdapter
+com.example.chance.adapters.EventSearchScreenListAdapter +.. com.example.chance.adapters.EventSearchScreenListAdapter$EventViewHolder
+com.example.chance.adapters.ViewHolder <|-- com.example.chance.adapters.EventSearchScreenListAdapter$EventViewHolder
+com.example.chance.views.base.ChanceFragment <|-- com.example.chance.views.base.MultiPurposeEventSearchScreen
+com.example.chance.views.base.ChancePopup <|-- com.example.chance.views.NotificationPopup
+com.example.chance.views.base.ChancePopup <|-- com.example.chance.views.CustomEventNotificationPopup
+com.example.chance.views.base.ChanceFragment <|-- com.example.chance.views.Authentication
+com.example.chance.model.User <|-- com.example.chance.model.Organizer
+com.example.chance.views.base.MultiPurposeEventSearchScreen <|-- com.example.chance.views.CreatedEvents
+androidx.appcompat.app.AppCompatActivity <|-- com.example.chance.MainActivity
+com.example.chance.MainActivity +.. com.example.chance.MainActivity$BackstackFragment
+com.example.chance.views.base.ChancePopup <|-- com.example.chance.views.QRCodePopup
+com.example.chance.controller.DataStoreManager +.. com.example.chance.controller.DataStoreManager$DataStoreUser
+com.example.chance.controller.DataStoreManager +.. com.example.chance.controller.DataStoreManager$__event
+com.example.chance.controller.DataStoreManager +.. com.example.chance.controller.DataStoreManager$__eventImage
+androidx.lifecycle.ViewModel <|-- com.example.chance.ChanceViewModel
+androidx.recyclerview.widget.ListAdapter <|-- com.example.chance.adapters.MainEventSearchListAdapter
+com.example.chance.adapters.MainEventSearchListAdapter +.. com.example.chance.adapters.MainEventSearchListAdapter$EventViewHolder
+com.example.chance.adapters.ViewHolder <|-- com.example.chance.adapters.MainEventSearchListAdapter$EventViewHolder
+com.example.chance.views.base.ChancePopup <|-- com.example.chance.views.PollConditionPopup
+com.example.chance.views.base.ChanceFragment <|-- com.example.chance.views.QrcodeScanner
+com.example.chance.views.QrcodeScanner +.. com.example.chance.views.QrcodeScanner$QrCodeAnalyzer
+com.example.chance.views.Analyzer <|.. com.example.chance.views.QrcodeScanner$QrCodeAnalyzer
+com.example.chance.views.base.MultiPurposeProfileSearchScreen <|-- com.example.chance.views.admin.AdminViewUsers
+com.example.chance.views.base.ChanceFragment <|-- com.example.chance.views.Profile
+@enduml
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

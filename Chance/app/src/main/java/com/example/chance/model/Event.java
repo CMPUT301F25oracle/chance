@@ -226,3 +226,68 @@ public class Event {
         }
     }
 }
+
+
+/**
+ * ==================== Event.java Comments ====================
+ *
+ * This file defines the Event class, which serves as the data model for an event
+ * within the application. It encapsulates all properties and behaviors associated with an event,
+ * such as its details, capacity, and participant lists. This class is designed to be directly
+ * used with Firebase Firestore for data persistence.
+ *
+ * === Event Class ===
+ * Represents a single event created by an Organizer. It includes information about the
+ * event's name, location, capacity, price, description, and dates. It also manages
+ * different lists of participants: those on the waiting list, those invited, those who
+ * have accepted invitations, and those who have declined.
+ *
+ * It has recently been updated to include location tracking for users who join the
+ * waiting list, storing their geographical coordinates as a GeoPoint.
+ *
+ * --- @DocumentId ---
+ * The 'ID' field is automatically populated by Firestore with the document's ID.
+ *
+ * --- @IgnoreExtraProperties ---
+ * Allows Firestore to ignore any extra fields in the database that are not present in this class.
+ *
+ * === Constructors ===
+ * - A required empty public constructor for Firestore deserialization.
+ * - A parameterized constructor for creating new Event instances with initial values.
+ *
+ * === Getters and Setters ===
+ * Standard accessor and mutator methods are provided for all properties of the event,
+ * allowing other parts of the application to interact with the event data.
+ * This includes the new 'waitingListLocations' map.
+ *
+ * === Utility Methods ===
+ * - isFull(): A convenience method to check if the event has reached its capacity (capacity <= 0).
+ * - equals() & hashCode(): Overridden to define event equality based on the unique event ID.
+ * - toString(): Provides a simple string representation of the event.
+ *
+ * === Core Logic Methods ===
+ * - addToWaitingList(String userId, double latitude, double longitude):
+ *   Adds a user to the event's waiting list and records their geographical location.
+ *   Checks against the maximum number of invited participants.
+ *
+ * - addToWaitingList(String userId):
+ *   A backward-compatible version of the method that adds a user to the waiting list
+ *   without location data, using a default (0,0) coordinate.
+ *
+ * - leaveWaitingList(String userId):
+ *   Removes a user from the event's waiting list and also removes their associated
+ *   location data to maintain data consistency.
+ *
+ * - acceptInvitation(String userId):
+ *   Moves a user from the 'invitationList' to the 'acceptedInvite' list.
+ *
+ * - declineInvitation(String userId):
+ *   Moves a user from the 'invitationList' to the 'declinedInvite' list.
+ *
+ * - viewWaitingListEntrants() & viewWaitingListEntrantsCount():
+ *   Provide read-only access to the waiting list and its size.
+ *
+ * - pollForInvitation():
+ *   Implements the lottery logic. It shuffles the waiting list and moves a number
+ *   of users (up to 'maxInvited' and 'capacity') to the 'invitationList'.
+ */
