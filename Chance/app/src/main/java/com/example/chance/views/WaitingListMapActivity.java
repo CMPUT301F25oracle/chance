@@ -125,6 +125,53 @@ public class WaitingListMapActivity extends AppCompatActivity implements OnMapRe
         }
     }
 }
+/**
+ * ==================== WaitingListMapActivity.java Comments ====================
+ *
+ * This file defines the WaitingListMapActivity class, which is responsible for
+ * displaying a Google Map with markers indicating the geographical locations of
+ * users who have signed up for an event's waiting list (lottery).
+ *
+ * === WaitingListMapActivity Class ===
+ * An AppCompatActivity that implements the OnMapReadyCallback to interact with
+ * the Google Map. It receives an event ID from the launching intent and uses it
+ * to fetch the corresponding event data, including the locations of users on the
+ * waiting list.
+ *
+ * --- EXTRA_EVENT_ID Constant ---
+ * A public constant string used as the key for passing the event ID via an Intent extra.
+ *
+ * --- onCreate Method ---
+ * Initializes the activity, sets the content view, and retrieves the event ID
+ * from the intent. If the event ID is missing, it logs an error and closes the
+ * activity. It then asynchronously initializes the SupportMapFragment.
+ *
+ * --- onMapReady Method ---
+ * This callback method is invoked when the Google Map is fully loaded and ready
+ * to be used. It configures basic UI settings like zoom controls and then
+ * triggers the process to load the event data and display the markers.
+ *
+ * --- loadEventAndDisplayMarkers Method ---
+ * Fetches the specific Event object from Firestore using the DataStoreManager.
+ * Upon successfully retrieving the event, it calls the displayUserMarkers method
+ * to render the locations on the map.
+ *
+ * --- displayUserMarkers Method ---
+ * This is the core logic method. It retrieves the map of user locations from the
+ * Event object. It then iterates through this map, and for each user:
+ * 1. It checks if the location is valid, skipping the default (0,0) coordinates
+ *    which indicate that a user signed up without providing a location.
+ * 2. For each valid location, it creates a Google Maps LatLng object and adds a
+ *    marker to the map.
+ * 3. It uses a LatLngBounds.Builder to calculate the geographic bounds that
+ *    encompass all the added markers.
+ * 4. Finally, if any markers were added, it animates the map's camera to zoom
+ *    and pan perfectly to frame all the markers on the screen with a bit of padding.
+ * 5. It includes comprehensive logging and Toast messages for debugging and to
+ *    inform the user if no locations are available to display.
+ */
+
+
 
 //    private void displayUserMarkers(Event event) {
 //        Map<String, GeoPoint> locations = event.getWaitingListLocations();

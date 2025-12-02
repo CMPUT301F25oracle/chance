@@ -99,3 +99,37 @@ public class ChanceTextInput extends FlexboxLayout {
 
     }
 }
+
+/**
+ * ==================== ChanceTextInput.java Comments ====================
+ *
+ * This file defines the ChanceTextInput class, which is a custom compound view
+ * designed to provide a standardized text input field with an optional icon.
+ * It extends FlexboxLayout to create a flexible and modern input component.
+ *
+ * === ChanceTextInput Class ===
+ * A custom view that encapsulates an ImageView and an EditText within a FlexboxLayout.
+ * This component allows for easy customization of the icon, hint text, and input type
+ * through XML attributes.
+ *
+ * --- ChanceTextInput Constructor ---
+ * Initializes the custom view, its children, and their styling from attributes.
+ * @param context The context in which the view is created.
+ * @param attrs The attributes from the XML layout.
+ *
+ * --- dpToPx Method ---
+ * A utility method to convert density-independent pixels (dp) to screen pixels (px).
+ * @param dpValue The value in dp to convert.
+ * @return The equivalent value in pixels.
+ *
+ * --- getText Method ---
+ * Retrieves the current text from the EditText component.
+ * @return The text content as a String.
+ *
+ * --- addTextChangedListener Method ---
+ * Adds a TextWatcher to the EditText to monitor text changes.
+ * @param textWatcher The TextWatcher to be added.
+ *
+ * --- removeTextChangedListener Method ---
+ * Removes the currently attached TextWatcher from the EditText.
+ */

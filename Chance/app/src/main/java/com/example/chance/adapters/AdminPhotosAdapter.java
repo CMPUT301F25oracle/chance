@@ -105,3 +105,58 @@ public class AdminPhotosAdapter extends RecyclerView.Adapter<AdminPhotosAdapter.
         }
     }
 }
+
+/**
+ * ==================== AdminPhotosAdapter.java Comments ====================
+ *
+ * === AdminPhotosAdapter Class ===
+ * Adapter for displaying photos in a RecyclerView for administrative purposes.
+ * This adapter handles the display of images, which can be loaded from a URL or a Base64 encoded string.
+ * It also supports single-item selection.
+ *
+ * === PhotoItem Inner Class ===
+ * Represents a single photo item in the RecyclerView.
+ * Contains the image URL or Base64 string, the storage path, and its selection state.
+ *
+ * --- PhotoItem Constructor ---
+ * Constructs a new PhotoItem.
+ * @param url The URL or Base64 string of the photo.
+ * @param storagePath The storage path of the photo.
+ *
+ * === AdminPhotosAdapter Constructor ===
+ * Constructs the AdminPhotosAdapter.
+ * @param context The context for inflating views and using Glide.
+ * @param photos The list of photo items to display.
+ *
+ * === onCreateViewHolder Method ===
+ * Called when RecyclerView needs a new {@link PhotoViewHolder} of the given type to represent an item.
+ * @param parent The ViewGroup into which the new View will be added after it is bound to an adapter position.
+ * @param viewType The view type of the new View.
+ * @return A new PhotoViewHolder that holds a View of the given view type.
+ *
+ * === onBindViewHolder Method ===
+ * Called by RecyclerView to display the data at the specified position.
+ * This method updates the contents of the {@link PhotoViewHolder#itemView} to reflect the item at the given position.
+ * @param holder The PhotoViewHolder which should be updated to represent the contents of the item at the given position in the data set.
+ * @param position The position of the item within the adapter's data set.
+ *
+ * === getItemCount Method ===
+ * Returns the total number of items in the data set held by the adapter.
+ * @return The total number of items in this adapter.
+ *
+ * === getSelectedItems Method ===
+ * Retrieves a list of all currently selected photo items.
+ * @return A list containing all items marked as selected.
+ *
+ * === removeItems Method ===
+ * Removes a list of items from the adapter's data set.
+ * @param toRemove The list of PhotoItem objects to remove.
+ *
+ * === PhotoViewHolder Inner Class ===
+ * ViewHolder for a photo item.
+ * Caches views to avoid repeated and expensive `findViewById` calls.
+ *
+ * --- PhotoViewHolder Constructor ---
+ * Constructs a new PhotoViewHolder.
+ * @param itemView The view that you inflated in {@link #onCreateViewHolder(ViewGroup, int)}.
+ */
